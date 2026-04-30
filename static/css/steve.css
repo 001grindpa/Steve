@@ -62,7 +62,7 @@ main .section-cont {
 }
 main .hero {
     padding-top: 1.5rem;
-    padding-bottom: 27rem;
+    padding-bottom: 25rem;
     margin-left: 5%;
     margin-right: 5%;
 }
@@ -76,6 +76,7 @@ main .hero .meet {
 }
 main .hero h1 {
     margin-bottom: 10px;
+    font-size: 40px;
 }
 main .hero p {
     color: var(--green-txt);
@@ -120,7 +121,7 @@ main .section-cont-2 .about-cont .one .content div {
 /* rearrange layout */
 @media(min-width: 400px) {
     main .hero h1 {
-        width: 360px;
+        width: 450px;
     }
     main .hero .about {
         width: 360px;
