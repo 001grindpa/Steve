@@ -2,9 +2,15 @@ from jose import JWTError, jwt
 from fastapi import HTTPException, status, Depends
 import datetime
 from models import TokenData
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
-SECRET_KEY="549e68dfddc494bdca1e0e9c1325e724bb29f885a2b576d967614181aaa51982"
-ALGORITHM="HS256"
+secret_key=os.getenv("SECRET_KEY")
+algo=os.getenv("ALGORITHM")
+
+SECRET_KEY=secret_key
+ALGORITHM=algo
 
 def create_jwt_token(data: dict, exp_min: int):
     to_encode = data.copy()

@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="loader">
+        <img src="{{ url_for('static', path='gifs/water-loader.gif') }}" alt="laoder">
+        <div>loading...</div>
+    </div>
+    <div class="sub-body">
+        <header>
+            <div class="sub-header-cont">
+                <div class="sub-header">
+                    <div class="logo">
+                        <img src="{{ url_for('static', path='images/steve-logo.png') }}" alt="logo">
+                    </div>
+                    <div class="logo-text">
+                        <h2>Steve</h2>
+                        <div>Your AI Chef</div>
+                    </div>
+                </div>
+                <a href="/signup"><button>Start Cooking</button></a>
+            </div>
+        </header>
+        <main>
+            <div class="section-cont">
+                <div class="hero">
+                    <div class="meet">Meet Steve 👋</div>
+                    <h1>Any ingredients. Endless possibilities. <p>That's Steve.</p></h1>
+                    <div class="about">Steve is your interactive cook AI agent that figures out what delicious dish you can make with what you have.</div>
+                </div>
+            </div>
+            <div class="section-cont-2">
+                <div class="about-cont">
+                    <div class="one">
+                        <img src="{{ url_for('static', path='images/search.png') }}" alt="search_icon">
+                        <div class="content">
+                            <h5>Smart Ingredient Matching</h5>
+                            <div>Steve analyzes what you have and finds the best recipe ideas.</div>
+                        </div>
+                    </div>
+                    <div class="one">
+                        <img src="{{ url_for('static', path='images/chat.png') }}" alt="search_icon">
+                        <div class="content">
+                            <h5>Interactive and Conversational</h5>
+                            <div>Chat with Steve to refine recipes, swap ingredients, and get tips</div>
+                        </div>
+                    </div>
+                    <div class="one">
+                        <img src="{{ url_for('static', path='images/chef.png') }}" alt="search_icon">
+                        <div class="content">
+                            <h5>Personalized To You</h5>
+                            <div>Steve learns your preferences and helps you cook better, every time.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

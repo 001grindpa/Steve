@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="initial-scale=1.0, width=device-width">
+        <meta property="og:description" content="Steve is your interactive cook AI agent that figures out what delicious dish you can make with what you have.">
+        <link rel="stylesheet" href="{{ url_for('static', path='css/steve.css') }}">
+        <script src="{{ url_for('static', path='js/steve.js') }}"></script>
+        <title>Steve: your chef assistant</title>
+        <style>
+            main .section-cont {
+                background: url("{{ url_for('static', path='images/steve-hero.png') }}");
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+        </style>
+    </head>
+    <body id="{{ page_id }}">
+        {% block body %}{% endblock %}
+    </body>
+</html>

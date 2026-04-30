@@ -1,7 +1,4 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
-from fastapi.templating import Jinja2Templates
-from fastapi.security import OAuth2PasswordBearer
-from fastapi.staticfiles import StaticFiles
 from models import CreateUser, LoginUser, UserData, get_db, User, Dish, DishData
 from sqlalchemy.orm import Session
 from hash import Hash
