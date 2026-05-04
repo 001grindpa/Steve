@@ -10,11 +10,13 @@
     --faint-green: rgb(0, 182, 0);
     --faint-pink: rgb(255, 216, 222);
     --very-faint-green: rgba(144, 238, 144, 0.534);
+    --milk-white: rgb(240, 240, 240);
+    --faded-black: rgba(0, 0, 0, 0.067);
 }
 .loader {
     width: fit-content;
     margin: auto;
-    margin-top: 40%;
+    margin-top: 20rem;
     text-align: center;
 }
 .loader img {
@@ -76,7 +78,7 @@ main .hero .meet {
 }
 main .hero h1 {
     margin-bottom: 10px;
-    font-size: 40px;
+    font-size: 37px;
 }
 main .hero p {
     color: var(--green-txt);
@@ -118,10 +120,116 @@ main .section-cont-2 .about-cont .one .content div {
     font-size: small;
 }
 
+/* signup */
+#signup main {
+    background: var(--milk-white);
+    text-align: center;
+    padding-top: 50px;
+}
+#signup header .sub-header-cont {
+    justify-content: flex-start;
+    outline: 1px solid lightgray;
+}
+#signup main .section-container {
+    text-align: center;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+#signup main h1 {
+    margin-bottom: 5px;
+}
+#signup main h1 + div {
+    text-align: left;
+    width: fit-content;
+    margin: auto;
+    margin-bottom: 10px;
+}
+#signup #google-login {
+    display: flex;
+    align-items: center;
+    outline: 1px solid gray;
+    width: fit-content;
+    margin: auto;
+    gap: 10px;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    padding: 8px 40px;
+    transition: 0.25s;
+    cursor: pointer;
+    border-radius: 5px;
+}
+#signup #google-login:hover {
+    background-color: var(--faded-black);
+}
+#signup #google-login img {
+    width: 25px;
+}
+#signup main h1 ~ form {
+    margin: auto;
+    display: grid;
+    width: 17rem;
+    gap: 10px;
+}
+#signup main h1 ~ form div {
+    display: flex;
+    outline: 1px solid lightgray;
+    background-color: white;
+    align-items: center;
+    width: 85%;
+    padding: 9px 14px;
+    margin: auto;
+}
+#signup main h1 ~ form input {
+    width: 85%;
+    margin: auto;
+    outline: none;
+    border: none;
+}
+#signup main h1 ~ form input:nth-child(3) {
+    padding: 10px 15px;
+    outline: 1px solid lightgray;
+}
+#signup main h1 ~ form button {
+    width: 96%;
+    margin: auto;
+    padding: 10px;
+    background-color: var(--green-bg);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    corner-shape: bevel;
+    cursor: pointer;
+    transition: 0.25s;
+}
+#signup main h1 ~ form button:hover {
+    background-color: var(--faint-green);
+}
+#signup main h1 ~ form img {
+    width: 20px;
+    opacity: 0.8;
+}
+#signup main h1 ~ .or {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: fit-content;
+    margin: auto;
+    font-size: small;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+#signup main h1 ~ .or .line {
+    background: lightgray;
+    width: 7.5rem;
+    height: 1px;
+}
+
+
 /* rearrange layout */
 @media(min-width: 400px) {
     main .hero h1 {
-        width: 450px;
+        width: 390px;
     }
     main .hero .about {
         width: 360px;
