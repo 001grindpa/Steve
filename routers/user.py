@@ -20,12 +20,12 @@ def landing(request: Request):
 def index(request: Request):
     if not request.session.get("username"):
         return RedirectResponse("/landing", status_code=303)
-    return templates.TemplateResponse(request, "index.html")
+    return templates.TemplateResponse(request, "index.html", {"page_id": "index"})
 
 # sign up endpoints
 @router.get("/signup", status_code=status.HTTP_200_OK)
 def signup(request: Request):
-    return templates.TemplateResponse(request, "index.html")
+    return templates.TemplateResponse(request, "signup.html", {"page_id": "signup"})
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
 def signup(user_data: CreateUser, db: Session=Depends(get_db)):

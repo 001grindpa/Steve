@@ -36,7 +36,7 @@ class TokenData(BaseModel):
     email: str
 
 # database config
-db_url = f"mysql+mysqlconnector://root:{user_pw}@localhost/test_db"
+db_url = f"mysql+mysqlconnector://root:{user_pw}@localhost/steve"
 engine = create_engine(db_url)
 Base = declarative_base()
 LocalSession = sessionmaker(bind=engine, autoflush=False)

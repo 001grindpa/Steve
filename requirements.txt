@@ -1,0 +1,10 @@
+langchain
+langgraph
+langchain_groq
+langchain_tavily
+langchain_mcp_adapters
+python-jose
+fastapi
+python-dotenv
+mcp
+aiosqlite

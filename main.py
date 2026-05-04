@@ -8,6 +8,7 @@ from routers import user, dish
 from jwt_config import create_jwt_token
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 session_secret_key = os.getenv("SESSION_SECRET_KEY")
