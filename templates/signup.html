@@ -2,7 +2,11 @@
 
 {% block body %}
 
-<div> <!--class="sub-body"-->
+<div class="loader">
+    <img src="{{ url_for('static', path='gifs/water-loader.gif') }}" alt="laoder">
+    <div>loading...</div>
+</div>
+<div class="sub-body">
     <header>
         <div class="sub-header-cont">
             <div class="sub-header">
@@ -18,6 +22,9 @@
     </header>
     <main>
         <div class="section-container">
+            <div class="noticeCont">
+                <!-- <div class="notice show">Check password and try again</div> -->
+            </div>
             <h1>Start cooking smarter with Steve</h1>
             <div>get personalized recipes from ingredients you already have.</div>
             <a href="" id="google-login"><img src="{{ url_for('static', path='images/google.png') }}" alt="google_logo"><div>Continue with Google</div></a>
@@ -26,12 +33,13 @@
                 <div>or</div>
                 <div class="line"></div>
             </div>
-            <form action="">
+            <form action="" method="post">
                 <div><img src="{{ url_for('static', path='images/email.png') }}" alt="mail_logo"><input type="text" name="email" placeholder="Email address" autofocus autocomplete="off"></div>
-                <div><img src="{{ url_for('static', path='images/lock.png') }}" alt="lock_logo"><input type="password" name="pw" placeholder="Password" autocomplete="off"><img src="{{ url_for('static', path='images/opened-eye.png') }}" alt="eye_logo"></div>
-                <input type="password" name="confirm_pw" placeholder="Confirm" autocomplete="off">
+                <div><img class="two" src="{{ url_for('static', path='images/lock.png') }}" alt="lock_logo"><input class="pw" type="password" name="password" placeholder="Password" autocomplete="off"><img id="eye" src="{{ url_for('static', path='images/opened-eye.png') }}" alt="eye_logo"></div>
+                <input class="pw" type="password" name="confirm_pw" placeholder="Confirm password" autocomplete="off">
                 <button>Create Account</button>
             </form>
+            <div class="login">Already have an account? <span><a href="/login">Sign in</a></span></div>
         </div>
     </main>
 </div>

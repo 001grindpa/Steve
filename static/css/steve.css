@@ -24,6 +24,7 @@
 }
 .sub-body {
     display: none;
+    overflow: hidden;
 }
 header .sub-header .logo img {
     width: 50px;
@@ -125,6 +126,7 @@ main .section-cont-2 .about-cont .one .content div {
     background: var(--milk-white);
     text-align: center;
     padding-top: 50px;
+    height: 100vh;
 }
 #signup header .sub-header-cont {
     justify-content: flex-start;
@@ -134,6 +136,29 @@ main .section-cont-2 .about-cont .one .content div {
     text-align: center;
     margin-left: 5%;
     margin-right: 5%;
+}
+#signup main .section-container .notice {
+    position: absolute;
+    transform: translateX(-110%);
+    background-color: lightgreen;
+    padding: 7px 15px;
+    color: green;
+}
+#signup main .section-container .notice.show {
+    animation: show 1s forwards;
+}
+@keyframes show {
+    to {
+        transform: translateX(35%);
+    }
+}
+#signup main .section-container .notice.show.remove {
+    animation: remove 5s forwards;
+}
+@keyframes remove {
+    to {
+        transform: translateX(-200%);
+    }
 }
 #signup main h1 {
     margin-bottom: 5px;
@@ -154,7 +179,7 @@ main .section-cont-2 .about-cont .one .content div {
     text-decoration: none;
     color: black;
     background-color: white;
-    padding: 8px 40px;
+    padding: 7px 38px;
     transition: 0.25s;
     cursor: pointer;
     border-radius: 5px;
@@ -179,6 +204,7 @@ main .section-cont-2 .about-cont .one .content div {
     width: 85%;
     padding: 9px 14px;
     margin: auto;
+    border-radius: 5px;
 }
 #signup main h1 ~ form input {
     width: 85%;
@@ -189,6 +215,7 @@ main .section-cont-2 .about-cont .one .content div {
 #signup main h1 ~ form input:nth-child(3) {
     padding: 10px 15px;
     outline: 1px solid lightgray;
+    border-radius: 5px;
 }
 #signup main h1 ~ form button {
     width: 96%;
@@ -209,6 +236,9 @@ main .section-cont-2 .about-cont .one .content div {
     width: 20px;
     opacity: 0.8;
 }
+#signup main h1 ~ form .two {
+    margin-right: 8px;
+}
 #signup main h1 ~ .or {
     display: flex;
     align-items: center;
@@ -216,13 +246,20 @@ main .section-cont-2 .about-cont .one .content div {
     width: fit-content;
     margin: auto;
     font-size: small;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 #signup main h1 ~ .or .line {
     background: lightgray;
     width: 7.5rem;
     height: 1px;
+}
+#signup main .login {
+    margin-top: 15px;
+    font-size: small;
+}
+#signup main .login a {
+    color: var(--green-txt);
 }
 
 

@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from models import CreateUser, LoginUser, UserData, get_db, User
 from sqlalchemy.orm import Session
 from hash import Hash
+from kit import check_password, email_check
 
 router = APIRouter(tags=["User Routes"])
 templates = Jinja2Templates(directory="templates")
@@ -29,8 +30,27 @@ def signup(request: Request):
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
 def signup(user_data: CreateUser, db: Session=Depends(get_db)):
-    user = User(username=user_data.username.lower(),
-                password=Hash.hash_func(user_data.password),
+    # check if fields are empty and if passwords are matching
+    if (user_data.password != user_data.confirm_pw):
+        raise HTTPException(status_code=status.HTTP_412_PRECONDITION_FAILED, detail="mismatched")
+    elif (len(user_data.password.strip()) == 0 or 
+          len(user_data.confirm_pw.strip()) == 0 or len(user_data.email.strip()) == 0):
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, 
+                            detail="Empty field detected")
+    # check if password is strong
+    password_result = check_password(user_data.password)
+    if password_result != "valid":
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=password_result)
+    # check if email is valid
+    email_result = email_check(user_data.email)
+    if email_result != "valid":
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=email_result)
+    # check if email already exists
+    pending_user = db.query(User).where(User.email == user_data.email).first()
+    if pending_user is not None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="exists")
+    # create user if all conditions are valid
+    user = User(password=Hash.hash_func(user_data.password),
                 email=user_data.email.lower())
     db.add(user)
     db.commit()

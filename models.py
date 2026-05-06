@@ -17,8 +17,8 @@ class DishData(BaseModel):
 
 # user models
 class CreateUser(BaseModel):
-    username: str
     password: str
+    confirm_pw: str
     email: str
 
 class LoginUser(BaseModel):
