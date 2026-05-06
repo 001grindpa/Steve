@@ -37,7 +37,7 @@
                 <div><img src="{{ url_for('static', path='images/email.png') }}" alt="mail_logo"><input type="text" name="email" placeholder="Email address" autofocus autocomplete="off"></div>
                 <div><img class="two" src="{{ url_for('static', path='images/lock.png') }}" alt="lock_logo"><input class="pw" type="password" name="password" placeholder="Password" autocomplete="off"><img id="eye" src="{{ url_for('static', path='images/opened-eye.png') }}" alt="eye_logo"></div>
                 <input class="pw" type="password" name="confirm_pw" placeholder="Confirm password" autocomplete="off">
-                <button>Create Account</button>
+                <button><img id="loading" src="{{ url_for('static', path='gifs/blue-loading.gif') }}" alt="loading"><span>Create Account</span></button>
             </form>
             <div class="login">Already have an account? <span><a href="/login">Sign in</a></span></div>
         </div>

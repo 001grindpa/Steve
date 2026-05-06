@@ -219,8 +219,8 @@ main .section-cont-2 .about-cont .one .content div {
 }
 #signup main h1 ~ form button {
     width: 96%;
+    height: 2rem;
     margin: auto;
-    padding: 10px;
     background-color: var(--green-bg);
     color: white;
     border: none;
@@ -228,16 +228,28 @@ main .section-cont-2 .about-cont .one .content div {
     corner-shape: bevel;
     cursor: pointer;
     transition: 0.25s;
+    position: relative;
 }
 #signup main h1 ~ form button:hover {
     background-color: var(--faint-green);
 }
-#signup main h1 ~ form img {
+#signup main h1 ~ form div img {
     width: 20px;
     opacity: 0.8;
 }
 #signup main h1 ~ form .two {
     margin-right: 8px;
+}
+#signup main h1 ~ form #loading {
+    position: absolute;
+    width: 3.5rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+#signup main h1 ~ form #loading + span {
+    /* display: none; */
 }
 #signup main h1 ~ .or {
     display: flex;

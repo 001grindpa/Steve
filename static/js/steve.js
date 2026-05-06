@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const loader = body.querySelector(".loader");
         const subBody = body.querySelector(".sub-body");
         const noticeCont = body.querySelector("main .section-container .noticeCont");
+        const btnLoader = body.querySelector("main h1 ~ form #loading");
+        const btnText = body.querySelector("main h1 ~ form #loading + span");
+        const submitBtn = body.querySelector("main h1 ~ form button");
 
         // page loading logic
         window.addEventListener("load", () => {
@@ -37,12 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     },
                     body: JSON.stringify(newForm)
                 })
+                btnText.style.display = "none";
+                btnLoader.style.display = "block";
+                submitBtn.disabled = true;
                 let d = await r.json() 
                 console.log(d.detail);
                 // create a notification el and append dynamic notice
                 let notice = document.createElement("div");
                 notice.classList.add("notice");
-                if (d.detail == "mismatched") {
+                if (d.detail == "success") {
+                    notice.textContent = "Successfull signup. Redirecting to Login...";
+                    notice.classList.add("show");
+                    noticeCont.appendChild(notice);
+                } else if (d.detail == "mismatched") {
                     notice.textContent = "Please make sure password is matching";
                     notice.style.backgroundColor = "red";
                     notice.style.color = "white";
@@ -81,7 +91,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 // clear notification
                 setTimeout(() => {
                     notice.classList.add("remove");
-                }, 5000);
+                    btnText.style.display = "block";
+                    btnLoader.style.display = "none";
+                    submitBtn.disabled = false;
+                    let login = document.createElement("a");
+                    login.href = "/login";
+                    login.click();
+                }, 4000);
                 // catch errors incase of any
             } catch(e) {
                 console.log("unexpected error: ", e)

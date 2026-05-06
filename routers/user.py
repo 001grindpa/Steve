@@ -55,9 +55,13 @@ def signup(user_data: CreateUser, db: Session=Depends(get_db)):
     db.add(user)
     db.commit()
     # db.refresh(user)
-    return {"msg": "signup successfull"}
+    return {"detail": "success"}
 
 # login endpoints
+@router.get("/login", status_code=status.HTTP_200_OK)
+def login(request: Request):
+    return templates.TemplateResponse(request, "login.html", {"page_id": "login"})
+
 @router.post("/login", status_code=status.HTTP_200_OK)
 def login(user_data: LoginUser, db: Session=Depends(get_db)):
     user = db.query(User).where(User.email == user_data.email.lower()).first()
