@@ -42,16 +42,16 @@ def signup(user_data: CreateUser, db: Session=Depends(get_db)):
     if password_result != "valid":
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=password_result)
     # check if email is valid
-    email_result = email_check(user_data.email)
+    email_result = email_check(user_data.email.strip())
     if email_result != "valid":
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=email_result)
     # check if email already exists
-    pending_user = db.query(User).where(User.email == user_data.email).first()
+    pending_user = db.query(User).where(User.email == user_data.email.strip()).first()
     if pending_user is not None:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="exists")
     # create user if all conditions are valid
-    user = User(password=Hash.hash_func(user_data.password),
-                email=user_data.email.lower())
+    user = User(password=Hash.hash_func(user_data.password.strip()),
+                email=user_data.email.lower().strip())
     db.add(user)
     db.commit()
     # db.refresh(user)
