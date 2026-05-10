@@ -94,9 +94,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     btnText.style.display = "block";
                     btnLoader.style.display = "none";
                     submitBtn.disabled = false;
-                    let login = document.createElement("a");
-                    login.href = "/login";
-                    login.click();
+                    if (d.detail == "success") {
+                        let login = document.createElement("a");
+                        login.href = "/login";
+                        login.click();
+                    }
                 }, 4000);
                 // catch errors incase of any
             } catch(e) {

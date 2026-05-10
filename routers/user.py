@@ -29,7 +29,7 @@ def signup(request: Request):
     return templates.TemplateResponse(request, "signup.html", {"page_id": "signup"})
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
-def signup(user_data: CreateUser, db: Session=Depends(get_db)):
+async def signup(user_data: CreateUser, db: Session=Depends(get_db)):
     # check if fields are empty and if passwords are matching
     if (user_data.password != user_data.confirm_pw):
         raise HTTPException(status_code=status.HTTP_412_PRECONDITION_FAILED, detail="mismatched")
@@ -63,7 +63,7 @@ def login(request: Request):
     return templates.TemplateResponse(request, "login.html", {"page_id": "login"})
 
 @router.post("/login", status_code=status.HTTP_200_OK)
-def login(user_data: LoginUser, db: Session=Depends(get_db)):
+async def login(user_data: LoginUser, db: Session=Depends(get_db)):
     user = db.query(User).where(User.email == user_data.email.lower()).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 

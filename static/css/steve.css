@@ -12,6 +12,8 @@
     --very-faint-green: rgba(144, 238, 144, 0.534);
     --milk-white: rgb(240, 240, 240);
     --faded-black: rgba(0, 0, 0, 0.067);
+    --faded-yellow: rgba(255, 255, 0, 0.311);
+    --faded-red: rgba(255, 0, 0, 0.311);
 }
 .loader {
     width: fit-content;
@@ -149,15 +151,16 @@ main .section-cont-2 .about-cont .one .content div {
 }
 @keyframes show {
     to {
-        transform: translateX(35%);
+        transform: translateX(10%);
     }
 }
 #signup main .section-container .notice.show.remove {
-    animation: remove 5s forwards;
+    animation: remove 2s forwards;
 }
 @keyframes remove {
     to {
-        transform: translateX(-200%);
+        opacity: 0;
+        /* transform: translateX(-110%); */
     }
 }
 #signup main h1 {
@@ -180,12 +183,14 @@ main .section-cont-2 .about-cont .one .content div {
     color: black;
     background-color: white;
     padding: 7px 38px;
-    transition: 0.25s;
+    /* transition: 0.25s; */
     cursor: pointer;
     border-radius: 5px;
 }
 #signup #google-login:hover {
-    background-color: var(--faded-black);
+    /* background-color: var(--faded-black);*/
+    background: linear-gradient(var(--faded-red), var(--faded-yellow));
+    color: green;
 }
 #signup #google-login img {
     width: 25px;
@@ -248,9 +253,9 @@ main .section-cont-2 .about-cont .one .content div {
     transform: translate(-50%, -50%);
     display: none;
 }
-#signup main h1 ~ form #loading + span {
-    /* display: none; */
-}
+/* #signup main h1 ~ form #loading + span {
+    display: none;
+} */
 #signup main h1 ~ .or {
     display: flex;
     align-items: center;
