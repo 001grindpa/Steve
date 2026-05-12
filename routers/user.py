@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
-from fastapi.security import OAuth2PasswordBearer
-from fastapi.staticfiles import StaticFiles
 from models import CreateUser, LoginUser, UserData, get_db, User
 from sqlalchemy.orm import Session
 from hash import Hash
@@ -19,7 +17,7 @@ def landing(request: Request):
 # index page endpoint
 @router.get("/", status_code=status.HTTP_200_OK)
 def index(request: Request):
-    if not request.session.get("username"):
+    if not request.session.get("email"):
         return RedirectResponse("/landing", status_code=303)
     return templates.TemplateResponse(request, "index.html", {"page_id": "index"})
 
@@ -29,7 +27,7 @@ def signup(request: Request):
     return templates.TemplateResponse(request, "signup.html", {"page_id": "signup"})
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
-async def signup(user_data: CreateUser, db: Session=Depends(get_db)):
+async def signup(request: Request ,user_data: CreateUser, db: Session=Depends(get_db)):
     # check if fields are empty and if passwords are matching
     if (user_data.password != user_data.confirm_pw):
         raise HTTPException(status_code=status.HTTP_412_PRECONDITION_FAILED, detail="mismatched")
@@ -54,7 +52,8 @@ async def signup(user_data: CreateUser, db: Session=Depends(get_db)):
                 email=user_data.email.lower().strip())
     db.add(user)
     db.commit()
-    # db.refresh(user)
+    request.session["email"] = user_data.email
+    db.refresh(user)
     return {"detail": "success"}
 
 # login endpoints
@@ -64,13 +63,19 @@ def login(request: Request):
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login(user_data: LoginUser, db: Session=Depends(get_db)):
+    # check if fields are empty
+    if user_data.email.strip() == "" or user_data.password.strip() == "":
+        raise HTTPException(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="empty"
+        )
     user = db.query(User).where(User.email == user_data.email.lower()).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
-                            detail="User does not exist")
+                            detail="not exist")
     if Hash.verify_hash(user_data.password, user.password):
-        return {"msg": "login succesfull"}
-    return {"msg": "check password again"}
+        return {"detail": "success"}
+    return {"detail": "Check password again"}
 
 @router.get("/get_user/{user}", status_code=status.HTTP_200_OK, response_model=UserData)
 def get_user(username: str, db: Session=Depends(get_db)):

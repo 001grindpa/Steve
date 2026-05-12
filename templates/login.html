@@ -2,8 +2,46 @@
 
 {% block body %}
 
-<header>
-    <h4>Hey</h4>
-</header>
+<div class="loader">
+    <img src="{{ url_for('static', path='gifs/water-loader.gif') }}" alt="laoder">
+    <div>loading...</div>
+</div>
+<div class="sub-body">
+    <header>
+        <div class="sub-header-cont">
+            <div class="sub-header">
+                <div class="logo">
+                    <img src="{{ url_for('static', path='images/steve-logo.png') }}" alt="logo">
+                </div>
+                <div class="logo-text">
+                    <h2>Steve</h2>
+                    <div>Your AI Chef</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="section-container">
+            <div class="noticeCont">
+                <!-- <div class="notice show">Check password and try again</div> -->
+            </div>
+            <h1>Welcome back! 👋</h1>
+            <div>Log in to continue creating delicious meals with Steve.</div>
+            <a href="/auth/google" id="google-login"><img src="{{ url_for('static', path='images/google.png') }}" alt="google_logo"><div>Continue with Google</div></a>
+            <div class="or">
+                <div class="line"></div>
+                <div>or</div>
+                <div class="line"></div>
+            </div>
+            <form action="" method="post">
+                <div><img src="{{ url_for('static', path='images/email.png') }}" alt="mail_logo"><input type="text" name="email" placeholder="Email address" autofocus autocomplete="off"></div>
+                <div><img class="two" src="{{ url_for('static', path='images/lock.png') }}" alt="lock_logo"><input class="pw" type="password" name="password" placeholder="Password" autocomplete="off"><img id="eye" src="{{ url_for('static', path='images/opened-eye.png') }}" alt="eye_logo"></div>
+                <a href="/reset_password">Forgot password?</a>
+                <button><img id="loading" src="{{ url_for('static', path='gifs/blue-loading.gif') }}" alt="loading"><span>Log In</span></button>
+            </form>
+            <div class="login">Don't own an account? <span><a href="/signup">Sign up</a></span></div>
+        </div>
+    </main>
+</div>
 
 {% endblock %}

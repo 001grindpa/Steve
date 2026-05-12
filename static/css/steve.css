@@ -160,7 +160,6 @@ main .section-cont-2 .about-cont .one .content div {
 @keyframes remove {
     to {
         opacity: 0;
-        /* transform: translateX(-110%); */
     }
 }
 #signup main h1 {
@@ -276,6 +275,168 @@ main .section-cont-2 .about-cont .one .content div {
     font-size: small;
 }
 #signup main .login a {
+    color: var(--green-txt);
+}
+
+/* login page styling */
+#login main {
+    background: var(--milk-white);
+    text-align: center;
+    padding-top: 50px;
+    height: 100vh;
+}
+#login header .sub-header-cont {
+    justify-content: flex-start;
+    outline: 1px solid lightgray;
+}
+#login main .section-container {
+    text-align: center;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+#login main .section-container .notice {
+    position: absolute;
+    transform: translateX(-110%);
+    background-color: lightgreen;
+    padding: 7px 15px;
+    color: green;
+}
+#login main .section-container .notice.show {
+    animation: show 1s forwards;
+}
+@keyframes show {
+    to {
+        transform: translateX(10%);
+    }
+}
+#login main .section-container .notice.show.remove {
+    animation: remove 2s forwards;
+}
+@keyframes remove {
+    to {
+        opacity: 0;
+        /* transform: translateX(-110%); */
+    }
+}
+#login main h1 {
+    margin-bottom: 5px;
+}
+#login main h1 + div {
+    text-align: left;
+    width: fit-content;
+    margin: auto;
+    margin-bottom: 10px;
+}
+#login #google-login {
+    display: flex;
+    align-items: center;
+    outline: 1px solid gray;
+    width: fit-content;
+    margin: auto;
+    gap: 10px;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    padding: 7px 38px;
+    /* transition: 0.25s; */
+    cursor: pointer;
+    border-radius: 5px;
+}
+#login #google-login:hover {
+    /* background-color: var(--faded-black);*/
+    background: linear-gradient(var(--faded-red), var(--faded-yellow));
+    color: green;
+}
+#login #google-login img {
+    width: 25px;
+}
+#login main h1 ~ form {
+    margin: auto;
+    display: grid;
+    width: 17rem;
+    gap: 10px;
+}
+#login main h1 ~ form div {
+    display: flex;
+    outline: 1px solid lightgray;
+    background-color: white;
+    align-items: center;
+    width: 85%;
+    padding: 9px 14px;
+    margin: auto;
+    border-radius: 5px;
+}
+#login main h1 ~ form input {
+    width: 85%;
+    margin: auto;
+    outline: none;
+    border: none;
+}
+#login main h1 ~ form input:nth-child(3) {
+    padding: 10px 15px;
+    outline: 1px solid lightgray;
+    border-radius: 5px;
+}
+#login main h1 ~ form button {
+    width: 96%;
+    height: 2rem;
+    margin: auto;
+    background-color: var(--green-bg);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    corner-shape: bevel;
+    cursor: pointer;
+    transition: 0.25s;
+    position: relative;
+}
+#login main h1 ~ form button:hover {
+    background-color: var(--faint-green);
+}
+#login main h1 ~ form div img {
+    width: 20px;
+    opacity: 0.8;
+}
+#login main h1 ~ form .two {
+    margin-right: 8px;
+}
+#login main h1 ~ form #loading {
+    position: absolute;
+    width: 3.5rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+#login main h1 ~ form a {
+    font-size: small;
+    color: var(--green-txt);
+    padding: 5px;
+    text-align: right;
+}
+/* #login main h1 ~ form #loading + span {
+    display: none;
+} */
+#login main h1 ~ .or {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: fit-content;
+    margin: auto;
+    font-size: small;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#login main h1 ~ .or .line {
+    background: lightgray;
+    width: 7.5rem;
+    height: 1px;
+}
+#login main .login {
+    margin-top: 15px;
+    font-size: small;
+}
+#login main .login a {
     color: var(--green-txt);
 }
 
