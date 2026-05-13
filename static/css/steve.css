@@ -8,6 +8,7 @@
     --green-bg: rgb(0, 157, 0);
     --green-txt: rgb(0, 157, 0);
     --faint-green: rgb(0, 182, 0);
+    --hover-green: rgba(0, 182, 0, 0.082);
     --faint-pink: rgb(255, 216, 222);
     --very-faint-green: rgba(144, 238, 144, 0.534);
     --milk-white: rgb(240, 240, 240);
@@ -139,9 +140,14 @@ main .section-cont-2 .about-cont .one .content div {
     margin-left: 5%;
     margin-right: 5%;
 }
-#signup main .section-container .notice {
+#signup main .section-container .noticeCont {
     position: absolute;
-    transform: translateX(-110%);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#signup main .section-container .notice {
+    transform: translateY(-100%);
     background-color: lightgreen;
     padding: 7px 15px;
     color: green;
@@ -151,15 +157,21 @@ main .section-cont-2 .about-cont .one .content div {
 }
 @keyframes show {
     to {
-        transform: translateX(10%);
+        transform: translateY(4rem);
     }
 }
 #signup main .section-container .notice.show.remove {
-    animation: remove 2s forwards;
+    animation: remove 1s forwards;
 }
 @keyframes remove {
+    from {
+        opacity: 1;
+        transform: translateY(4rem);
+    }
     to {
         opacity: 0;
+        transform: scaleX(10%) translateY(-1rem);
+        display: none;
     }
 }
 #signup main h1 {
@@ -294,9 +306,14 @@ main .section-cont-2 .about-cont .one .content div {
     margin-left: 5%;
     margin-right: 5%;
 }
-#login main .section-container .notice {
+#login main .section-container .noticeCont {
     position: absolute;
-    transform: translateX(-110%);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#login main .section-container .notice {
+    transform: translateY(-100%);
     background-color: lightgreen;
     padding: 7px 15px;
     color: green;
@@ -306,18 +323,18 @@ main .section-cont-2 .about-cont .one .content div {
 }
 @keyframes show {
     to {
-        transform: translateX(10%);
+        transform: translateY(3rem);
     }
 }
 #login main .section-container .notice.show.remove {
     animation: remove 2s forwards;
 }
-@keyframes remove {
+/* @keyframes remove {
     to {
         opacity: 0;
-        /* transform: translateX(-110%); */
+        transform: translateY(-100%) scaleX(10%);
     }
-}
+} */
 #login main h1 {
     margin-bottom: 5px;
 }
@@ -440,6 +457,103 @@ main .section-cont-2 .about-cont .one .content div {
     color: var(--green-txt);
 }
 
+/* index page styling */
+#index .sub-body {
+    background-color: var(--milk-white);
+}
+#index {
+    
+}
+#index #check-menu {
+    display: none;
+}
+#index #check-menu + label .arrow-right {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 1rem;
+    height: 1rem;
+    outline: 1px solid lightgray;
+    padding: 7px;
+    border-radius: 5px;
+    transition: 0.25s;
+}
+#index #check-menu:checked ~ .block-1 {
+    transform: translateX(0);
+}
+#index .block-1 {
+    position: fixed;
+    width: 13rem;
+    top: 0;
+    left: 0;
+    background-color: white;
+    outline: 1px solid lightgray;
+    padding: 15px 10px;
+    transform: translateX(-101%);
+    transition: 0.3s;
+}
+#index .block-1 .above-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+#index .block-1 .above-menu .arrow {
+    width: 1rem;
+    height: 1rem;
+    outline: 1px solid lightgray;
+    padding: 7px;
+    border-radius: 5px;
+    transition: 0.25s;
+}
+#index .block-1 .above-menu .arrow:hover {
+    background: var(--faded-black);
+}
+#index .block-1 .logo-cont {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+#index .block-1 .logo-cont .logo img {
+    width: 40px;
+}
+#index .block-1 .logo-cont .logo-text h2 {
+    color: var(--green-txt);
+}
+#index .block-1 .logo-cont .logo-text div {
+    font-size: small;
+}
+/* #index .block-1 menu {
+    
+} */
+#index .block-1 menu .item {
+    margin: auto;
+    display: flex;
+    padding: 10px;
+    width: 90%;
+    border-radius: 5px;
+    align-items: center;
+    gap: 10px;
+    transition: 0.25s;
+    cursor: pointer;
+}
+#index .block-1 menu .item:hover {
+    background-color: var(--hover-green);
+}
+#index .block-1 menu .item img {
+    width: 20px;
+    height: 20px;
+}
+#index .block-1 menu .item div {
+    font-size: small;
+}
+#index .block-1 menu .item.selected {
+    background-color: var(--hover-green);
+}
+#index .block-2  {
+
+}
 
 /* rearrange layout */
 @media(min-width: 400px) {

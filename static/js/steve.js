@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     notice.style.backgroundColor = "blue";
                     notice.style.color = "lightblue";
                     notice.classList.add("show");
-                    noticeCont.appendChild(notice);
+                    noticeCont.prepend(notice);
                 }
                 // clear notification
                 setTimeout(() => {
@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (d.detail == "success") {
                     notice.textContent = "Logging in...";
                     notice.classList.add("show");
-                    noticeCont.appendChild(notice);
+                    noticeCont.prepend(notice);
                 }
                 else if (d.detail == "empty" || d.detail == "not exist") {
                     if (d.detail == "empty") {
@@ -171,14 +171,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     notice.style.backgroundColor = "yellow";
                     notice.style.color = "red";
                     notice.classList.add("show");
-                    noticeCont.appendChild(notice);
+                    noticeCont.prepend(notice);
                 }
                 else if (d.detail == "Check password again") {
                     notice.textContent = d.detail;
                     notice.style.backgroundColor = "red";
                     notice.style.color = "white";
                     notice.classList.add("show");
-                    noticeCont.appendChild(notice);
+                    noticeCont.prepend(notice);
                 }
                 // clear notification
                 setTimeout(() => {
@@ -186,6 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     btnText.style.display = "block";
                     btnLoader.style.display = "none";
                     submitBtn.disabled = false;
+                    // noticeCont.removeChild(notice);
                     if (d.detail == "success") {
                         let login = document.createElement("a");
                         login.href = "/";
@@ -208,6 +209,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     eye.src = "static/images/opened-eye.png";
                 }
             })
+        })
+    }
+    else if (document.body.id == "index") {
+        const body = document.querySelector("body");
+        const loader = body.querySelector(".loader");
+        const subBody = body.querySelector(".sub-body");
+
+        // page loading logic
+        window.addEventListener("load", () => {
+            loader.style.display = "none";
+            subBody.style.display = "block";
         })
     }
 })
