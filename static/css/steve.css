@@ -471,12 +471,12 @@ main .section-cont-2 .about-cont .one .content div {
     position: absolute;
     top: 1rem;
     left: 1rem;
-    width: 1rem;
-    height: 1rem;
-    outline: 1px solid lightgray;
-    padding: 7px;
-    border-radius: 5px;
-    transition: 0.25s;
+    /* width: 1rem;
+    height: 1rem; */
+    /* outline: 1px solid lightgray; */
+    /* padding: 7px; */
+    /* border-radius: 5px; */
+    /* transition: 0.25s; */
 }
 #index #check-menu:checked ~ .block-1 {
     transform: translateX(0);
@@ -484,6 +484,8 @@ main .section-cont-2 .about-cont .one .content div {
 #index .block-1 {
     position: fixed;
     width: 13rem;
+    height: 100vh;
+    overflow-y: auto;
     top: 0;
     left: 0;
     background-color: white;
@@ -498,16 +500,16 @@ main .section-cont-2 .about-cont .one .content div {
     justify-content: space-between;
     margin-bottom: 2rem;
 }
-
-#index .block-1 .above-menu .arrow {
+#index .block-1 .above-menu .arrow, #index #check-menu + label .arrow-right {
     width: 1rem;
     height: 1rem;
     outline: 1px solid lightgray;
     padding: 7px;
     border-radius: 5px;
     transition: 0.25s;
+    cursor: pointer;
 }
-#index .block-1 .above-menu .arrow:hover {
+#index .block-1 .above-menu .arrow:hover, #index #check-menu + label .arrow-right:hover {
     background: var(--faded-black);
 }
 #index .block-1 .logo-cont {
@@ -524,11 +526,12 @@ main .section-cont-2 .about-cont .one .content div {
 #index .block-1 .logo-cont .logo-text div {
     font-size: small;
 }
-/* #index .block-1 menu {
-    
-} */
+#index .block-1 menu {
+    height: 35rem;
+}
 #index .block-1 menu .item {
     margin: auto;
+    margin-bottom: 5px;
     display: flex;
     padding: 10px;
     width: 90%;
@@ -551,11 +554,195 @@ main .section-cont-2 .about-cont .one .content div {
 #index .block-1 menu .item.selected {
     background-color: var(--hover-green);
 }
-#index .block-2  {
+#index .block-1 .line {
+    width: 100%;
+    height: 1px;
+    background-color: var(--faded-black);
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+#index .block-1 .profile-cont {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 30px;
+    margin-bottom: 40px;
+    transition: 0.25s;
+    cursor: pointer;
+}
+#index .block-1 .profile-cont:hover {
+    background-color: var(--faded-black);
+}
+#index .block-1 .profile-cont img {
+    width: 2rem;
+    background-color: gray;
+    border-radius: 100%;
+}
+#index .block-1 .profile-cont .profile div:nth-child(1) {
+    font-size: small;
+    font-weight: bold;
+}
+#index .block-1 .profile-cont .profile div:nth-child(2) {
+    color: var(--green-txt);
+    font-size: small;
+}
 
+/* chat area styling */
+/* steve chat box */
+#index .grid-cont {
+    display: grid;
+    grid-template-areas: 
+    "one"
+    "two";
+}
+
+#index .block-2  {
+    padding: 15px 10px;
+    grid-area: one;
+}
+#index .back {
+    margin-top: 1.5rem;
+    margin-bottom: 15px;
+    margin-left: 3.5rem;
+    font-weight: bold;
+}
+#index .block-2 .chat-area {
+    padding: 10px;
+    outline: 1px solid var(--faded-black);
+    height: 30rem;
+}
+#index .block-2 .chat-area .steve-cont {
+    width: 70%;
+    margin-top: 10px;
+}
+#index .block-2 .chat-area .steve-cont .steve {
+    padding: 10px;
+    width: fit-content;
+    background-color: white;
+    border-radius: 10px;
+    line-height: 1.5;
+}
+#index .block-2 .chat-area .steve-cont .steve .txt {
+    font-size: small;
+}
+#index .block-2 .chat-area .steve-cont .steve .time {
+    font-size: x-small;
+    color: gray;
+    margin-top: 7px;
+}
+/* thinking */
+#index .block-2 .chat-area .steve-cont img {
+    width: 5rem;
+    display: none;
+}
+/* user chat box */
+#index .block-2 .chat-area .user-cont {
+    width: 70%;
+    margin-bottom: 10px;
+    margin-left: auto;
+}
+#index .block-2 .chat-area .user-cont .user {
+    padding: 10px;
+    width: fit-content;
+    background-color: white;
+    border-radius: 10px;
+    line-height: 1.5;
+    margin-left: auto;
+}
+#index .block-2 .chat-area .user-cont .user .user-txt {
+    font-size: small;
+}
+#index .block-2 .chat-area .user-cont .user .user-time {
+    font-size: x-small;
+    color: gray;
+    margin-top: 7px;
+}
+
+/* block-3 styling */
+#index .block-3 {
+    background-color: white;
+    padding: 10px;
+    grid-area: two;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 5rem;
+    border-radius: 10px;
+}
+#index .block-3 .ingre-cont {
+    margin-top: 10px;
+}
+#index .block-3 .ingre-cont .before-ingre {
+    margin-bottom: 5px;
+}
+#index .block-3 .ingre-cont .ingre {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+#index .block-3 .ingre-cont .ingre div {
+    outline: 1px solid var(--faded-black);
+    padding: 10px;
+    font-size: small;
+    color: var(--green-txt);
+    border-radius: 10px;
+    width: fit-content;
+}
+#index .block-3 .dishes {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 15px;
+}
+#index .block-3 .dishes .dish {
+    outline: 1px solid lightgray;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    gap: 10px;
+    line-height: 1.4;;
+}
+#index .block-3 .dishes .dish h4 + div {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 5px;
+}
+#index .block-3 .dishes .dish h4 + div .info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: small;
+}
+#index .block-3 .dishes .dish h4 + div img {
+    width: 15px;
+    height: 15px;
+}
+#index .block-3 .dishes .dish .one .desc, #index .block-3 .uses {
+    font-size: small;
+    margin-top: 5px;
+}
+ #index .block-3 .uses {
+    color: var(--green-txt);
+ }
+/* fav field styling */
+#index .block-3 .dishes .two img {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 100%;
+    transition: 0.25s;
+}
+#index .block-3 .dishes .two img:hover {
+    background-color: var(--very-faint-green);
 }
 
 /* rearrange layout */
+@media(min-width: 388px) {
+    #index .block-3 .dishes .dish {
+        width: 14rem;
+        margin: auto;
+    }
+}
 @media(min-width: 400px) {
     main .hero h1 {
         width: 390px;
@@ -571,5 +758,18 @@ main .section-cont-2 .about-cont .one .content div {
     main .hero {
         margin-left: 10%;
         margin-right: 10%;
+    }
+}
+@media(min-width: 777px) {
+    #index .grid-cont {
+        grid-template-areas: "one one one two";
+    }
+    #index .block-2 {
+        margin-top: 0;
+    }
+    #index .block-3 {
+        margin: auto;
+        margin-top: 20px;
+        width: 22.5rem;
     }
 }

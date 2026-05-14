@@ -49,9 +49,87 @@
                         <div>History</div>
                     </div>
                 </menu>
+                <div class="line"></div>
+                <div class="profile-cont">
+                    <img src="{{ url_for('static', path='images/user.png') }}" alt="user">
+                    <div class="profile">
+                        <div>{{ user }}</div>
+                        <div>View profile</div>
+                    </div>
+                </div>
             </div>
-            <div class="block-2">
-                
+            <div class="back">Welcome back, {{ user }}!</div>
+            <div class="grid-cont">
+                <div class="block-2">
+                    <div class="chat-area">
+                        <div class="user-cont">
+                            <div class="user">
+                                <div class="user-txt">Hello, I'm steve. Tell me me what ingredients you have</div>
+                                <div class="user-time">10:30 <span>AM</span></div>
+                            </div>
+                        </div>
+                        <div class="steve-cont">
+                            <div class="steve">
+                                <div class="txt">Hello, I'm steve. Tell me me what ingredients you have</div>
+                                <div class="time">10:30 <span>AM</span></div>
+                            </div>
+                            <img src="{{ url_for('static', path='gifs/loading-dots.gif') }}" alt="thinking">
+                        </div>
+                    </div>
+                </div>
+                <div class="block-3">
+                    <h3>Steve's recipe ideas ✨</h3>
+                    <div class="ingre-cont">
+                        <div class="before-ingre">Based on your ingredients</div>
+                        <div class="ingre">
+                            <div>Chicken</div>
+                            <div>Rice</div>
+                            <div>Garlic</div>
+                        </div>
+                    </div>
+                    <div class="dishes">
+                        <div class="dish">
+                            <div class="one">
+                                <h4>Garlic Soy Chicken & Rice Bowl</h4>
+                                <div>
+                                    <div class="info">
+                                        <img src="{{ url_for('static', path='images/time.png') }}" alt="time">
+                                        <div>24 min</div>
+                                    </div>
+                                    <div class="info">
+                                        <img src="{{ url_for('static', path='images/chart.png') }}" alt="chart">
+                                        <div>Easy</div>
+                                    </div>
+                                </div>
+                                <div class="desc">Savory garlic soy chicken served over rice with steamed broccoli.</div>
+                                <div class="uses">Uses: Chicken, Rice, Broccoli, Garlic, Soy Sauce</div>
+                            </div>
+                            <div class="two">
+                                <img src="{{ url_for('static', path='images/love.png') }}" alt="fav">
+                            </div>
+                        </div>
+                        <div class="dish">
+                            <div class="one">
+                                <h4>Garlic Soy Chicken & Rice Bowl</h4>
+                                <div>
+                                    <div class="info">
+                                        <img src="{{ url_for('static', path='images/time.png') }}" alt="time">
+                                        <div>24 min</div>
+                                    </div>
+                                    <div class="info">
+                                        <img src="{{ url_for('static', path='images/chart.png') }}" alt="chart">
+                                        <div>Easy</div>
+                                    </div>
+                                </div>
+                                <div class="desc">Savory garlic soy chicken served over rice with steamed broccoli.</div>
+                                <div class="uses">Uses: Chicken, Rice, Broccoli, Garlic, Soy Sauce</div>
+                            </div>
+                            <div class="two">
+                                <img src="{{ url_for('static', path='images/love.png') }}" alt="fav">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>

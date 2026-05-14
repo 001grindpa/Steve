@@ -13,6 +13,18 @@
                 background-repeat: no-repeat;
                 background-size: cover;
             }
+            .block-2 .chat-area {
+                background-image: url("{{ url_for('static', path='images/steve-chat-bg-mobile.png') }}");
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+            }
+            /* rearrange layout */
+            @media(min-width: 366px) {
+                .block-2 .chat-area {
+                    background-image: url("{{ url_for('static', path='images/steve-chat-bg-2.png') }}");
+                    background-size: cover;
+                }
+            }
         </style>
     </head>
     <body id="{{ page_id }}">

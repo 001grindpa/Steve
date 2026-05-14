@@ -19,7 +19,7 @@ def landing(request: Request):
 def index(request: Request):
     if not request.session.get("email"):
         return RedirectResponse("/landing", status_code=303)
-    return templates.TemplateResponse(request, "index.html", {"page_id": "index"})
+    return templates.TemplateResponse(request, "index.html", {"page_id": "index", "user": request.session["username"]})
 
 # sign up endpoints
 @router.get("/signup", status_code=status.HTTP_200_OK)
@@ -53,6 +53,7 @@ async def signup(request: Request ,user_data: CreateUser, db: Session=Depends(ge
     db.add(user)
     db.commit()
     request.session["email"] = user_data.email
+    request.session["username"] = "user"
     db.refresh(user)
     return {"detail": "success"}
 
@@ -62,7 +63,7 @@ def login(request: Request):
     return templates.TemplateResponse(request, "login.html", {"page_id": "login"})
 
 @router.post("/login", status_code=status.HTTP_200_OK)
-async def login(user_data: LoginUser, db: Session=Depends(get_db)):
+async def login(request: Request,user_data: LoginUser, db: Session=Depends(get_db)):
     # check if fields are empty
     if user_data.email.strip() == "" or user_data.password.strip() == "":
         raise HTTPException(
@@ -74,6 +75,8 @@ async def login(user_data: LoginUser, db: Session=Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                             detail="not exist")
     if Hash.verify_hash(user_data.password, user.password):
+        request.session["email"] = user.email
+        request.session["username"] = "user"
         return {"detail": "success"}
     return {"detail": "Check password again"}
 
