@@ -771,13 +771,14 @@ main .section-cont-2 .about-cont .one .content div {
 @media(min-width: 777px) {
     #index .grid-cont {
         grid-template-areas: "one one one two";
+        width: 80%;
+        margin: auto;
     }
     #index .block-2 {
         margin-top: 0;
     }
     #index .block-3 {
         margin: auto;
-        margin-top: 20px;
-        width: 22.5rem;
+        width: 17rem;
     }
 }
