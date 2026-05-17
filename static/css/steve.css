@@ -538,11 +538,19 @@ main .section-cont-2 .about-cont .one .content div {
     border-radius: 5px;
     align-items: center;
     gap: 10px;
-    transition: 0.25s;
+    transition: 0.35s;
     cursor: pointer;
 }
 #index .block-1 menu .item:hover {
     background-color: var(--hover-green);
+}
+#index .block-1 menu .item:nth-child(2) img {
+    transition: 0.25s;
+    border-radius: 100%;
+    text-align: center;
+}
+#index .block-1 menu .item:nth-child(2):hover img {
+    background-color: lightcoral;
 }
 #index .block-1 menu .item img {
     width: 20px;

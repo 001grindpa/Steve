@@ -89,4 +89,5 @@ async def google_callback(request: Request, code: str, db: Session=Depends(get_d
                 
     # assign session
     request.session["email"] = email
+    request.session["username"] = name
     return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)

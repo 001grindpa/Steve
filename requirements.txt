@@ -3,8 +3,14 @@ langgraph
 langchain_groq
 langchain_tavily
 langchain_mcp_adapters
-python-jose
-fastapi
+uvicorn
+sqlalchemy
+mysql-connector-python
+passlib
+bcrypt
+jose
+python-jose[cryptography]
+fastapi[all]
 python-dotenv
 mcp
 aiosqlite
