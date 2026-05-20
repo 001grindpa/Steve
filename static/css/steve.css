@@ -620,6 +620,51 @@ main .section-cont-2 .about-cont .one .content div {
     outline: 1px solid var(--faded-black);
     height: 30rem;
 }
+#index .block-2 .chat-area .chat-cont {
+    height: 85%;
+    /* outline: 1px solid red; */
+}
+#index .block-2 .chat-area .input-cont {
+    /* outline: 1px solid red; */
+    background-color: white;
+    border-radius: 5px;
+    margin: auto;
+    margin-top: 1rem;
+    padding: 3px;
+    width: 80%;
+}
+#index .block-2 .chat-area .input-cont form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: center;
+}
+#index .block-2 .chat-area .input-cont form input {
+    width: 100%;
+    height: 2rem;
+    border: none;
+    outline: none;
+    padding: 5px;
+}
+#index .block-2 .chat-area .input-cont form button {
+    width: 50px;
+    height: 50px;
+    padding: 7px 5px;
+    text-align: center;
+    border-radius: 100%;
+    border: none;
+    background-color: var(--green-bg);
+    transition: 0.25s;
+    cursor: pointer;
+}
+#index .block-2 .chat-area .input-cont form button:hover {
+    background-color: var(--faint-green);
+}
+#index .block-2 .chat-area .input-cont form button img {
+    width: 1.1rem;
+    margin: auto;
+}
 #index .block-2 .chat-area .steve-cont {
     width: 70%;
     margin-top: 10px;
@@ -744,6 +789,170 @@ main .section-cont-2 .about-cont .one .content div {
     background-color: var(--very-faint-green);
 }
 
+/* footer styling */
+
+#index footer .footer-grid {
+    padding: 10px;
+    display: grid;
+    justify-content: space-around;
+    grid-template-areas: 
+    "one"
+    "two"
+    "three";
+}
+#index footer .section-1 {
+    grid-area: one;
+}
+#index footer .section-1 .logo-cont {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+}
+#index footer .section-1 .logo-cont .logo img {
+    width: 50px;
+    margin-left: -5px;
+}
+#index footer .section-1 .logo-cont .logo-text h2 {
+    color: var(--green-txt);
+}
+#index footer .section-1 .logo-cont .logo-text div {
+    font-size: small;
+}
+#index footer .section-1 .intro {
+    width: 14rem;
+    font-size: smaller;
+    line-height: 1.5;
+}
+#index footer .section-1 .social-cont {
+    display: flex;
+    padding: 10px;
+    gap: 15px;
+}
+#index footer .section-1 .social-cont img {
+    width: 20px;
+    height: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    outline: 1px solid var(--faded-black);
+    transition: 0.25s;
+    cursor: pointer;
+}
+#index footer .section-1 .social-cont img:hover {
+    background-color: var(--faded-yellow);
+}
+/* subsection-1 styling */
+#f {
+    display: none;
+}
+#index footer .section-2 {
+    grid-area: two;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    gap: 10px;
+}
+#index footer .section-2 .sub-section input + label {
+    display: inline-block;
+    width: 100%;
+}
+#index footer .section-2 .sub-section {
+    width: 18rem;
+    transition: 0.3s;
+    margin: auto;
+}
+#index footer .section-2 .sub-section .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    gap: 5px;
+}
+#index footer .section-2 .sub-section .head img {
+    width: 15px;
+    transform: rotate(-270deg);
+}
+#index footer .section-2 .sub-section .line {
+    width: 100%;
+    height: 1px;
+    background-color: lightgray;
+}
+#index footer .section-2 .sub-section #f:checked + label .head img {
+    transform: rotate(270deg);
+}
+#index footer .section-2 .sub-section #f:checked ~ .content {
+    height: 0px;
+    display: none;
+}
+#index footer .section-2 .sub-section .content {
+    font-size: small;
+    line-height: 2;
+    padding: 2px 10px;
+}
+#index footer .section-2 .sub-section .content div:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+/* subsection-2 styling */
+#f1 {
+    display: none;
+}
+#index footer .section-2 .sub-section #f1:checked + label .head img {
+    transform: rotate(270deg);
+}
+#index footer .section-2 .sub-section #f1:checked ~ .content {
+    height: 0px;
+    display: none;
+}
+/* subsection-3 styling */
+#f2 {
+    display: none;
+}
+#index footer .section-2 .sub-section #f2:checked + label .head img {
+    transform: rotate(270deg);
+}
+#index footer .section-2 .sub-section #f2:checked ~ .content {
+    height: 0px;
+    display: none;
+}
+/* section-3 styling */
+#index footer .section-3 {
+    grid-area: three;
+}
+#index footer .section-3 .content {
+    font-size: small;
+    line-height: 3;
+}
+#index footer .section-3 form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+#index footer .section-3 form input {
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+}
+#index footer .section-3 form input:focus {
+    outline: 3px solid var(--faint-green);
+}
+#index footer .section-3 form button {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background-color: var(--faint-green);
+    color: white;
+}
+#index footer .copyright-cont {
+    font-size: small;
+    color: gray;
+    width: fit-content;
+    margin: auto;
+    padding: 20px;
+}
+
+
 /* rearrange layout */
 @media(min-width: 388px) {
     #index .block-3 .dishes .dish {
@@ -762,6 +971,32 @@ main .section-cont-2 .about-cont .one .content div {
         width: 320px;
     }
 }
+@media(min-width: 450px) {
+    #index footer .footer-grid {
+        grid-template-areas:
+        "one two"
+        "three three";
+    }
+    #index footer .section-2 .sub-section {
+        width: auto;
+        margin-top: 0;
+    }
+    #index footer .section-2 .sub-section input + label .head img {
+        display: none;
+    }
+    #index footer .section-2 .sub-section #f:checked ~ .content {
+        height: auto;
+        display: block;
+    }
+    #index footer .section-2 .sub-section #f1:checked ~ .content {
+        height: auto;
+        display: block;
+    }
+    #index footer .section-2 .sub-section #f2:checked ~ .content {
+        height: auto;
+        display: block;
+    }
+}
 @media(min-width: 490px) {
     main .hero {
         margin-left: 10%;
@@ -778,7 +1013,16 @@ main .section-cont-2 .about-cont .one .content div {
         margin-top: 0;
     }
     #index .block-3 {
-        margin: auto;
+        margin-left: auto;
         width: 17rem;
     }
+    #index footer .footer-grid {
+        grid-template-areas:
+        "one two three";
+    }
 }
+/* @media(min-width: 1300px) {
+    #index footer .section-2 .sub-section {
+        width: 20rem;
+    }
+} */

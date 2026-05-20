@@ -18,11 +18,17 @@
                 background-repeat: no-repeat;
                 background-size: 100% 100%;
             }
+            #index footer {
+                background: url("{{ url_for('static', path='images/steve-chat-bg-2.png') }}");
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
             /* rearrange layout */
             @media(min-width: 366px) {
                 .block-2 .chat-area {
                     background-image: url("{{ url_for('static', path='images/steve-chat-bg-2.png') }}");
                     background-size: cover;
+                    background-repeat: no-repeat;
                 }
             }
         </style>
