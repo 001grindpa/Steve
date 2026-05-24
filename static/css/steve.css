@@ -461,6 +461,26 @@ main .section-cont-2 .about-cont .one .content div {
 #index .sub-body {
     background-color: var(--milk-white);
 }
+#index main .noticeCont {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+}
+#index main .notice {
+    transform: translateY(-100%);
+    background-color: red;
+    padding: 7px 15px;
+    color: white;
+}
+#index main .notice.show {
+    animation: show 1s forwards;
+}
+#index main .notice.show.remove {
+    animation: remove 1s forwards;
+}
+
 #index {
     
 }
@@ -471,12 +491,6 @@ main .section-cont-2 .about-cont .one .content div {
     position: absolute;
     top: 1rem;
     left: 1rem;
-    /* width: 1rem;
-    height: 1rem; */
-    /* outline: 1px solid lightgray; */
-    /* padding: 7px; */
-    /* border-radius: 5px; */
-    /* transition: 0.25s; */
 }
 #index #check-menu:checked ~ .block-1 {
     transform: translateX(0);
@@ -560,7 +574,7 @@ main .section-cont-2 .about-cont .one .content div {
     font-size: small;
 }
 #index .block-1 menu .item.selected {
-    background-color: var(--hover-green);
+    background-color: var(--very-faint-green);
 }
 #index .block-1 .line {
     width: 100%;
@@ -622,7 +636,11 @@ main .section-cont-2 .about-cont .one .content div {
 }
 #index .block-2 .chat-area .chat-cont {
     height: 85%;
+    overflow-y: auto;
     /* outline: 1px solid red; */
+}
+#index .block-2 .chat-area .chat-cont::-webkit-scrollbar {
+    display: none;
 }
 #index .block-2 .chat-area .input-cont {
     /* outline: 1px solid red; */
@@ -687,11 +705,11 @@ main .section-cont-2 .about-cont .one .content div {
 /* thinking */
 #index .block-2 .chat-area .steve-cont img {
     width: 5rem;
-    display: none;
 }
 /* user chat box */
 #index .block-2 .chat-area .user-cont {
     width: 70%;
+    margin-top: 10px;
     margin-bottom: 10px;
     margin-left: auto;
 }
@@ -786,7 +804,7 @@ main .section-cont-2 .about-cont .one .content div {
     transition: 0.25s;
 }
 #index .block-3 .dishes .two img:hover {
-    background-color: var(--very-faint-green);
+    background-color: lightcoral;
 }
 
 /* footer styling */
@@ -794,6 +812,7 @@ main .section-cont-2 .about-cont .one .content div {
 #index footer .footer-grid {
     padding: 10px;
     display: grid;
+    gap: 1rem;
     justify-content: space-around;
     grid-template-areas: 
     "one"
@@ -825,7 +844,6 @@ main .section-cont-2 .about-cont .one .content div {
 }
 #index footer .section-1 .social-cont {
     display: flex;
-    padding: 10px;
     gap: 15px;
 }
 #index footer .section-1 .social-cont img {
@@ -1013,16 +1031,63 @@ main .section-cont-2 .about-cont .one .content div {
         margin-top: 0;
     }
     #index .block-3 {
-        margin-left: auto;
         width: 17rem;
     }
     #index footer .footer-grid {
         grid-template-areas:
         "one two three";
     }
-}
-/* @media(min-width: 1300px) {
-    #index footer .section-2 .sub-section {
-        width: 20rem;
+    /* rearrange menu */
+    #index .block-1 {
+        transform: translateX(0);
+        height: auto;
+        width: auto;
+        right: 0;
+        padding: 0;
+        background-color: rgba(255, 255, 255, 0.171);
+        backdrop-filter: blur(3px);
     }
-} */
+    #index .block-1 .flex-zone {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        justify-content: space-around;
+        padding: 10px 0;
+    }
+    #index .block-1 menu {
+        height: auto;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    #index .block-1 .above-menu .arrow, #index #check-menu + label .arrow-right {
+        display: none;
+    }
+    #index .block-1 .line {
+        display: none;
+    }
+    #index .block-1 .above-menu {
+        margin-bottom: 0;
+    }
+    #index .block-1 menu .item {
+        width: fit-content;
+        padding: 5px 20px;
+    }
+    #index .block-1 .profile-cont {
+        width: fit-content;
+        margin-bottom: 0;
+    }
+    #index .back {
+        margin-top: 6rem;
+    }
+}
+@media(min-width: 1400px) {
+    #index .block-3-cont {
+        width: 36rem;
+        margin: 0;
+        margin-left: auto;
+    }
+    #index .block-3 {
+        width: fit-content;
+    }
+}

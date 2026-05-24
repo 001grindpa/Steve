@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
-from models import CreateUser, LoginUser, UserData, get_db, User
+from fastapi.responses import RedirectResponse, StreamingResponse
+from models import CreateUser, LoginUser, UserData, get_db, User, QueryData
 from sqlalchemy.orm import Session
 from hash import Hash
-from kit import check_password, email_check
+from kit import check_password, email_check, stream_response
+from test_steve import randomResponse
 
 router = APIRouter(tags=["User Routes"])
 templates = Jinja2Templates(directory="templates")
@@ -87,3 +88,17 @@ def get_user(username: str, db: Session=Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                             detail="User does not exist")
     return user
+
+# logout endpoint
+@router.delete("/logout", status_code=status.HTTP_308_PERMANENT_REDIRECT)
+def logout(request: Request):
+    request.session["username"] = None
+    request.session["email"] = None
+    return RedirectResponse("/login", status_code=status.HTTP_308_PERMANENT_REDIRECT)
+
+# agent query endpoint
+@router.get("/steve", status_code=status.HTTP_200_OK)
+async def steve(request: Request):
+    r = randomResponse()
+    # SSE - Server Sent Event
+    return StreamingResponse(stream_response(r), media_type="text/event-stream")

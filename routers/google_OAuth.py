@@ -41,7 +41,7 @@ async def login_google():
     google_url = f"{GOOGLE_AUTH_ENDPOINT}?{query_string}"
 
     # Redirect the user's browser straight to google
-    return RedirectResponse(url=google_url)
+    return RedirectResponse(url=google_url, status_code=status.HTTP_307_TEMPORARY_REDIRECT)
 
 @router.get("/auth/callback", status_code=status.HTTP_200_OK)
 async def google_callback(request: Request, code: str, db: Session=Depends(get_db)):

@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const body = document.querySelector("body");
         const eye = body.querySelector("main #eye");
         const pwFields = body.querySelectorAll("main form .pw");
-        const form = body.querySelector("#login main h1 ~ form");
+        const form = body.querySelector("main h1 ~ form");
         const loader = body.querySelector(".loader");
         const subBody = body.querySelector(".sub-body");
         const noticeCont = body.querySelector("main .section-container .noticeCont");
@@ -215,11 +215,119 @@ document.addEventListener("DOMContentLoaded", () => {
         const body = document.querySelector("body");
         const loader = body.querySelector(".loader");
         const subBody = body.querySelector(".sub-body");
+        const chatCont = body.querySelector(".block-2 .chat-area .chat-cont");
+        const chatForm = body.querySelector(".block-2 .chat-area .input-cont form");
+        const queryInput = body.querySelector("#query");
+        const queryBtn = body.querySelector(".block-2 .chat-area .input-cont form button");
+        const noticeCont = body.querySelector("main .noticeCont");
 
         // page loading logic
         window.addEventListener("load", () => {
             loader.style.display = "none";
             subBody.style.display = "block";
+        })
+
+        chatForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            let formObject = Object.fromEntries(new FormData(chatForm));
+            console.log(formObject);
+
+            // configure time
+            let hour = new Date().getHours();
+            let minute = new Date().getMinutes();
+            minute = (minute < 9)? `0${minute}`: minute;
+            hour = (hour < 9)? `0${hour}`: hour;
+            let period = "AM";
+            if (hour >= 12) {
+                period = "PM";
+            }
+
+            // handle empty input field
+            if (formObject.query.trim() === "") {
+                let notice = document.createElement("div");
+                notice.classList.add("notice");
+                notice.textContent = "Query field is empty";
+                noticeCont.prepend(notice);
+                notice.classList.add("show");
+                setTimeout(() => {
+                    notice.classList.add("remove");
+                }, 3000);
+
+                return;
+            }
+            // handle btn when streaming is live
+            queryBtn.disabled = true;
+            queryBtn.style.cursor = "progress";
+            
+            // handle user chat
+            // create user's text parent container
+            let userCont = document.createElement("div");
+            userCont.classList.add("user-cont");
+            // create user's text container and append to parent
+            let user = document.createElement("div");
+            user.classList.add("user");
+            userCont.appendChild(user);
+            // create user's text el and time el
+            let userTxt = document.createElement("div");
+            userTxt.classList.add("user-txt");
+            userTxt.textContent = formObject.query;
+            let time = document.createElement("div");
+            time.classList.add("user-time");
+            time.textContent = `${hour}:${minute} ${period}`;
+            // append both el to parent
+            user.appendChild(userTxt);
+            user.appendChild(time);
+            // append parent to ancestor
+            chatCont.appendChild(userCont);
+            chatCont.scrollTop = chatCont.scrollHeight;
+            queryInput.value = "";
+
+            // handle API call (bot response etc)
+            // create steve's response container
+            let steveCont = document.createElement("div");
+            steveCont.classList.add("steve-cont");
+            // create gif loader and append to steve's response cont
+            let loaderGif = document.createElement("img");
+            loaderGif.src = "static/gifs/loading-dots.gif";
+            steveCont.appendChild(loaderGif);
+
+            // append steve's response container to ancestor
+            chatCont.appendChild(steveCont);
+            try {
+                let response = await fetch("/steve");
+                let reader = response.body.getReader();
+                let decoder = new TextDecoder();
+
+                let steve = document.createElement("div");
+                steve.classList.add("steve");
+                loaderGif.style.display = "none";
+                steveCont.appendChild(steve);
+                // create steve's text el and append to steve's cont
+                let steveTxt = document.createElement("div");
+                steveTxt.classList.add("txt");
+                steve.appendChild(steveTxt);
+                // create time el for steve and append
+                let steveTime = document.createElement("div");
+                steveTime.classList.add("time");
+                steveTime.textContent = `${hour}:${minute} ${period}`;
+                steve.appendChild(steveTime);
+
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    steveTxt.innerHTML += chunk;
+                    chatCont.scrollTop = chatCont.scrollHeight;
+                }
+                queryBtn.disabled = false;
+                queryBtn.style.cursor = "pointer";
+            } catch (error) {
+                console.log("Unexpected error ->", error);
+            } finally {
+                console.log("request completed");
+            }
         })
     }
 })

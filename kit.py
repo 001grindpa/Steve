@@ -1,3 +1,5 @@
+import asyncio
+
 def check_password(pw: str):
     is_digit = is_lower = is_upper = False
     for i in pw:
@@ -22,3 +24,8 @@ def email_check(mail: str):
         if c == "@" and len(mail) >= 5 and "." in mail:
             return "valid"
     return "invalid"
+
+async def stream_response(q: str):
+    for char in q:
+        await asyncio.sleep(0.1)
+        yield char

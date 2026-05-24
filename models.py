@@ -9,6 +9,10 @@ load_dotenv()
 # access env
 user_pw = os.getenv("USER_PW")
 
+# query Steve
+class QueryData(BaseModel):
+    query: str
+
 # dishes model
 class DishData(BaseModel):
     name: str
