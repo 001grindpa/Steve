@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse, StreamingResponse
-from models import CreateUser, LoginUser, UserData, get_db, User, QueryData
+from models import CreateUser, LoginUser, UserData, get_db, User, QueryData, Chat
 from sqlalchemy.orm import Session
 from hash import Hash
-from kit import check_password, email_check, stream_response
+from kit import check_password, email_check, stream_response, get_time
 from test_steve import randomResponse
 
 router = APIRouter(tags=["User Routes"])
@@ -98,7 +98,33 @@ def logout(request: Request):
 
 # agent query endpoint
 @router.get("/steve", status_code=status.HTTP_200_OK)
-async def steve(request: Request):
+async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
     r = randomResponse()
+    time = get_time()
+    # add chat to database first
+    chat = Chat(
+        username=request.session.get("username"), user_txt=query,
+        user_time=time, steve_txt=r, steve_time=time
+        )
+    db.add(chat)
+    db.commit()
+
+    # query db to get llm response
+    chats = db.query(Chat).where(Chat.username == request.session.get("username")).all()
+    n_of_chats = len(chats)
+    # get llm response from last chat
+    last_chat = db.query(Chat).where(
+        Chat.username == request.session.get("username"),
+        Chat.id == n_of_chats        
+        ).first()
+    llm_response = last_chat.steve_txt
     # SSE - Server Sent Event
-    return StreamingResponse(stream_response(r), media_type="text/event-stream")
+    return StreamingResponse(stream_response(llm_response), media_type="text/event-stream")
+
+@router.get("/chat", status_code=status.HTTP_200_OK)
+def chat(request: Request, db: Session=Depends(get_db)):
+    chats = db.query(Chat).where(Chat.username == request.session.get("username")).all()
+    # chats = chats[::-1]
+    if chats is None:
+        return {"detail": "not_found"}
+    return {"detail": chats}

@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     if (document.body.id === "landing") {
         const body = document.querySelector("body");
         const loader = body.querySelector(".loader");
@@ -227,10 +227,66 @@ document.addEventListener("DOMContentLoaded", () => {
             subBody.style.display = "block";
         })
 
+        // auto load existing chat
+        try {
+            r = await fetch("/chat");
+            d = await r.json();
+            if (d.detail == "not_found") {
+                console.log("empty chat");
+            }
+            d.detail.forEach(el => {
+                // render user's text
+                let userContG = document.createElement("div");
+                userContG.classList.add("user-cont");
+                // create user's text container and append to parent
+                let userG = document.createElement("div");
+                userG.classList.add("user");
+                userContG.appendChild(userG);
+                // create user's text el and time el
+                let userTxtG = document.createElement("div");
+                userTxtG.classList.add("user-txt");
+                userTxtG.textContent = el.user_txt;
+                let timeG = document.createElement("div");
+                timeG.classList.add("user-time");
+                timeG.textContent = el.user_time;
+                // append both el to parent
+                userG.appendChild(userTxtG);
+                userG.appendChild(timeG);
+                // append parent to ancestor
+                chatCont.appendChild(userContG);
+                chatCont.scrollTop = chatCont.scrollHeight;
+
+                // render steve's text
+                // create steve's response container
+                let steveContG = document.createElement("div");
+                steveContG.classList.add("steve-cont");
+                let steveG = document.createElement("div");
+                steveG.classList.add("steve");
+                steveContG.appendChild(steveG);
+                // create steve's text el and append to steve's cont
+                let steveTxtG = document.createElement("div");
+                steveTxtG.classList.add("txt");
+                steveTxtG.textContent = el.steve_txt;
+                steveG.appendChild(steveTxtG);
+                // create time el for steve and append
+                let steveTimeG = document.createElement("div");
+                steveTimeG.classList.add("time");
+                steveTimeG.textContent = el.steve_time;
+                steveG.appendChild(steveTimeG);
+
+                // append steve's response container to ancestor
+                chatCont.appendChild(steveContG);
+                chatCont.scrollTop = chatCont.scrollHeight
+            })
+        }
+        catch (e) {
+            console.log("Unexpected error ->", e)
+        }
+
         chatForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             let formObject = Object.fromEntries(new FormData(chatForm));
-            console.log(formObject);
+            let query = queryInput.value;
 
             // configure time
             let hour = new Date().getHours();
@@ -239,6 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hour = (hour < 9)? `0${hour}`: hour;
             let period = "AM";
             if (hour >= 12) {
+                // hour = 24 -hour;
                 period = "PM";
             }
 
@@ -294,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // append steve's response container to ancestor
             chatCont.appendChild(steveCont);
             try {
-                let response = await fetch("/steve");
+                let response = await fetch(`/steve?query=${query}`);
                 let reader = response.body.getReader();
                 let decoder = new TextDecoder();
 

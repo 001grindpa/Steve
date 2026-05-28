@@ -84,4 +84,15 @@ class Dish(BaseClass):
     def __repr__(self):
         f"<name='{self.name}', origin='{self.origin}', ingredients='{self.ingredients}'>"
 
+class Chat(BaseClass):
+    __tablename__ = "chats"
+    username = Column(String(255))
+    user_txt = Column(String(255))
+    user_time = Column(String(255))
+    steve_txt = Column(String(255))
+    steve_time = Column(String(255))
+
+    def __repr__(self):
+        return f"id='{self.id}', user_txt='{self.user_txt}', steve_txt='{self.steve_txt}', steve_time='{self.steve_time}'"
+
 Base.metadata.create_all(engine)

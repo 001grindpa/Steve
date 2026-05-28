@@ -1,4 +1,16 @@
 import asyncio
+from datetime import datetime, timedelta
+
+def get_time():
+    now = datetime.now()
+    hour = now.hour
+    minute = now.minute
+    period = "AM"
+    
+    if (hour >= 12):
+        # hour = 24-hour
+        period = "PM"
+    return "{}:{} {}".format(hour, minute, period)
 
 def check_password(pw: str):
     is_digit = is_lower = is_upper = False

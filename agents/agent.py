@@ -15,7 +15,7 @@ load_dotenv()
 os.environ["GROQ_API_KEY"]=os.getenv("GROQ_API_KEY")
 os.environ["TAVILY_API_KEY"]=os.getenv("TAVILY_API_KEY")
 
-# create a State model from TypedDict
+# derive a State model from TypedDict
 class State(TypedDict):
     messages: Annotated[list, add_messages]
 
@@ -32,7 +32,7 @@ def llm_caller(state: State):
         1. Your name is Steve.
         2. You are a professional chef that searches the interet and finds dishes
         around the world that can be made from the recipe you're given.
-        3. return an array/list of meals they can make (do not include preparation process)
+        3. return an array/list of meals a user can prepare (do not include preparation process)
         just an array of meals in the format [...,...,...].
         4. include the word "can't" in your response expressing how inappropriate it is
         when user tries to make a meal from non edible items. Don't add "[]" for this type of response.
