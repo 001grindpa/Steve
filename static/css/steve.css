@@ -507,6 +507,7 @@ main .section-cont-2 .about-cont .one .content div {
     padding: 15px 10px;
     transform: translateX(-101%);
     transition: 0.3s;
+    z-index: 15;
 }
 #index .block-1 .above-menu {
     display: flex;
@@ -650,6 +651,36 @@ main .section-cont-2 .about-cont .one .content div {
     margin-top: 1rem;
     padding: 3px;
     width: 80%;
+    position: relative;
+}
+#index .block-2 .chat-area .input-cont #trash_can {
+    width: 17px;
+    position: absolute;
+    left: -47px;
+    top: 10px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 100%;
+    transition: 0.25s;
+}
+#index .block-2 .chat-area .input-cont #trash_can:hover {
+    background-color: var(--faded-red);
+}
+#index .block-2 .chat-area .input-cont #trash_can:hover + div {
+    display: block;
+}
+#index .block-2 .chat-area .input-cont #trash_can + div {
+    position: absolute;
+    padding: 10px;
+    width: fit-content;
+    font-size: small;
+    backdrop-filter: blur(2px);
+    background-color: rgba(255, 255, 255, 0.325);
+    border-radius: 5px;
+    outline: 1px solid lightgray;
+    left: -10%;
+    top: -40px;
+    display: none;
 }
 #index .block-2 .chat-area .input-cont form {
     width: 100%;

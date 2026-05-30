@@ -220,6 +220,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const queryInput = body.querySelector("#query");
         const queryBtn = body.querySelector(".block-2 .chat-area .input-cont form button");
         const noticeCont = body.querySelector("main .noticeCont");
+        const clearChat = body.querySelector("#trash_can");
+        const sideMenu = body.querySelector(".block-1");
+        const bugerLogo = body.querySelector("#check-menu + label");
+        const bugerLogoCheck = body.querySelector("#check-menu");
 
         // page loading logic
         window.addEventListener("load", () => {
@@ -227,7 +231,36 @@ document.addEventListener("DOMContentLoaded", async () => {
             subBody.style.display = "block";
         })
 
+        // clicking body removes sidebar menu
+        body.addEventListener("click", () => {
+            if (bugerLogoCheck.checked == true) {
+                bugerLogo.click();
+            }
+        })
+        sideMenu.addEventListener("click", (e) => {
+            e.stopPropagation();
+        })
+        bugerLogo.addEventListener("click", (e) => {
+            e.stopPropagation();
+        })
+
+        // clear chat db on click
+        clearChat.addEventListener("click", async () => {
+            try {
+                let r = await fetch("/clear_chat", {
+                    method: "DELETE"
+                });
+                let d = await r.json();
+                console.log(d.detail);
+                chatCont.textContent = "";
+            }
+            catch (e) {
+                console.log("Unexpected error ->", e);
+            }
+        })
+
         // auto load existing chat
+        // this can be done with jinja too
         try {
             r = await fetch("/chat");
             d = await r.json();

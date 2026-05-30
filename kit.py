@@ -6,11 +6,12 @@ def get_time():
     hour = now.hour
     minute = now.minute
     period = "AM"
-    
     if (hour >= 12):
         # hour = 24-hour
         period = "PM"
-    return "{}:{} {}".format(hour, minute, period)
+    return "{}:{} {}".format(f"0{hour}" if hour < 9 else hour, 
+                             f"0{minute}" if minute < 9 else minute, 
+                             period)
 
 def check_password(pw: str):
     is_digit = is_lower = is_upper = False

@@ -110,21 +110,26 @@ async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
     db.commit()
 
     # query db to get llm response
-    chats = db.query(Chat).where(Chat.username == request.session.get("username")).all()
-    n_of_chats = len(chats)
-    # get llm response from last chat
     last_chat = db.query(Chat).where(
-        Chat.username == request.session.get("username"),
-        Chat.id == n_of_chats        
-        ).first()
+        Chat.username == request.session.get("username")        
+        ).order_by(Chat.id.desc()).first()
     llm_response = last_chat.steve_txt
+    print(last_chat)
     # SSE - Server Sent Event
     return StreamingResponse(stream_response(llm_response), media_type="text/event-stream")
 
 @router.get("/chat", status_code=status.HTTP_200_OK)
 def chat(request: Request, db: Session=Depends(get_db)):
     chats = db.query(Chat).where(Chat.username == request.session.get("username")).all()
-    # chats = chats[::-1]
     if chats is None:
         return {"detail": "not_found"}
     return {"detail": chats}
+
+# ad an endpoint that delete's chat
+@router.delete("/clear_chat", status_code=status.HTTP_200_OK)
+def clear_chat(request: Request, db:Session=Depends(get_db)):
+    chats = db.query(Chat).where(User.username == request.session.get("username")).all()
+    for chat in chats:
+        db.delete(chat)
+        db.commit()
+    return {"detail": "chats cleared"}
