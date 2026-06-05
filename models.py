@@ -76,7 +76,10 @@ class Dish(BaseClass):
 
     name = Column(String(255))
     origin = Column(String(255))
-    ingredients = Column(String(255))
+    time = Column(String(255))
+    mode = Column(String(255))
+    description = Column(String(1000))
+    ingredients = Column(String(1000))
     user_id = Column(ForeignKey("users.id"))
 
     users = relationship(User, back_populates="dishes")
@@ -89,7 +92,7 @@ class Chat(BaseClass):
     username = Column(String(255))
     user_txt = Column(String(255))
     user_time = Column(String(255))
-    steve_txt = Column(String(255))
+    steve_txt = Column(String(1000))
     steve_time = Column(String(255))
 
     def __repr__(self):

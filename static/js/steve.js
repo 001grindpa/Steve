@@ -224,6 +224,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const sideMenu = body.querySelector(".block-1");
         const bugerLogo = body.querySelector("#check-menu + label");
         const bugerLogoCheck = body.querySelector("#check-menu");
+        const recipesCont = body.querySelector(".block-3");
+        const userIngreCont = body.querySelector(".block-3 .ingre-cont");
+        const dishesCont = body.querySelector(".block-3 .dishes");
+        // userIngre.style.background = "red";
 
         // page loading logic
         window.addEventListener("load", () => {
@@ -383,6 +387,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // append steve's response container to ancestor
             chatCont.appendChild(steveCont);
+            chatCont.scrollTop = chatCont.scrollHeight
             try {
                 let response = await fetch(`/steve?query=${query}`);
                 let reader = response.body.getReader();
@@ -413,6 +418,36 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
                 queryBtn.disabled = false;
                 queryBtn.style.cursor = "pointer";
+                // fetch dishes to make
+                replies = ["Ok.", "On it.", "Searching the web right now.", "You got it."];
+                replies.forEach(async el => {
+                    if (steveTxt.textContent == el) {
+                        console.log("Getting dishes...");
+                        try {
+                            r = await fetch("/to-make");
+                            d = await r.json();
+                            d.detail.forEach(el => {
+                                let obj = JSON.parse(el);
+                                
+                                // render user's ingres
+                                if (obj["user's ingredients"]) {
+                                    var items = obj["user's ingredients"].split(" ");
+                                    var ing = document.createElement("div");
+                                    ing.classList.add("ingre");
+                                    userIngreCont.append(ing);
+                                    for (let item in items) {
+                                        let div = document.createElement("div");
+                                        div.textContent = item;
+                                        ing.appendChild(div);
+                                    }
+                                }
+                            })
+
+                        } catch(e) {
+                            console.log("Unexpected error ->", e);
+                        }
+                    }
+                });
             } catch (error) {
                 console.log("Unexpected error ->", error);
             } finally {

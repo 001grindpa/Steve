@@ -1,6 +1,9 @@
 import asyncio
 from datetime import datetime, timedelta
+from typing import List
+from random import choice
 
+# get the current chat time
 def get_time():
     now = datetime.now()
     hour = now.hour
@@ -13,6 +16,7 @@ def get_time():
                              f"0{minute}" if minute < 9 else minute, 
                              period)
 
+# check if password is strong
 def check_password(pw: str):
     is_digit = is_lower = is_upper = False
     for i in pw:
@@ -40,5 +44,26 @@ def email_check(mail: str):
 
 async def stream_response(q: str):
     for char in q:
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(0.03)
         yield char
+
+async def getting_dish_replies():
+    replies = ["Ok.", "On it.", "Searching the web right now.", "You got it."]
+    return choice(replies)
+
+# classes
+class DishDetail:
+    def __init__(self, name: str, origin: str, time: str, mode: str, description: str, ingredients: List[str]) -> None:
+        self.name =  name
+        self.origin = origin
+        self.time = time
+        self.mode = mode
+        self.desc = description
+        self.ingre = ingredients
+
+    def __str__(self):
+        return f"{self.name} is an {self.origin} dish, {self.desc}. It's a {self.mode} meal that takes about {self.time} to make."
+    def __repr__(self):
+        return f"<name='{self.name}', origin='{self.origin}', description='{self.desc}', ingredients='{self.ingre}', mode='{self.mode}', time/duration='{self.time}'>"
+
+# print(getting_dish_replies())

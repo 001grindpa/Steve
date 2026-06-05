@@ -4,8 +4,12 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from models import CreateUser, LoginUser, UserData, get_db, User, QueryData, Chat
 from sqlalchemy.orm import Session
 from hash import Hash
-from kit import check_password, email_check, stream_response, get_time
-from test_steve import randomResponse
+from kit import (
+    check_password, email_check, stream_response, get_time, 
+    getting_dish_replies, DishDetail
+)
+from agents.agent import graph
+import ast
 
 router = APIRouter(tags=["User Routes"])
 templates = Jinja2Templates(directory="templates")
@@ -99,7 +103,17 @@ def logout(request: Request):
 # agent query endpoint
 @router.get("/steve", status_code=status.HTTP_200_OK)
 async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
-    r = randomResponse()
+    user = db.query(User).where(User.username == request.session.get("username")).first()
+    config = {"configurable": {"thread_id": user.id}}
+    raw_r = await graph.ainvoke({"messages": [query]}, config=config)
+    r = raw_r["messages"][-1].content
+    print(r)
+    try:
+        if (isinstance(ast.literal_eval(r), list)):
+            request.session["dishes"] = ast.literal_eval(r)
+            r = await getting_dish_replies()
+    except (ValueError, SyntaxError):
+        pass
     time = get_time()
     # add chat to database first
     chat = Chat(
@@ -114,7 +128,8 @@ async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
         Chat.username == request.session.get("username")        
         ).order_by(Chat.id.desc()).first()
     llm_response = last_chat.steve_txt
-    print(last_chat)
+    
+    # print(last_chat)
     # SSE - Server Sent Event
     return StreamingResponse(stream_response(llm_response), media_type="text/event-stream")
 
@@ -125,7 +140,7 @@ def chat(request: Request, db: Session=Depends(get_db)):
         return {"detail": "not_found"}
     return {"detail": chats}
 
-# ad an endpoint that delete's chat
+# This endpoint deletes chats
 @router.delete("/clear_chat", status_code=status.HTTP_200_OK)
 def clear_chat(request: Request, db:Session=Depends(get_db)):
     chats = db.query(Chat).where(User.username == request.session.get("username")).all()
