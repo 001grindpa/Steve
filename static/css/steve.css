@@ -764,6 +764,7 @@ main .section-cont-2 .about-cont .one .content div {
 
 /* block-3 styling */
 #index .block-3 {
+    position: relative;
     background-color: white;
     padding: 10px;
     grid-area: two;
@@ -791,6 +792,14 @@ main .section-cont-2 .about-cont .one .content div {
     color: var(--green-txt);
     border-radius: 10px;
     width: fit-content;
+}
+#index .block-3 #green-loader {
+    width: 40px;
+    margin-top: 25px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 25px;
+    display: none;
 }
 #index .block-3 .dishes {
     display: flex;
