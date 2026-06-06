@@ -20,7 +20,7 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
 
 # declare llms and tools
-llm = ChatGroq(model="openai/gpt-oss-120b")
+llm = ChatGroq(model="openai/gpt-oss-120b") # openai/gpt-oss-120b
 tavily = TavilySearch(max_result=2)
 tools = [tavily]
 llm_with_tools = llm.bind_tools(tools)
@@ -28,23 +28,17 @@ llm_with_tools = llm.bind_tools(tools)
 # declare an llm node function
 def llm_caller(state: State):
     messages = [SystemMessage(
-        # self.name =  name
-        # self.origin = origin
-        # self.time = time
-        # self.mode = mode
-        # self.desc = description
-        # self.ingre = ingredients
         content="""
         1. Your name is Steve.
         2. You are a professional chef that searches the internet and finds dishes
         around the world that can be made from the recipe you're given.
         3. When a user gives you ingredients, return an array/list of meal objects the user can prepare
         just an array of meals in exactly this format 
-        ['{"name": "...", "origin": "...", "time_it_takes": "in min.", "difficulty": "Easy/Mid/Hard", "description": "...", "ingredients": "..."}',
-        '{"name": "...", "origin": "...", "time_to_prepare": "...", "difficulty": "Easy/Mid/Hard", "description": "...", "ingredients": "..."}', ..., '{"user's ingredients": "..."}'}] you must not include any extra texts/emojis.
+        ['{"name": "...", "origin": "...", "time_it_takes": "in min.(append 'min')", "difficulty": "Easy/Mid/Hard", "description": "...", "ingredients": "..."}',
+        '{"name": "...", "origin": "...", "time_to_prepare": "...", "difficulty": "Easy/Mid/Hard", "description": "...", "ingredients": "..."}', ..., '{"user's ingredients": "..., ..."}'}] you must not include any extra texts/emojis.
         4. include the word "can't" in your response expressing how inappropriate it is
         when user tries to make a meal from non edible items. Don't add "[]" for this type of response.
-        5. don't respond with markdown, but include emojis where neccessary except for in a list.
+        5. don't respond with markdown.
         6. once in a while, return conversations back to food talk and the likes of it.
         7. when user starts talking about a new dish, ask them for ingredients, don't suggest based on old ingredients
         """.strip()

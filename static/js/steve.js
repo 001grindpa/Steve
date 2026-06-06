@@ -227,6 +227,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const recipesCont = body.querySelector(".block-3");
         const userIngreCont = body.querySelector(".block-3 .ingre-cont");
         const dishesCont = body.querySelector(".block-3 .dishes");
+        const preDishInfo = body.querySelector(".block-3 .dishes .pre-info");
         // userIngre.style.background = "red";
 
         // page loading logic
@@ -247,6 +248,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         bugerLogo.addEventListener("click", (e) => {
             e.stopPropagation();
         })
+
+        // remove pre dish info when dish is generated/available
+        // userIngreCont.style.outline = "1px solid red";
+        if (userIngreCont.textContent.trim() != "") {
+            preDishInfo.style.display = "none";
+        }
 
         // clear chat db on click
         clearChat.addEventListener("click", async () => {
@@ -426,21 +433,90 @@ document.addEventListener("DOMContentLoaded", async () => {
                         try {
                             r = await fetch("/to-make");
                             d = await r.json();
+                            // clear recipe container before appending new data
+                            userIngreCont.textContent = "";
+                            dishesCont.textContent = "";
+                            // start creating and appending dish details
+                            const beforeIngre = document.createElement("div");
+                            beforeIngre.textContent = "Based on your ingredients";
+                            beforeIngre.classList.add("before-ingre");
+                            userIngreCont.appendChild(beforeIngre);
+                            
                             d.detail.forEach(el => {
                                 let obj = JSON.parse(el);
                                 
                                 // render user's ingres
                                 if (obj["user's ingredients"]) {
-                                    var items = obj["user's ingredients"].split(" ");
+                                    var items = obj["user's ingredients"].split(", ");
                                     var ing = document.createElement("div");
                                     ing.classList.add("ingre");
                                     userIngreCont.append(ing);
                                     for (let item in items) {
                                         let div = document.createElement("div");
-                                        div.textContent = item;
+                                        div.textContent = items[item];
                                         ing.appendChild(div);
                                     }
+                                    // return here so that the loop does not attempt to render
+                                    // a dish obj with the "user's ingredients" data.
+                                    return;
                                 }
+                                // render dish info container
+                                let dish = document.createElement("div");
+                                dish.classList.add("dish");
+                                dishesCont.appendChild(dish);
+                                let innerInfo = document.createElement("div");
+                                innerInfo.classList.add("one");
+                                dish.appendChild(innerInfo);
+                                // render dish name
+                                let h4 = document.createElement("h4");
+                                h4.textContent = obj.name;
+                                innerInfo.appendChild(h4);
+                                // render dish innerItemsCont
+                                let innerItemsCont = document.createElement("div");
+                                innerInfo.appendChild(innerItemsCont);
+                                // render innerItems
+                                // create timeImg and timeData elements container
+                                let itemOne = document.createElement("div");
+                                itemOne.classList.add("info");
+                                innerItemsCont.appendChild(itemOne);
+                                // create timeImg and timeData elements
+                                let timeImg = document.createElement("img");
+                                timeImg.src = "static/images/time.png";
+                                itemOne.appendChild(timeImg);
+                                let timeData = document.createElement("div");
+                                timeData.textContent = obj.time_it_takes;
+                                itemOne.appendChild(timeData);
+                                // create modeImg and Modedata el container
+                                let itemTwo = document.createElement("div");
+                                itemTwo.classList.add("info");
+                                innerItemsCont.appendChild(itemTwo);
+                                // create modeImg and Modedata elements container
+                                let modeImg = document.createElement("img");
+                                modeImg.src = "static/images/chart.png";
+                                itemOne.appendChild(modeImg);
+                                let modeData = document.createElement("div");
+                                modeData.textContent = obj.difficulty;
+                                itemOne.appendChild(modeData);
+
+                                // render description
+                                let desc = document.createElement("div");
+                                desc.classList.add("desc");
+                                desc.textContent = obj.description;
+                                innerInfo.appendChild(desc);
+                                // render ingredients
+                                let ingred = document.createElement("div");
+                                ingred.classList.add("uses");
+                                ingred.textContent = "Uses: ";
+                                ingred.textContent += obj.ingredients;
+                                innerInfo.appendChild(ingred);
+                                // render fav iconCont
+                                let favCont = document.createElement("div");
+                                favCont.classList.add("two");
+                                dish.appendChild(favCont);
+                                // render fav iconImg
+                                let favImg = document.createElement("img");
+                                favImg.src = "static/images/love.png";
+                                favCont.appendChild(favImg);
                             })
 
                         } catch(e) {

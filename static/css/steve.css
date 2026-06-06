@@ -715,8 +715,9 @@ main .section-cont-2 .about-cont .one .content div {
     margin: auto;
 }
 #index .block-2 .chat-area .steve-cont {
-    width: 70%;
+    width: 15rem;
     margin-top: 10px;
+    /* outline: 1px solid red; */
 }
 #index .block-2 .chat-area .steve-cont .steve {
     padding: 10px;
@@ -779,6 +780,7 @@ main .section-cont-2 .about-cont .one .content div {
 }
 #index .block-3 .ingre-cont .ingre {
     display: flex;
+    flex-flow: row wrap;
     gap: 10px;
     margin-bottom: 10px;
 }
@@ -794,6 +796,12 @@ main .section-cont-2 .about-cont .one .content div {
     display: flex;
     flex-flow: row wrap;
     gap: 15px;
+}
+#index .block-3 .dishes .pre-info {
+    font-size: small;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 #index .block-3 .dishes .dish {
     outline: 1px solid lightgray;
@@ -1051,6 +1059,9 @@ main .section-cont-2 .about-cont .one .content div {
         margin-left: 10%;
         margin-right: 10%;
     }
+    #index .block-2 .chat-area .steve-cont {
+        width: 20rem;
+    }
 }
 @media(min-width: 777px) {
     #index .grid-cont {
@@ -1120,5 +1131,8 @@ main .section-cont-2 .about-cont .one .content div {
     }
     #index .block-3 {
         width: fit-content;
+    }
+    #index .block-2 .chat-area .steve-cont {
+        width: 30rem;
     }
 }
