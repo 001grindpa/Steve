@@ -103,7 +103,7 @@ def logout(request: Request):
 # agent query endpoint
 @router.get("/steve", status_code=status.HTTP_200_OK)
 async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
-    user = db.query(User).where(User.username == request.session.get("username")).first()
+    user = db.query(User).where(User.email == request.session.get("email")).first()
     config = {"configurable": {"thread_id": user.id}}
     raw_r = await graph.ainvoke({"messages": [query]}, config=config)
     r = raw_r["messages"][-1].content
@@ -117,7 +117,7 @@ async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
     time = get_time()
     # add chat to database first
     chat = Chat(
-        username=request.session.get("username"), user_txt=query,
+        username=request.session.get("email"), user_txt=query,
         user_time=time, steve_txt=r, steve_time=time
         )
     db.add(chat)
@@ -125,7 +125,7 @@ async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
 
     # query db to get llm response
     last_chat = db.query(Chat).where(
-        Chat.username == request.session.get("username")        
+        Chat.username == request.session.get("email")        
         ).order_by(Chat.id.desc()).first()
     llm_response = last_chat.steve_txt
     
@@ -135,7 +135,7 @@ async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
 
 @router.get("/chat", status_code=status.HTTP_200_OK)
 def chat(request: Request, db: Session=Depends(get_db)):
-    chats = db.query(Chat).where(Chat.username == request.session.get("username")).all()
+    chats = db.query(Chat).where(Chat.username == request.session.get("email")).all()
     if chats is None:
         return {"detail": "not_found"}
     return {"detail": chats}
@@ -143,7 +143,7 @@ def chat(request: Request, db: Session=Depends(get_db)):
 # This endpoint deletes chats
 @router.delete("/clear_chat", status_code=status.HTTP_200_OK)
 def clear_chat(request: Request, db:Session=Depends(get_db)):
-    chats = db.query(Chat).where(User.username == request.session.get("username")).all()
+    chats = db.query(Chat).where(User.username == request.session.get("email")).all()
     for chat in chats:
         db.delete(chat)
         db.commit()

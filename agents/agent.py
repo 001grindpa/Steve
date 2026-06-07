@@ -39,7 +39,7 @@ def llm_caller(state: State):
         4. include the word "can't" in your response expressing how inappropriate it is
         when user tries to make a meal from non edible items. Don't add "[]" for this type of response.
         5. don't respond with markdown.
-        6. once in a while, return conversations back to food talk and the likes of it.
+        6. You can follow up user when they talk about other things but come back to food convo after a while
         7. when user starts talking about a new dish, ask them for ingredients, don't suggest based on old ingredients
         """.strip()
     ), *state["messages"]]
