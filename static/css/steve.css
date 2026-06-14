@@ -779,6 +779,38 @@ main .section-cont-2 .about-cont .one .content div {
 #index .block-3 .ingre-cont .before-ingre {
     margin-bottom: 5px;
 }
+#index .block-3 .ingre-cont .cancel {
+    padding: 6px;
+    position: absolute;
+    right: 15px;
+    top: 1rem;
+    transition: 0.3s;
+    cursor: pointer;
+}
+#index .block-3 .ingre-cont .cancel div {
+    position: relative;
+    width: 30px;
+    height: 5px;
+    margin: 5px;
+}
+#index .block-3 .ingre-cont .cancel div::after {
+    content: "";
+    position: absolute;
+    background-color: gray;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+#index .block-3 .ingre-cont .cancel.active div:nth-child(1)::after {
+    transform: rotate(45deg);
+    margin: 0;
+    top: 5px;
+}
+#index .block-3 .ingre-cont .cancel.active div:nth-child(2)::after {
+    transform: rotate(135deg);
+    margin: 0;
+    bottom: 5px;
+}
 #index .block-3 .ingre-cont .ingre {
     display: flex;
     flex-flow: row wrap;

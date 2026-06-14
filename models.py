@@ -89,7 +89,7 @@ class Dish(BaseClass):
 
 class Chat(BaseClass):
     __tablename__ = "chats"
-    username = Column(String(255))
+    email = Column(String(255))
     user_txt = Column(String(255))
     user_time = Column(String(255))
     steve_txt = Column(String(1000))

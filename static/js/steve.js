@@ -229,6 +229,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const dishesCont = body.querySelector(".block-3 .dishes");
         const preDishInfo = body.querySelector(".block-3 .dishes .pre-info");
         const greenLoader = body.querySelector(".block-3 #green-loader");
+        const dishes = body.querySelectorAll(".block-3 .dishes .two img");
+        const cancelOptions = body.querySelector(".block-3 .ingre-cont .cancel");
         // userIngre.style.background = "red";
 
         // page loading logic
@@ -250,11 +252,27 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
         })
 
-        // remove pre dish info when dish is generated/available
-        // userIngreCont.style.outline = "1px solid red";
+        // remove pre dish info ("dishes will appear here") when dish is generated/available
         if (userIngreCont.textContent.trim() != "") {
             preDishInfo.style.display = "none";
+
+            // iplement cancel options action
+            cancelOptions.classList.add("active");
         }
+        // clear steve's ideas
+        // cancelOptions.addEventListener("click", async () => {
+        //         try {
+        //             let r = await fetch("/cancel-options", {
+        //                 method: "DELETE"
+        //             });
+        //             let d = await r.json();
+        //             console.log(d.detail);
+        //             dishesCont.textContent = "";
+        //             cancelOptions.classList.remove("active");
+        //         } catch (e) {
+        //             console.log("Unexpected error ->", e);
+        //         }
+        //     });
 
         // clear chat db on click
         clearChat.addEventListener("click", async () => {
@@ -321,13 +339,69 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 // append steve's response container to ancestor
                 chatCont.appendChild(steveContG);
-                chatCont.scrollTop = chatCont.scrollHeight
+                chatCont.scrollTop = chatCont.scrollHeight;
             })
         }
         catch (e) {
-            console.log("Unexpected error ->", e)
+            console.log("Unexpected error ->", e);
         }
 
+        // send request to add dish to favorites and remove
+        for (let i=0; i < dishes.length; i++) {
+            dishes[i].addEventListener("click", async () => {
+                if (dishes[i].style.backgroundColor == "lightcoral") {
+                    // remove dish from list if exists
+                    dishes[i].style.backgroundColor = "transparent";
+                    try {
+                        let r = await fetch(`/remove-dish?index=${i}`, {
+                            method: "DELETE"
+                        });
+                        let d = await r.json();
+                        
+                        // create notification for status
+                        let notice = document.createElement("div");
+                        notice.classList.add("notice");
+                        notice.style.backgroundColor = "gray";
+                        notice.textContent = d.detail;
+                        noticeCont.prepend(notice);
+                        notice.classList.add("show");
+                        setTimeout(() => {
+                            notice.classList.add("remove");
+                        }, 4000);
+                    } catch (e) {
+                        console.log("Unexpected error ->", e);
+                    } finally {
+                        console.log("You have sent a request to remove meal");
+                    }
+                } else {
+                    // add dish to list
+                    dishes[i].style.backgroundColor = "lightcoral";
+                    try {
+                        let r = await fetch(`/add-dish?index=${i}`, {
+                            method: "POST"
+                        });
+                        let d = await r.json();
+                        
+                        // create notification for status
+                        let notice = document.createElement("div");
+                        notice.classList.add("notice");
+                        notice.style.backgroundColor = "blue";
+                        notice.textContent = d.detail;
+                        noticeCont.prepend(notice);
+                        notice.classList.add("show");
+                        setTimeout(() => {
+                            notice.classList.add("remove");
+                        }, 4000);
+                    } catch (e) {
+                        console.log("Unexpected error ->", e);
+                    } finally {
+                        console.log("You have sent a request to add meal");
+                    }   
+                }
+            })
+        }
+
+        // render conversation chat between user and steve
         chatForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             let formObject = Object.fromEntries(new FormData(chatForm));
@@ -447,11 +521,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 userIngreCont.appendChild(beforeIngre);
                                 
                                 d.detail.forEach(el => {
-                                    let obj = JSON.parse(el);
-                                    
                                     // render user's ingres
-                                    if (obj["user's ingredients"]) {
-                                        var items = obj["user's ingredients"].split(", ");
+                                    if (el["user's ingredients"]) {
+                                        var items = el["user's ingredients"].split(", ");
                                         var ing = document.createElement("div");
                                         ing.classList.add("ingre");
                                         userIngreCont.append(ing);
@@ -461,7 +533,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                             ing.appendChild(div);
                                         }
                                         // return here so that the loop does not attempt to render
-                                        // a dish obj with the "user's ingredients" data.
+                                        // a dish el with the "user's ingredients" data.
                                         return;
                                     }
                                     // render dish info container
@@ -473,7 +545,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     dish.appendChild(innerInfo);
                                     // render dish name
                                     let h4 = document.createElement("h4");
-                                    h4.textContent = obj.name;
+                                    h4.textContent = el.name;
                                     innerInfo.appendChild(h4);
                                     // render dish innerItemsCont
                                     let innerItemsCont = document.createElement("div");
@@ -488,7 +560,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     timeImg.src = "static/images/time.png";
                                     itemOne.appendChild(timeImg);
                                     let timeData = document.createElement("div");
-                                    timeData.textContent = obj.time_it_takes;
+                                    timeData.textContent = el.time_it_takes;
                                     itemOne.appendChild(timeData);
                                     // create modeImg and Modedata el container
                                     let itemTwo = document.createElement("div");
@@ -499,19 +571,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     modeImg.src = "static/images/chart.png";
                                     itemOne.appendChild(modeImg);
                                     let modeData = document.createElement("div");
-                                    modeData.textContent = obj.difficulty;
+                                    modeData.textContent = el.difficulty;
                                     itemOne.appendChild(modeData);
 
                                     // render description
                                     let desc = document.createElement("div");
                                     desc.classList.add("desc");
-                                    desc.textContent = obj.description;
+                                    desc.textContent = el.description;
                                     innerInfo.appendChild(desc);
                                     // render ingredients
                                     let ingred = document.createElement("div");
                                     ingred.classList.add("uses");
                                     ingred.textContent = "Uses: ";
-                                    ingred.textContent += obj.ingredients;
+                                    ingred.textContent += el.ingredients;
                                     innerInfo.appendChild(ingred);
                                     // render fav iconCont
                                     let favCont = document.createElement("div");

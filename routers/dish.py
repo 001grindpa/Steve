@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
-from models import CreateUser, LoginUser, UserData, get_db, User, Dish, DishData
+from models import get_db, Dish, DishData, User
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 from hash import Hash
 from routers import user
 from oauth2 import get_current_user
@@ -10,19 +11,46 @@ router = APIRouter(tags=["Dish Routes"])
 
 @router.get("/to-make", status_code=status.HTTP_200_OK)
 async def to_make(request: Request):
-    dishes = request.session.get("dishes")
+    dishes = ""
+    if request.session.get("dishes"):
+        dishes = request.session.get("dishes")
     return {"detail": dishes}
 
-# @router.post("/make_dish", status_code=status.HTTP_201_CREATED)
-# def make_dish(dish_data: DishData, username: str, current_user: User=Depends(get_current_user), db: Session=Depends(get_db)):
-#     dish = Dish(name=dish_data.name, origin=dish_data.origin, 
-#                 ingredients=dish_data.ingredients)
-#     user = db.query(User).where(User.username == username).first()
-#     if not user:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
-#                             detail="User does not exist")
-    
-#     user.dishes.append(dish)
-#     db.commit()
-#     db.refresh(dish)
-#     return dish
+# this API endpoint recieves the array index of the dish object you intend to save
+# then it saves it from the active dishes session data to the db
+@router.post("/add-dish", status_code=status.HTTP_201_CREATED)
+async def add_dish(request: Request, index: int, db:Session = Depends(get_db)):
+    selected_dish = request.session.get("dishes")[index]
+    current_user = db.query(User).where(User.email == request.session.get("email")).first()
+
+    # check if dish is already in db
+    dish = db.query(Dish).where(Dish.name == selected_dish.get("name")).first()
+    if dish:
+        raise HTTPException(status_code=status.HTTP_302_FOUND, detail="This dish is already added to list")
+    # create dish db object
+    new_dish = Dish(name=selected_dish.get("name"), origin=selected_dish.get("origin"), 
+                time=selected_dish.get("time_it_takes"), mode=selected_dish.get("difficulty"), 
+                description=selected_dish.get("description"), ingredients=selected_dish.get("ingredients"))
+    # add dish object to db
+    current_user.dishes.append(new_dish)
+    db.commit()
+    return {"detail": "Meal added to list successfully"}
+
+@router.delete("/remove-dish", status_code=status.HTTP_200_OK)
+def remove_dish(request: Request, index: int, db: Session=Depends(get_db)):
+    selected_dish = request.session.get("dishes")[index]
+    current_user = db.query(User).where(User.email == request.session.get("email")).first()
+
+    # check if in db
+    dish = db.query(Dish).where(and_(Dish.name == selected_dish.get("name"), 
+                                     Dish.user_id == current_user.id)).first()
+    if dish:
+        db.delete(dish)
+        db.commit()
+        return {"detail": "Meal removed from list"}
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This dish is not in list")
+
+@router.delete("/cancel-options", status_code=status.HTTP_200_OK)
+def cancel_options(request: Request):
+    request.session["dishes"] = None
+    return {"detail": "options cleared"}

@@ -97,36 +97,52 @@
                     <div class="block-3">
                         <h3>Steve's recipe ideas ✨</h3>
                         <div class="ingre-cont">
-                            <!-- <div class="before-ingre">Based on your ingredients</div>
-                            <div class="ingre">
-                                <div>Chicken</div>
-                                <div>Rice</div>
-                                <div>Garlic</div>
-                            </div> -->
+                            {% if request.session.get("dishes") %}
+                                <div class="before-ingre">Based on your ingredients</div>
+                                <div class="cancel">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                {% for data in request.session.get("dishes") %}
+                                        {% if data.get("user's ingredients") %}
+                                        <div class="ingre">
+                                            <div>{{ data.get("user's ingredients") }}</div>
+                                            <!-- <div>Rice</div>
+                                            <div>Garlic</div> -->
+                                        </div>
+                                        {% endif %}
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <div class="dishes">
                             <!--Use jnja to render generated dishes from session-->
                             <div class="pre-info">Steve's ideas will appear here.</div>
-                            <!-- <div class="dish">
-                                <div class="one">
-                                    <h4>Garlic Soy Chicken & Rice Bowl</h4>
-                                    <div>
-                                        <div class="info">
-                                            <img src="{{ url_for('static', path='images/time.png') }}" alt="time">
-                                            <div>24 min</div>
+                            {% if request.session.get("dishes") %}
+                                {% for data in request.session.get("dishes") %}
+                                    {% if not data.get("user's ingredients") %}
+                                        <div class="dish">
+                                            <div class="one">
+                                                <h4>{{ data.get("name") }}</h4>
+                                                <div>
+                                                    <div class="info">
+                                                        <img src="{{ url_for('static', path='images/time.png') }}" alt="time">
+                                                        <div>{{ data.get("time_it_takes") }}</div>
+                                                    </div>
+                                                    <div class="info">
+                                                        <img src="{{ url_for('static', path='images/chart.png') }}" alt="chart">
+                                                        <div>{{ data.get("difficulty") }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="desc">{{ data.get("description") }}</div>
+                                                <div class="uses">Uses: {{ data.get("ingredients") }}</div>
+                                            </div>
+                                            <div class="two">
+                                                <img src="{{ url_for('static', path='images/love.png') }}" alt="fav">
+                                            </div>
                                         </div>
-                                        <div class="info">
-                                            <img src="{{ url_for('static', path='images/chart.png') }}" alt="chart">
-                                            <div>Easy</div>
-                                        </div>
-                                    </div>
-                                    <div class="desc">Savory garlic soy chicken served over rice with steamed broccoli.</div>
-                                    <div class="uses">Uses: Chicken, Rice, Broccoli, Garlic, Soy Sauce</div>
-                                </div>
-                                <div class="two">
-                                    <img src="{{ url_for('static', path='images/love.png') }}" alt="fav">
-                                </div>
-                            </div> -->
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <img id="green-loader" src="{{ url_for('static', path='gifs/green_loader.gif') }}" alt="loader">
                     </div>

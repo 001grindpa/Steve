@@ -4,6 +4,7 @@ from fastapi.responses import RedirectResponse, StreamingResponse
 from models import CreateUser, LoginUser, UserData, get_db, User, QueryData, Chat
 from sqlalchemy.orm import Session
 from hash import Hash
+import json
 from kit import (
     check_password, email_check, stream_response, get_time, 
     getting_dish_replies, DishDetail
@@ -110,14 +111,17 @@ async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
     print(r)
     try:
         if (isinstance(ast.literal_eval(r), list)):
-            request.session["dishes"] = ast.literal_eval(r)
+            dish_data = []
+            for obj in ast.literal_eval(r):
+                dish_data.append(json.loads(obj))
+            request.session["dishes"] = dish_data
             r = await getting_dish_replies()
     except (ValueError, SyntaxError):
         pass
     time = get_time()
     # add chat to database first
     chat = Chat(
-        username=request.session.get("email"), user_txt=query,
+        email=request.session.get("email"), user_txt=query,
         user_time=time, steve_txt=r, steve_time=time
         )
     db.add(chat)
@@ -125,7 +129,7 @@ async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
 
     # query db to get llm response
     last_chat = db.query(Chat).where(
-        Chat.username == request.session.get("email")        
+        Chat.email == request.session.get("email")        
         ).order_by(Chat.id.desc()).first()
     llm_response = last_chat.steve_txt
     
@@ -135,7 +139,7 @@ async def steve(request: Request, query: str=None, db: Session=Depends(get_db)):
 
 @router.get("/chat", status_code=status.HTTP_200_OK)
 def chat(request: Request, db: Session=Depends(get_db)):
-    chats = db.query(Chat).where(Chat.username == request.session.get("email")).all()
+    chats = db.query(Chat).where(Chat.email == request.session.get("email")).all()
     if chats is None:
         return {"detail": "not_found"}
     return {"detail": chats}
@@ -143,7 +147,7 @@ def chat(request: Request, db: Session=Depends(get_db)):
 # This endpoint deletes chats
 @router.delete("/clear_chat", status_code=status.HTTP_200_OK)
 def clear_chat(request: Request, db:Session=Depends(get_db)):
-    chats = db.query(Chat).where(User.username == request.session.get("email")).all()
+    chats = db.query(Chat).where(Chat.email == request.session.get("email")).all()
     for chat in chats:
         db.delete(chat)
         db.commit()
