@@ -20,7 +20,7 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
 
 # declare llms and tools
-llm = ChatGroq(model="openai/gpt-oss-120b") # openai/gpt-oss-120b
+llm = ChatGroq(model="openai/gpt-oss-120") # openai/gpt-oss-120b
 tavily = TavilySearch(max_result=2)
 tools = [tavily]
 llm_with_tools = llm.bind_tools(tools)
@@ -35,7 +35,7 @@ def llm_caller(state: State):
         3. When a user gives you ingredients, return an array/list of at most three(3) meal objects the user can prepare
         just an array of meals in exactly this format 
         ['{"name": "...", "origin": "...", "time_it_takes": "in min.(append 'min')", "difficulty": "Easy/Mid/Hard", "description": "...", "ingredients": "..."}',
-        '{"name": "...", "origin": "...", "time_it_takes": "...", "difficulty": "Easy/Mid/Hard", "description": "...", "ingredients": "..."}', ..., '{"user's ingredients": "..., ..."}'}] you must not include any extra texts/emojis.
+        '{"name": "...", "origin": "...", "time_it_takes": "...", "difficulty": "Easy/Mid/Hard", "description": "...", "ingredients": "..."}', ..., '{"user's ingredients": "..., ..."}'}]. Insert the object keys as they are and you must not include any extra texts/emojis.
         4. include the word "can't" in your response expressing how inappropriate it is
         when user tries to make a meal from non edible items. Don't add "[]" for this type of response.
         5. don't respond with markdown.

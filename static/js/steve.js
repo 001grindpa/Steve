@@ -229,9 +229,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const dishesCont = body.querySelector(".block-3 .dishes");
         const preDishInfo = body.querySelector(".block-3 .dishes .pre-info");
         const greenLoader = body.querySelector(".block-3 #green-loader");
-        const dishes = body.querySelectorAll(".block-3 .dishes .two img");
+        // const dishes = body.querySelectorAll(".block-3 .dishes .two img");
+        // const ingreContTitle = body.querySelector(".block-3 .ingre-cont .before-ingre");
+        // const ingreCont = body.querySelector(".block-3 .ingre-cont .ingre");
         const cancelOptions = body.querySelector(".block-3 .ingre-cont .cancel");
-        // userIngre.style.background = "red";
+        // recipesCont.style.background = "red";
 
         // page loading logic
         window.addEventListener("load", () => {
@@ -258,21 +260,121 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // iplement cancel options action
             cancelOptions.classList.add("active");
-        }
+        };
         // clear steve's ideas
-        // cancelOptions.addEventListener("click", async () => {
-        //         try {
-        //             let r = await fetch("/cancel-options", {
-        //                 method: "DELETE"
-        //             });
-        //             let d = await r.json();
-        //             console.log(d.detail);
-        //             dishesCont.textContent = "";
-        //             cancelOptions.classList.remove("active");
-        //         } catch (e) {
-        //             console.log("Unexpected error ->", e);
-        //         }
-        //     });
+        recipesCont.addEventListener("click", async (e) => {
+            let cancelBtn = e.target.closest(".cancel");
+            if (cancelBtn) {
+                console.log("btn clicked");
+                // retrieve later generated dom elements
+                const ingreContTitle = body.querySelector(".block-3 .ingre-cont .before-ingre");
+                const ingreCont = body.querySelector(".block-3 .ingre-cont .ingre");
+                if (cancelBtn.classList.contains("active")) {
+                    try {
+                        let r = await fetch("/cancel-options", {
+                            method: "DELETE"
+                        });
+                        let d = await r.json();
+                        console.log(d.detail);
+
+                        // clear front-end text
+                        dishesCont.textContent = "";
+                        ingreCont.textContent = "";
+                        ingreContTitle.textContent = "";
+                        // create and add back pre-dish info i.e "Steve's ideas will appear here" el
+                        let preDishInfo = document.createElement("div");
+                        preDishInfo.classList.add("pre-info")
+                        preDishInfo.textContent = "Steve's ideas will appear here.";
+                        dishesCont.append(preDishInfo);
+                        // remove the active class from cancel el when there's nothing to cancel
+                        cancelBtn.classList.remove("active");
+                        
+                        // create notification for status
+                        let notice = document.createElement("div");
+                        notice.classList.add("notice");
+                        notice.style.backgroundColor = "gray";
+                        notice.textContent = d.detail;
+                        noticeCont.prepend(notice);
+                        notice.classList.add("show");
+                        setTimeout(() => {
+                            notice.classList.add("remove");
+                        }, 4000);
+                        
+                    } catch (e) {
+                        console.log("Unexpected error ->", e);
+                    } finally {
+                        console.log("clicked cancel button")
+                    }
+                } else {
+                    // create notification for status
+                    let notice = document.createElement("div");
+                    notice.classList.add("notice");
+                    notice.style.backgroundColor = "red";
+                    notice.textContent = "No recommendations to clear";
+                    noticeCont.prepend(notice);
+                    notice.classList.add("show");
+                    setTimeout(() => {
+                        notice.classList.add("remove");
+                    }, 3000);
+                    return console.log("No recommendations to clear");
+                }
+            };
+            // send request to add dish to favorites and remove
+            const dishes = body.querySelectorAll(".block-3 .dishes .two img");
+            for (let i=0; i < dishes.length; i++) {
+                if (e.target == dishes[i]) {
+                    if (dishes[i].style.backgroundColor == "lightcoral") {
+                        // remove dish from list if exists
+                        dishes[i].style.backgroundColor = "transparent";
+                        try {
+                            let r = await fetch(`/remove-dish?index=${i}`, {
+                                method: "DELETE"
+                            });
+                            let d = await r.json();
+                            
+                            // create notification for status
+                            let notice = document.createElement("div");
+                            notice.classList.add("notice");
+                            notice.style.backgroundColor = "gray";
+                            notice.textContent = d.detail;
+                            noticeCont.prepend(notice);
+                            notice.classList.add("show");
+                            setTimeout(() => {
+                                notice.classList.add("remove");
+                            }, 4000);
+                        } catch (e) {
+                            console.log("Unexpected error ->", e);
+                        } finally {
+                            console.log("You have sent a request to remove meal");
+                        }
+                    } else {
+                        // add dish to list
+                        dishes[i].style.backgroundColor = "lightcoral";
+                        try {
+                            let r = await fetch(`/add-dish?index=${i}`, {
+                                method: "POST"
+                            });
+                            let d = await r.json();
+                            
+                            // create notification for status
+                            let notice = document.createElement("div");
+                            notice.classList.add("notice");
+                            notice.style.backgroundColor = "blue";
+                            notice.textContent = d.detail;
+                            noticeCont.prepend(notice);
+                            notice.classList.add("show");
+                            setTimeout(() => {
+                                notice.classList.add("remove");
+                            }, 4000);
+                        } catch (e) {
+                            console.log("Unexpected error ->", e);
+                        } finally {
+                            console.log("You have sent a request to add meal");
+                        }   
+                    }
+                }
+            }
+        });
 
         // clear chat db on click
         clearChat.addEventListener("click", async () => {
@@ -295,7 +397,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             r = await fetch("/chat");
             d = await r.json();
             if (d.detail == "not_found") {
-                console.log("empty chat");
+                return console.log("empty chat");
             }
             d.detail.forEach(el => {
                 // render user's text
@@ -344,61 +446,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         catch (e) {
             console.log("Unexpected error ->", e);
-        }
-
-        // send request to add dish to favorites and remove
-        for (let i=0; i < dishes.length; i++) {
-            dishes[i].addEventListener("click", async () => {
-                if (dishes[i].style.backgroundColor == "lightcoral") {
-                    // remove dish from list if exists
-                    dishes[i].style.backgroundColor = "transparent";
-                    try {
-                        let r = await fetch(`/remove-dish?index=${i}`, {
-                            method: "DELETE"
-                        });
-                        let d = await r.json();
-                        
-                        // create notification for status
-                        let notice = document.createElement("div");
-                        notice.classList.add("notice");
-                        notice.style.backgroundColor = "gray";
-                        notice.textContent = d.detail;
-                        noticeCont.prepend(notice);
-                        notice.classList.add("show");
-                        setTimeout(() => {
-                            notice.classList.add("remove");
-                        }, 4000);
-                    } catch (e) {
-                        console.log("Unexpected error ->", e);
-                    } finally {
-                        console.log("You have sent a request to remove meal");
-                    }
-                } else {
-                    // add dish to list
-                    dishes[i].style.backgroundColor = "lightcoral";
-                    try {
-                        let r = await fetch(`/add-dish?index=${i}`, {
-                            method: "POST"
-                        });
-                        let d = await r.json();
-                        
-                        // create notification for status
-                        let notice = document.createElement("div");
-                        notice.classList.add("notice");
-                        notice.style.backgroundColor = "blue";
-                        notice.textContent = d.detail;
-                        noticeCont.prepend(notice);
-                        notice.classList.add("show");
-                        setTimeout(() => {
-                            notice.classList.add("remove");
-                        }, 4000);
-                    } catch (e) {
-                        console.log("Unexpected error ->", e);
-                    } finally {
-                        console.log("You have sent a request to add meal");
-                    }   
-                }
-            })
         }
 
         // render conversation chat between user and steve
@@ -508,6 +555,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                         try {
                             r = await fetch("/to-make");
                             d = await r.json();
+                            // handle when dishes array is empty
+                            if (d.detail == "") {
+                                return console.log("The array of dishes is empty");
+                            }
                             // clear recipe container before appending new data
                             userIngreCont.textContent = "";
                             dishesCont.textContent = "";
@@ -515,10 +566,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                             setTimeout(() => {
                                 greenLoader.style.display = "none";
                                 // start creating and appending dish details
+                                // create the cancel button
+                                let cancelBtn = document.createElement("div");
+                                cancelBtn.classList.add("cancel", "active");
+                                let line1 = document.createElement("div");
+                                let line2 = document.createElement("div");
+                                cancelBtn.appendChild(line1);
+                                cancelBtn.appendChild(line2);
+                                userIngreCont.appendChild(cancelBtn);
+
+
                                 const beforeIngre = document.createElement("div");
                                 beforeIngre.textContent = "Based on your ingredients";
                                 beforeIngre.classList.add("before-ingre");
                                 userIngreCont.appendChild(beforeIngre);
+                                
                                 
                                 d.detail.forEach(el => {
                                     // render user's ingres

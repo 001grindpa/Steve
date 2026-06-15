@@ -97,25 +97,23 @@
                     <div class="block-3">
                         <h3>Steve's recipe ideas ✨</h3>
                         <div class="ingre-cont">
+                            <div class="cancel">
+                                <div></div>
+                                <div></div>
+                            </div>
                             {% if request.session.get("dishes") %}
                                 <div class="before-ingre">Based on your ingredients</div>
-                                <div class="cancel">
-                                    <div></div>
-                                    <div></div>
-                                </div>
                                 {% for data in request.session.get("dishes") %}
                                         {% if data.get("user's ingredients") %}
                                         <div class="ingre">
                                             <div>{{ data.get("user's ingredients") }}</div>
-                                            <!-- <div>Rice</div>
-                                            <div>Garlic</div> -->
                                         </div>
                                         {% endif %}
                                 {% endfor %}
                             {% endif %}
                         </div>
                         <div class="dishes">
-                            <!--Use jnja to render generated dishes from session-->
+                            <!--Used jnja to render generated dishes from session-->
                             <div class="pre-info">Steve's ideas will appear here.</div>
                             {% if request.session.get("dishes") %}
                                 {% for data in request.session.get("dishes") %}
