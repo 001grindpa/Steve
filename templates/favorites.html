@@ -37,13 +37,13 @@
                     </div>
                     <menu>
                         <a href="">
-                            <div class="item selected">
+                            <div class="item">
                                 <img src="{{ url_for('static', path='images/home.png') }}" alt="home">
                                 <div>Home</div>
                             </div>
                         </a>
                         <a href="/dishes">
-                            <div class="item">
+                            <div class="item selected">
                                 <img src="{{ url_for('static', path='images/love.png') }}" alt="favorites">
                                 <div>Favorites</div>
                             </div>
@@ -71,87 +71,62 @@
                     </div>
                 </div>
             </div>
-            <div class="back">Welcome back, {{ user }}!</div>
-            <div class="grid-cont">
-                <div class="block-2">
-                    <div class="chat-area">
-                        <div class="chat-cont">
-                        <!-- store chat to db and use jinja to render it here from db on page reload -->
-                            <!-- <div class="user-cont">
-                                <div class="user">
-                                    <div class="user-txt">Hello, I'm steve. Tell me me what ingredients you have</div>
-                                    <div class="user-time">10:30 <span>AM</span></div>
-                                </div>
-                            </div>
-                            <div class="steve-cont">
-                                <div class="steve">
-                                    <div class="txt">Hello, I'm steve. Tell me me what ingredients you have</div>
-                                    <div class="time">10:30 AM</div>
-                                </div>
-                                <img src="{{ url_for('static', path='gifs/loading-dots.gif') }}" alt="thinking">
-                            </div> -->
-                        </div>
-                        <div class="input-cont">
-                            <img id="trash_can" src="{{ url_for('static', path='images/trash_can.png') }}" alt="trash_can">
-                            <div>Clear chat</div>
+            <div class="block-2">
+                <div class="fav-header">
+                    <h2>My Favorites</h2>
+                    <div>All your saved recipes in one place.</div>
+                </div>
+                <div>
+                    <form action="" id="search">
+                        <img src="{{ url_for('static', path='images/search-2.png') }}" alt="search_icon">
+                        <input type="text" name="fav" placeholder="Search your favorites..." autocomplete="off" autofocus>
+                    </form>
+                    <div class="order">
+                        <div class="sort">
+                            <div>Sort by</div>
                             <form action="">
-                                <input id="query" type="text" name="query" placeholder="Message Steve..." autocomplete="off" autofocus>
-                                <button type="submit"><img src="{{ url_for('static', path='images/send_white.png') }}" alt="send_logo"></button>
+                                <select name="sort" id="sort">
+                                    <option value="recent">Recently added</option>
+                                    <option value="oldest">Oldest Added</option>
+                                    <option value="a-z">A-Z (Dish name)</option>
+                                    <option value="quick">Quick meals</option>
+                                    <option value="complex">Complex meals</option>
+                                </select>
+                            </form>
+                        </div>
+                        <div class="filter">
+                            <div>Filter</div>
+                            <form action="">
+                                <select name="filter" id="filter">
+                                    <option value="all">All recipes</option>
+                                </select>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="block-3-cont">
-                    <div class="block-3">
-                        <h3>Steve's recipe ideas ✨</h3>
-                        <div class="ingre-cont">
-                            <div class="cancel">
-                                <div></div>
-                                <div></div>
-                            </div>
-                            {% if request.session.get("dishes") %}
-                                <div class="before-ingre">Based on your ingredients</div>
-                                {% for data in request.session.get("dishes") %}
-                                        {% if data.get("user's ingredients") %}
-                                        <div class="ingre">
-                                            <div>{{ data.get("user's ingredients") }}</div>
-                                        </div>
-                                        {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                        <div class="dishes">
-                            <!--Used jnja to render generated dishes from session-->
-                            <div class="pre-info">Steve's ideas will appear here.</div>
-                            {% if request.session.get("dishes") %}
-                                {% for data in request.session.get("dishes") %}
-                                    {% if not data.get("user's ingredients") %}
-                                        <div class="dish">
-                                            <div class="one">
-                                                <h4>{{ data.get("name") }}</h4>
-                                                <div>
-                                                    <div class="info">
-                                                        <img src="{{ url_for('static', path='images/time.png') }}" alt="time">
-                                                        <div>{{ data.get("time_it_takes") }}</div>
-                                                    </div>
-                                                    <div class="info">
-                                                        <img src="{{ url_for('static', path='images/chart.png') }}" alt="chart">
-                                                        <div>{{ data.get("difficulty") }}</div>
-                                                    </div>
-                                                </div>
-                                                <div class="desc">{{ data.get("description") }}</div>
-                                                <div class="uses">Uses: {{ data.get("ingredients") }}</div>
-                                            </div>
-                                            <div class="two">
-                                                <img src="{{ url_for('static', path='images/love.png') }}" alt="fav">
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                        <img id="green-loader" src="{{ url_for('static', path='gifs/green_loader.gif') }}" alt="loader">
+            </div>
+            <div class="block-3">
+                <div class="dish-cont">
+                    <div class="dish-header">
+                        <h4>Garlic Soy chicken & Rice Bowl</h4>
+                        <img src="{{ url_for('static', path='images/dots.png') }}" alt="dots_icon">
                     </div>
+                    <div class="sub-details">
+                        <div class="sub-detail">
+                            <img src="{{ url_for('static', path='images/time.png') }}" alt="time_icon">
+                            <div>25 min</div>
+                        </div>
+                        <div class="sub-detail">
+                            <img src="{{ url_for('static', path='images/chart.png') }}" alt="chart_icon">
+                            <div>Easy</div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div>Savory garlic soy chicken served over rice with steamed broccoli</div>
+                        <div class="uses">Uses: Chicken, Rice, Broccoli, Garlic, Soy Sauce</div>
+                        <div class="origin">Orign: India</div>
+                    </div>
+                    <div class="recipe">View Recipe</div>
                 </div>
             </div>
         </main>

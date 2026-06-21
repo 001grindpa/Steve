@@ -229,9 +229,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const dishesCont = body.querySelector(".block-3 .dishes");
         const preDishInfo = body.querySelector(".block-3 .dishes .pre-info");
         const greenLoader = body.querySelector(".block-3 #green-loader");
-        // const dishes = body.querySelectorAll(".block-3 .dishes .two img");
-        // const ingreContTitle = body.querySelector(".block-3 .ingre-cont .before-ingre");
-        // const ingreCont = body.querySelector(".block-3 .ingre-cont .ingre");
         const cancelOptions = body.querySelector(".block-3 .ingre-cont .cancel");
         // recipesCont.style.background = "red";
 
@@ -668,6 +665,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             } finally {
                 console.log("request completed");
             }
+        })
+    }
+    else if (document.body.id == "fav") {
+        const body = document.querySelector("body");
+        const subBody = body.querySelector(".sub-body");
+        const loader = body.querySelector(".loader");
+        const sideMenu = body.querySelector(".block-1");
+        const bugerLogo = body.querySelector("#check-menu + label");
+        const bugerLogoCheck = body.querySelector("#check-menu");
+
+        // render page after window loads
+        window.addEventListener("load", () => {
+            loader.style.display = "none";
+            subBody.style.display = "block";
+        })
+
+        // clicking body removes sidebar menu
+        body.addEventListener("click", () => {
+            if (bugerLogoCheck.checked == true) {
+                bugerLogo.click();
+            }
+        })
+        sideMenu.addEventListener("click", (e) => {
+            e.stopPropagation();
+        })
+        bugerLogo.addEventListener("click", (e) => {
+            e.stopPropagation();
         })
     }
 })

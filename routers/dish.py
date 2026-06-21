@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
 from models import get_db, Dish, DishData, User
 from sqlalchemy.orm import Session
+from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_
 from hash import Hash
 from routers import user
@@ -8,6 +9,7 @@ from oauth2 import get_current_user
 from kit import DishDetail
 
 router = APIRouter(tags=["Dish Routes"])
+templates = Jinja2Templates(directory="templates")
 
 @router.get("/to-make", status_code=status.HTTP_200_OK)
 async def to_make(request: Request):
@@ -36,6 +38,22 @@ async def add_dish(request: Request, index: int, db:Session = Depends(get_db)):
     db.commit()
     return {"detail": "Meal added to list successfully"}
 
+# this endpoint returns the page template
+@router.get("/dishes", status_code=status.HTTP_200_OK)
+def dishes(request: Request):
+    return templates.TemplateResponse(request, "favorites.html", {"page_id": "fav"})
+
+# this api retrieves dishes from db
+@router.get("/dishes", status_code=status.HTTP_200_OK)
+def dishes(request: Request, db: Session=Depends(get_db)):
+    current_user = db.query(User).where(User.email == request.session.get("email")).first()
+    if current_user is None:
+        raise HTTPException(detail="User not found", status_code=status.HTTP_404_NOT_FOUND)
+    user_dishes = db.query(Dish).where(Dish.user_id == current_user.id).all()
+
+    return {"detail": user_dishes}
+
+# this api removes fav dishes from db
 @router.delete("/remove-dish", status_code=status.HTTP_200_OK)
 def remove_dish(request: Request, index: int, db: Session=Depends(get_db)):
     selected_dish = request.session.get("dishes")[index]
@@ -50,6 +68,7 @@ def remove_dish(request: Request, index: int, db: Session=Depends(get_db)):
         return {"detail": "Meal removed from list"}
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This dish is not in list")
 
+# this api clears steve's ideas from ui
 @router.delete("/cancel-options", status_code=status.HTTP_200_OK)
 def cancel_options(request: Request):
     request.session["dishes"] = None

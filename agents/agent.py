@@ -20,7 +20,7 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
 
 # declare llms and tools
-llm = ChatGroq(model="openai/gpt-oss-120") # openai/gpt-oss-120b
+llm = ChatGroq(model="openai/gpt-oss-120b") # openai/gpt-oss-120b
 tavily = TavilySearch(max_result=2)
 tools = [tavily]
 llm_with_tools = llm.bind_tools(tools)
