@@ -674,6 +674,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const sideMenu = body.querySelector(".block-1");
         const bugerLogo = body.querySelector("#check-menu + label");
         const bugerLogoCheck = body.querySelector("#check-menu");
+        // const dishOptionsIcon = body.querySelectorAll(".block-3 .dish-cont .dish-header img");
+        // const dishOptionsCont = body.querySelectorAll(".block-3 .dish-cont .options");
+        const dishesBlock = body.querySelector(".block-3");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -681,9 +684,29 @@ document.addEventListener("DOMContentLoaded", async () => {
             subBody.style.display = "block";
         })
 
-        // clicking body removes sidebar menu
-        body.addEventListener("click", () => {
-            if (bugerLogoCheck.checked == true) {
+        // clicking body removes floating els
+        body.addEventListener("click", (e) => {
+            let clickedEl = e.target;
+            // get generated dishes el/objects from DOM
+            const dishOptionsIcon = body.querySelectorAll(".block-3 .dish-cont .dish-header img");
+            const dishOptionsCont = body.querySelectorAll(".block-3 .dish-cont .options");
+            const dishOptionEls = body.querySelectorAll(".block-3 .dish-cont .options .option");
+            // prevents removal if clicked on container
+            for(let i=0; i < dishOptionsIcon.length; i++) {
+                if (clickedEl === dishOptionsIcon[i] || clickedEl === dishOptionsCont[i]) {
+                    console.log("clicked icon");
+                    return;
+                } 
+            }
+            // 
+            dishOptionsCont.forEach((el) => {
+                if (el.style.display === "block") {
+                    el.style.display = "none";
+                }
+            })
+
+            // removes floating sidebar menu
+            if (bugerLogoCheck.checked) {
                 bugerLogo.click();
             }
         })
@@ -692,6 +715,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
         bugerLogo.addEventListener("click", (e) => {
             e.stopPropagation();
+        })
+
+        // control dish options cont el
+        dishesBlock.addEventListener("click", (e) => {
+            // get generated dishes el/objects from DOM
+            const dishOptionsIcon = body.querySelectorAll(".block-3 .dish-cont .dish-header img");
+            const dishOptionsCont = body.querySelectorAll(".block-3 .dish-cont .options");
+            let targetEl = e.target;
+
+            for (let i=0; i < dishOptionsIcon.length; i ++) {
+                // check if clicked existing container el == generated el out of many similar
+                if (targetEl == dishOptionsIcon[i]) {
+                    if (dishOptionsCont[i].style.display == "block") {
+                        return dishOptionsCont[i].style.display = "none";
+                    }
+                    return dishOptionsCont[i].style.display = "block";
+                }
+            }
         })
     }
 })
