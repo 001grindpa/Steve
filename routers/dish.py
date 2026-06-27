@@ -44,7 +44,7 @@ def dishes(request: Request):
     return templates.TemplateResponse(request, "favorites.html", {"page_id": "fav"})
 
 # this api retrieves dishes from db
-@router.get("/dishes", status_code=status.HTTP_200_OK)
+@router.post("/dishes", status_code=status.HTTP_200_OK)
 def dishes(request: Request, db: Session=Depends(get_db)):
     current_user = db.query(User).where(User.email == request.session.get("email")).first()
     if current_user is None:
