@@ -684,7 +684,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             subBody.style.display = "block";
         })
 
-        // clicking body removes floating els
+        // clicking body removes floating elements
         body.addEventListener("click", (e) => {
             let clickedEl = e.target;
             // get generated dishes el/objects from DOM
@@ -716,6 +716,128 @@ document.addEventListener("DOMContentLoaded", async () => {
         bugerLogo.addEventListener("click", (e) => {
             e.stopPropagation();
         })
+
+        // this fetch client retrieves meals stored in db
+        try {
+            let resp = await fetch("/dishes", {
+                method: "POST"
+            });
+            let dishesObjs = await resp.json();
+            console.log("Dishes: ", dishesObjs.detail);
+            dishesObjs.detail.forEach(dish => {
+                // create dish container
+                let dishCont = document.createElement("div");
+                dishCont.classList.add("dish-cont");
+                // apend dishCont to block3
+                dishesBlock.appendChild(dishCont);
+                // create options floating el
+                let options = document.createElement("div");
+                options.classList.add("options");
+                // append options cont to dishes cont
+                dishCont.appendChild(options);
+                // create options children
+                let option1 = document.createElement("div"); // create option1
+                option1.classList.add("option");
+                // create option1 children
+                let img1 = document.createElement("img");
+                img1.src = "static/images/love.png";
+                option1.appendChild(img1); // append to option1
+                let content1 = document.createElement("div");
+                content1.textContent = "Remove from favorites";
+                option1.appendChild(content1); // append to option1
+                
+                let option2 = document.createElement("div"); // create option2
+                option2.classList.add("option");
+                // create option2 children
+                let img2 = document.createElement("img");
+                img2.src = "static/images/calender.png";
+                option2.appendChild(img2); // append to option2
+                let content2 = document.createElement("div");
+                content2.textContent = "Remove from favorites";
+                option2.appendChild(content2); // append to option2
+
+                let option3 = document.createElement("div"); // create option3
+                option3.classList.add("option");
+                // create option2 children
+                let img3 = document.createElement("img");
+                img3.src = "static/images/big-share.png";
+                option3.appendChild(img3); // append to option3
+                let content3 = document.createElement("div");
+                content3.textContent = "Remove from favorites";
+                option3.appendChild(content3); // append to option3
+                // append option1, 2, 3 to options cont
+                options.appendChild(option1);
+                options.appendChild(option2);
+                options.appendChild(option3);
+                
+                // start creating main dish content
+                let head = document.createElement("div"); // header cont
+                head.classList.add("dish-header");
+                dishCont.appendChild(head); // append head directly to dish cont
+                // create head children
+                let h4 = document.createElement("h4");
+                h4.textContent = dish["name"];
+                let dots = document.createElement("img");
+                dots.src = "static/images/dots.png";
+                // append h4 and dots to head cont
+                head.appendChild(h4);
+                head.appendChild(dots);
+
+                // start creating main dish body
+                let subDetails = document.createElement("div");
+                subDetails.classList.add("sub-details");
+                dishCont.appendChild(subDetails); // append subDetails to dishes cont
+                // start creating sub details children
+                let timeDetail = document.createElement("div");
+                timeDetail.classList.add("sub-detail");
+                subDetails.appendChild(timeDetail); // append timeDetail to subDetails cont
+                let timeImg = document.createElement("img"); // time detail
+                timeImg.src = "static/images/time.png";
+                let timeDiv = document.createElement("div"); // time detail
+                timeDiv.textContent = dish["time"];
+                // append both time details to the container
+                timeDetail.appendChild(timeImg);
+                timeDetail.appendChild(timeDiv);
+                // second sub detail child
+                let modeDetail = document.createElement("div");
+                modeDetail.classList.add("sub-detail");
+                subDetails.appendChild(modeDetail); // append modeDetail to subDetails cont
+                let modeImg = document.createElement("img"); // mode detail
+                modeImg.src = "static/images/chart.png";
+                let modeDiv = document.createElement("div"); // mode detail
+                modeDiv.textContent = dish["mode"];
+                // append both mode details to the container
+                modeDetail.appendChild(modeImg);
+                modeDetail.appendChild(modeDiv);
+                
+                // create content container and append to dishCont
+                let content = document.createElement("div");
+                content.classList.add("content");
+                dishCont.appendChild(content);
+                // start creating content children
+                let dishDesc = document.createElement("div");
+                dishDesc.textContent = dish["description"];
+                let uses = document.createElement("div"); // ingredients content
+                uses.classList.add("uses");
+                uses.textContent = `Uses: ${dish["ingredients"]}`;
+                let origin = document.createElement("div"); // origin content
+                origin.classList.add("origin");
+                uses.textContent = `Origin: ${dish["origin"]}`;
+                // append both contents to the content container
+                content.appendChild(dishDesc);
+                content.appendChild(uses);
+                content.appendChild(origin);
+
+                // create and append recipe btn to dishCont finally
+                let recipeBtn = document.createElement("div");
+                recipeBtn.classList.add("recipe");
+                recipeBtn.textContent = "View Recipe";
+                dishCont.appendChild(recipeBtn);
+            })
+
+        } catch (e) {
+            console.log("Unexpected error -> ", e);
+        }
 
         // control dish options cont el
         dishesBlock.addEventListener("click", (e) => {

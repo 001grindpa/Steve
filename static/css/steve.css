@@ -2,7 +2,7 @@
 *, html, body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 :root {
     --green-bg: rgb(0, 157, 0);
@@ -952,6 +952,12 @@ main .notice.show.remove {
     padding: 5px;
     border-radius: 8px;
 }
+#fav .block-2 .fav-header h2 {
+    color: var(--green-txt);
+}
+#fav .block-2 .fav-header div {
+    font-size: var(--smaller-txt);
+}
 #fav .block-3 {
     margin: auto;
     margin-top: 1rem;
@@ -1025,6 +1031,9 @@ main .notice.show.remove {
 #fav .block-3 .dish-cont .content {
     margin-top: 5px;
 }
+#fav .block-3 .dish-cont .content .uses, #fav .block-3 .dish-cont .content .origin {
+    font-weight: bold;
+} 
 #fav .block-3 .dish-cont .recipe {
     margin-top: 0.3rem;
     background-color: rgba(255, 166, 0, 0.827);
