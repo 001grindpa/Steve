@@ -724,6 +724,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
             let dishesObjs = await resp.json();
             console.log("Dishes: ", dishesObjs.detail);
+            // remove existing from dishes container
+            dishesBlock.innerHTML = "";
             dishesObjs.detail.forEach(dish => {
                 // create dish container
                 let dishCont = document.createElement("div");
@@ -753,7 +755,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 img2.src = "static/images/calender.png";
                 option2.appendChild(img2); // append to option2
                 let content2 = document.createElement("div");
-                content2.textContent = "Remove from favorites";
+                content2.textContent = "Add to meal planner";
                 option2.appendChild(content2); // append to option2
 
                 let option3 = document.createElement("div"); // create option3
@@ -763,7 +765,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 img3.src = "static/images/big-share.png";
                 option3.appendChild(img3); // append to option3
                 let content3 = document.createElement("div");
-                content3.textContent = "Remove from favorites";
+                content3.textContent = "Share";
                 option3.appendChild(content3); // append to option3
                 // append option1, 2, 3 to options cont
                 options.appendChild(option1);
@@ -833,7 +835,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 recipeBtn.classList.add("recipe");
                 recipeBtn.textContent = "View Recipe";
                 dishCont.appendChild(recipeBtn);
-            })
+            });
+            if (dishesBlock.innerHTML == "") {
+                let noDishCont = document.createElement("div");
+                noDishCont.classList.add("no-dish");
+                dishesBlock.appendChild(noDishCont);
+                let noDishImg = document.createElement("img");
+                noDishImg.src = "static/images/no_dishes.png";
+                noDishCont.appendChild(noDishImg);
+            }
 
         } catch (e) {
             console.log("Unexpected error -> ", e);

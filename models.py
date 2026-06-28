@@ -59,6 +59,7 @@ class BaseClass(Base):
 
     id = Column(Integer, primary_key=True)
 
+# this table stores user data
 class User(BaseClass):
     __tablename__ = "users"
 
@@ -67,10 +68,12 @@ class User(BaseClass):
     email = Column(String(255))
 
     dishes = relationship("Dish", back_populates="users")
+    planner = relationship("Planner", back_populates="users")
 
     def __repr__(self):
         return f"<username='{self.username}', email='{self.email}'>"
     
+# this table stores fav dishes
 class Dish(BaseClass):
     __tablename__ = "dishes"
 
@@ -87,6 +90,7 @@ class Dish(BaseClass):
     def __repr__(self):
         f"<name='{self.name}', origin='{self.origin}', ingredients='{self.ingredients}'>"
 
+# table that stores conversations
 class Chat(BaseClass):
     __tablename__ = "chats"
     email = Column(String(255))
@@ -97,5 +101,23 @@ class Chat(BaseClass):
 
     def __repr__(self):
         return f"id='{self.id}', user_txt='{self.user_txt}', steve_txt='{self.steve_txt}', steve_time='{self.steve_time}'"
+
+# this table stores meal planner
+class Planner(BaseClass):
+    __tablename__ = "planner"
+
+    breakfast = Column(String(1000))
+    lunch = Column(String(1000))
+    dinner = Column(String(1000))
+    snacks = Column(String(1000))
+    user_id = Column(ForeignKey("users.id"))
+
+    # establish relationship with user table
+    users = relationship(User, back_populates="planner")
+
+    def __repr__(self):
+        return f"""<id='{self.id}', breakfast='{self.breakfast}', 
+        lunch='{self.lunch}', dinner='{self.dinner}', snack'{self.snacks}'>""".strip()
+
 
 Base.metadata.create_all(engine)

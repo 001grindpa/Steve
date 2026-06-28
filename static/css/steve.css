@@ -963,11 +963,13 @@ main .notice.show.remove {
     margin-top: 1rem;
     width: 85vw;
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-flow: row wrap;
     gap: 1rem;
     margin-bottom: 40px;
 }
-#fav .block-3 img {
+#fav .block-3 .dish-cont img {
     width: 1rem;
 }
 #fav .block-3 .dish-cont {
@@ -1048,6 +1050,10 @@ main .notice.show.remove {
 }
 #fav .block-3 .dish-cont .recipe:hover {
     background-color: orange;
+}
+#fav .block-3 .no-dish img {
+    width: 20rem;
+    height: 20rem;
 }
 
 /* footer styling */
