@@ -674,6 +674,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const sideMenu = body.querySelector(".block-1");
         const bugerLogo = body.querySelector("#check-menu + label");
         const bugerLogoCheck = body.querySelector("#check-menu");
+        const searchInput = body.querySelector(".block-2 #search input");
+        const searchForm = body.querySelector(".block-2 #search");
         // const dishOptionsIcon = body.querySelectorAll(".block-3 .dish-cont .dish-header img");
         // const dishOptionsCont = body.querySelectorAll(".block-3 .dish-cont .options");
         const dishesBlock = body.querySelector(".block-3");
@@ -687,14 +689,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         // clicking body removes floating elements
         body.addEventListener("click", (e) => {
             let clickedEl = e.target;
+            // console.log("clicked el: ", clickedEl);
             // get generated dishes el/objects from DOM
             const dishOptionsIcon = body.querySelectorAll(".block-3 .dish-cont .dish-header img");
             const dishOptionsCont = body.querySelectorAll(".block-3 .dish-cont .options");
-            const dishOptionEls = body.querySelectorAll(".block-3 .dish-cont .options .option");
+            const dishData = body.querySelectorAll(".block-3 .dish-cont");
             // prevents removal if clicked on container
             for(let i=0; i < dishOptionsIcon.length; i++) {
-                if (clickedEl === dishOptionsIcon[i] || clickedEl === dishOptionsCont[i]) {
-                    console.log("clicked icon");
+                if (clickedEl === dishOptionsIcon[i] || 
+                    clickedEl === dishOptionsCont[i] ||
+                    clickedEl === dishData[i].querySelectorAll(".options .option div")[0] ||
+                    clickedEl === dishData[i].querySelectorAll(".options .option div")[1] ||
+                    clickedEl === dishData[i].querySelectorAll(".options .option div")[2] ||
+                    clickedEl === dishData[i].querySelectorAll(".options .option img")[0] ||
+                    clickedEl === dishData[i].querySelectorAll(".options .option img")[1] ||
+                    clickedEl === dishData[i].querySelectorAll(".options .option img")[2]) {
+                    // console.log("clicked icon");
                     return;
                 } 
             }
@@ -717,10 +727,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
         })
 
-        // this fetch client retrieves meals stored in db
+        // this fetch client auto retrieves meals stored in db
         try {
             let resp = await fetch("/dishes", {
-                method: "POST"
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"fav": ""})
             });
             let dishesObjs = await resp.json();
             console.log("Dishes: ", dishesObjs.detail);
@@ -848,22 +862,173 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (e) {
             console.log("Unexpected error -> ", e);
         }
+        // filter dishes based on user input
+        searchInput.addEventListener("input", async () => {
+            let formObj = Object.fromEntries(new FormData(searchForm));
+            console.log("Form Data: ", JSON.stringify(formObj));
+            
+            try {
+                let resp = await fetch("/dishes", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formObj)
+                });
+                let dishesObjs = await resp.json();
+                console.log("Retrieved Dishes: ", dishesObjs.detail);
+                // remove existing from dishes container if searched dish exists
+                if (dishesObjs.detail) {
+                    dishesBlock.innerHTML = "";
+                }
+                dishesObjs.detail.forEach(dish => {
+                    // create dish container
+                    let dishCont = document.createElement("div");
+                    dishCont.classList.add("dish-cont");
+                    // apend dishCont to block3
+                    dishesBlock.appendChild(dishCont);
+                    // create options floating el
+                    let options = document.createElement("div");
+                    options.classList.add("options");
+                    // append options cont to dishes cont
+                    dishCont.appendChild(options);
+                    // create options children
+                    let option1 = document.createElement("div"); // create option1
+                    option1.classList.add("option");
+                    // create option1 children
+                    let img1 = document.createElement("img");
+                    img1.src = "static/images/love.png";
+                    option1.appendChild(img1); // append to option1
+                    let content1 = document.createElement("div");
+                    content1.textContent = "Remove from favorites";
+                    option1.appendChild(content1); // append to option1
+                    
+                    let option2 = document.createElement("div"); // create option2
+                    option2.classList.add("option");
+                    // create option2 children
+                    let img2 = document.createElement("img");
+                    img2.src = "static/images/calender.png";
+                    option2.appendChild(img2); // append to option2
+                    let content2 = document.createElement("div");
+                    content2.textContent = "Add to meal planner";
+                    option2.appendChild(content2); // append to option2
+
+                    let option3 = document.createElement("div"); // create option3
+                    option3.classList.add("option");
+                    // create option2 children
+                    let img3 = document.createElement("img");
+                    img3.src = "static/images/big-share.png";
+                    option3.appendChild(img3); // append to option3
+                    let content3 = document.createElement("div");
+                    content3.textContent = "Share";
+                    option3.appendChild(content3); // append to option3
+                    // append option1, 2, 3 to options cont
+                    options.appendChild(option1);
+                    options.appendChild(option2);
+                    options.appendChild(option3);
+                    
+                    // start creating main dish content
+                    let head = document.createElement("div"); // header cont
+                    head.classList.add("dish-header");
+                    dishCont.appendChild(head); // append head directly to dish cont
+                    // create head children
+                    let h4 = document.createElement("h4");
+                    h4.textContent = dish["name"];
+                    let dots = document.createElement("img");
+                    dots.src = "static/images/dots.png";
+                    // append h4 and dots to head cont
+                    head.appendChild(h4);
+                    head.appendChild(dots);
+
+                    // start creating main dish body
+                    let subDetails = document.createElement("div");
+                    subDetails.classList.add("sub-details");
+                    dishCont.appendChild(subDetails); // append subDetails to dishes cont
+                    // start creating sub details children
+                    let timeDetail = document.createElement("div");
+                    timeDetail.classList.add("sub-detail");
+                    subDetails.appendChild(timeDetail); // append timeDetail to subDetails cont
+                    let timeImg = document.createElement("img"); // time detail
+                    timeImg.src = "static/images/time.png";
+                    let timeDiv = document.createElement("div"); // time detail
+                    timeDiv.textContent = dish["time"];
+                    // append both time details to the container
+                    timeDetail.appendChild(timeImg);
+                    timeDetail.appendChild(timeDiv);
+                    // second sub detail child
+                    let modeDetail = document.createElement("div");
+                    modeDetail.classList.add("sub-detail");
+                    subDetails.appendChild(modeDetail); // append modeDetail to subDetails cont
+                    let modeImg = document.createElement("img"); // mode detail
+                    modeImg.src = "static/images/chart.png";
+                    let modeDiv = document.createElement("div"); // mode detail
+                    modeDiv.textContent = dish["mode"];
+                    // append both mode details to the container
+                    modeDetail.appendChild(modeImg);
+                    modeDetail.appendChild(modeDiv);
+                    
+                    // create content container and append to dishCont
+                    let content = document.createElement("div");
+                    content.classList.add("content");
+                    dishCont.appendChild(content);
+                    // start creating content children
+                    let dishDesc = document.createElement("div");
+                    dishDesc.textContent = dish["description"];
+                    let uses = document.createElement("div"); // ingredients content
+                    uses.classList.add("uses");
+                    uses.textContent = `Uses: ${dish["ingredients"]}`;
+                    let origin = document.createElement("div"); // origin content
+                    origin.classList.add("origin");
+                    uses.textContent = `Origin: ${dish["origin"]}`;
+                    // append both contents to the content container
+                    content.appendChild(dishDesc);
+                    content.appendChild(uses);
+                    content.appendChild(origin);
+
+                    // create and append recipe btn to dishCont finally
+                    let recipeBtn = document.createElement("div");
+                    recipeBtn.classList.add("recipe");
+                    recipeBtn.textContent = "View Recipe";
+                    dishCont.appendChild(recipeBtn);
+                });
+                if (dishesBlock.innerHTML == "") {
+                    let noDishCont = document.createElement("div");
+                    noDishCont.classList.add("no-dish");
+                    dishesBlock.appendChild(noDishCont);
+                    let noDishImg = document.createElement("img");
+                    noDishImg.src = "static/images/no_dish_found.png";
+                    noDishCont.appendChild(noDishImg);
+                }
+            }
+            catch (e) {
+                console.log("Unexpected error -> ", e);
+            }
+        })
 
         // control dish options cont el
         dishesBlock.addEventListener("click", (e) => {
             // get generated dishes el/objects from DOM
-            const dishOptionsIcon = body.querySelectorAll(".block-3 .dish-cont .dish-header img");
-            const dishOptionsCont = body.querySelectorAll(".block-3 .dish-cont .options");
+            const dishData = body.querySelectorAll(".block-3 .dish-cont");
+            
             let targetEl = e.target;
 
-            for (let i=0; i < dishOptionsIcon.length; i ++) {
+            for (let i=0; i < dishData.length; i ++) {
                 // check if clicked existing container el == generated el out of many similar
-                if (targetEl == dishOptionsIcon[i]) {
-                    if (dishOptionsCont[i].style.display == "block") {
-                        return dishOptionsCont[i].style.display = "none";
-                    }
-                    return dishOptionsCont[i].style.display = "block";
+                if (targetEl == dishData[i].querySelectorAll(".options .option div")[0] ||
+                    targetEl == dishData[i].querySelectorAll(".options .option img")[0]) {
+                    console.log("remove dish option clicked");
                 }
+                if (targetEl == dishData[i].querySelector(".dish-header img")) {
+
+                    const dishOptionsIcon = dishData[i].querySelector(".dish-header img");
+                    const dishOptionsCont = dishData[i].querySelector(".options");
+
+                    if (dishOptionsCont.style.display == "block") {
+                        return dishOptionsCon.style.display = "none";
+                    }
+                    return dishOptionsCont.style.display = "block";
+                }
+                
             }
         })
     }

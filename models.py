@@ -119,5 +119,4 @@ class Planner(BaseClass):
         return f"""<id='{self.id}', breakfast='{self.breakfast}', 
         lunch='{self.lunch}', dinner='{self.dinner}', snack'{self.snacks}'>""".strip()
 
-
 Base.metadata.create_all(engine)

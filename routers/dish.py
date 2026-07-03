@@ -45,13 +45,24 @@ def dishes(request: Request):
 
 # this api retrieves dishes from db
 @router.post("/dishes", status_code=status.HTTP_200_OK)
-def dishes(request: Request, db: Session=Depends(get_db)):
+async def dishes(request: Request, db: Session=Depends(get_db)):
+    form_data = await request.json()
+    print(form_data)
+    
     current_user = db.query(User).where(User.email == request.session.get("email")).first()
+
+    if form_data.get("fav").strip() != "":
+        queried_dishes = db.query(Dish).where(Dish.user_id == current_user.id).filter(Dish.name.like(f"%{form_data.get("fav").strip()}%")).all()
+        if queried_dishes is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This dish is not found")
+        else:
+            return {"detail": queried_dishes}
+
     if current_user is None:
         raise HTTPException(detail="User not found", status_code=status.HTTP_404_NOT_FOUND)
-    user_dishes = db.query(Dish).where(Dish.user_id == current_user.id).all()
-
-    return {"detail": user_dishes}
+    if form_data.get("fav").strip() == "":
+        user_dishes = db.query(Dish).where(Dish.user_id == current_user.id).all()
+        return {"detail": user_dishes}
 
 # this api removes fav dishes from db
 @router.delete("/remove-dish", status_code=status.HTTP_200_OK)
