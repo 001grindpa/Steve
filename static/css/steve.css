@@ -855,7 +855,7 @@ main .notice.show.remove {
     border-radius: 5px;
     display: flex;
     gap: 10px;
-    line-height: 1.4;;
+    line-height: 1.4;
 }
 #index .block-3 .dishes .dish h4 + div {
     display: flex;
@@ -1032,6 +1032,16 @@ main .notice.show.remove {
 }
 #fav .block-3 .dish-cont .content {
     margin-top: 5px;
+}
+#fav .block-3 .dish-cont .content .uses {
+    color: var(--green-txt);
+}
+#fav .block-3 .dish-cont .content .origin {
+    background-color: gray;
+    color: white;
+    width: fit-content;
+    padding: 5px;
+    font-size: small;
 }
 #fav .block-3 .dish-cont .content .uses, #fav .block-3 .dish-cont .content .origin {
     font-weight: bold;

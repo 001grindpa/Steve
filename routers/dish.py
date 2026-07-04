@@ -66,12 +66,12 @@ async def dishes(request: Request, db: Session=Depends(get_db)):
 
 # this api removes fav dishes from db
 @router.delete("/remove-dish", status_code=status.HTTP_200_OK)
-def remove_dish(request: Request, index: int, db: Session=Depends(get_db)):
-    selected_dish = request.session.get("dishes")[index]
+def remove_dish(request: Request, name: str, db: Session=Depends(get_db)):
+    # get user
     current_user = db.query(User).where(User.email == request.session.get("email")).first()
 
-    # check if in db
-    dish = db.query(Dish).where(and_(Dish.name == selected_dish.get("name"), 
+    # check if dish in db
+    dish = db.query(Dish).where(and_(Dish.name == name,
                                      Dish.user_id == current_user.id)).first()
     if dish:
         db.delete(dish)

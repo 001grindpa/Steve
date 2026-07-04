@@ -318,13 +318,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
             // send request to add dish to favorites and remove
             const dishes = body.querySelectorAll(".block-3 .dishes .two img");
+            const dishDetail = body.querySelectorAll(".block-3 .dishes .dish");
             for (let i=0; i < dishes.length; i++) {
                 if (e.target == dishes[i]) {
                     if (dishes[i].style.backgroundColor == "lightcoral") {
                         // remove dish from list if exists
                         dishes[i].style.backgroundColor = "transparent";
+                        let name = dishDetail[i].querySelector(".one h4");
+                        // console.log("Dish name: ", name.textContent);
                         try {
-                            let r = await fetch(`/remove-dish?index=${i}`, {
+                            let r = await fetch(`/remove-dish?name=${name.textContent}`, {
                                 method: "DELETE"
                             });
                             let d = await r.json();
@@ -838,7 +841,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 uses.textContent = `Uses: ${dish["ingredients"]}`;
                 let origin = document.createElement("div"); // origin content
                 origin.classList.add("origin");
-                uses.textContent = `Origin: ${dish["origin"]}`;
+                origin.textContent = `Origin: ${dish["origin"]}`;
                 // append both contents to the content container
                 content.appendChild(dishDesc);
                 content.appendChild(uses);
@@ -979,7 +982,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     uses.textContent = `Uses: ${dish["ingredients"]}`;
                     let origin = document.createElement("div"); // origin content
                     origin.classList.add("origin");
-                    uses.textContent = `Origin: ${dish["origin"]}`;
+                    origin.textContent = `Origin: ${dish["origin"]}`;
                     // append both contents to the content container
                     content.appendChild(dishDesc);
                     content.appendChild(uses);
@@ -1006,7 +1009,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
 
         // control dish options cont el
-        dishesBlock.addEventListener("click", (e) => {
+        dishesBlock.addEventListener("click", async (e) => {
             // get generated dishes el/objects from DOM
             const dishData = body.querySelectorAll(".block-3 .dish-cont");
             
@@ -1014,10 +1017,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             for (let i=0; i < dishData.length; i ++) {
                 // check if clicked existing container el == generated el out of many similar
-                if (targetEl == dishData[i].querySelectorAll(".options .option div")[0] ||
-                    targetEl == dishData[i].querySelectorAll(".options .option img")[0]) {
-                    console.log("remove dish option clicked");
-                }
                 if (targetEl == dishData[i].querySelector(".dish-header img")) {
 
                     const dishOptionsIcon = dishData[i].querySelector(".dish-header img");
@@ -1028,7 +1027,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                     return dishOptionsCont.style.display = "block";
                 }
-                
+                // remove dish from fav list if true
+                if (targetEl == dishData[i].querySelectorAll(".options .option div")[0] || targetEl == dishData[i].querySelectorAll(".options .option img")[0]) {
+                    
+                    let name = dishData[i].querySelector(".dish-header h4").textContent;
+                    try {
+                        let resp = await fetch(`/remove-dish?name=${name}`, {
+                            method: "DELETE"
+                        });
+                        let data = await resp.json();
+                        console.log(data.detail);
+                        if (data.detail == "Meal removed from list") {
+                            dishesBlock.removeChild(dishData[i]);
+                        }
+
+                    } catch (e) {
+                        console.log("Unexpected error -> ", e);
+                    }
+                }
+                // add dish to planner
+                if (targetEl == dishData[i].querySelectorAll(".options .option div")[1] || targetEl == dishData[i].querySelectorAll(".options .option img")[1]) {
+                    console.log("add to planner clicked");
+                }
             }
         })
     }
