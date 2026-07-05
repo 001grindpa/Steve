@@ -34,6 +34,9 @@ def signup(request: Request):
 
 @router.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(request: Request ,user_data: CreateUser, db: Session=Depends(get_db)):
+    # remove live sessions after login
+    if request.session.get("dishes"):
+        request.session["dishes"] = None
     # check if fields are empty and if passwords are matching
     if (user_data.password != user_data.confirm_pw):
         raise HTTPException(status_code=status.HTTP_412_PRECONDITION_FAILED, detail="mismatched")
@@ -70,6 +73,9 @@ def login(request: Request):
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login(request: Request,user_data: LoginUser, db: Session=Depends(get_db)):
+    # remove live sessions after login
+    if request.session.get("dishes"):
+        request.session["dishes"] = None
     # check if fields are empty
     if user_data.email.strip() == "" or user_data.password.strip() == "":
         raise HTTPException(
