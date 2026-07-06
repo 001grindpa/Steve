@@ -13,6 +13,7 @@
     --very-faint-green: rgba(144, 238, 144, 0.534);
     --milk-white: rgb(240, 240, 240);
     --faded-black: rgba(0, 0, 0, 0.067);
+    --faded-black-lvl-1: rgba(0, 0, 0, 0.427);
     --faded-yellow: rgba(255, 255, 0, 0.311);
     --faded-red: rgba(255, 0, 0, 0.311);
     --smaller-txt: 12px;
@@ -1064,6 +1065,90 @@ main .notice.show.remove {
 #fav .block-3 .no-dish img {
     width: 20rem;
     height: 20rem;
+}
+#fav .block-4 {
+    position: fixed;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(3px);
+    background-color: var(--faded-black-lvl-1);
+    /* display: none; */
+}
+#fav .block-4 .recipeCont {
+    width: 17rem;
+    height: 30rem;
+    padding: 20px;
+    padding-bottom: 3.5rem;
+    background-color: white;
+    margin-top: 50px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    border-radius: 0.7rem;
+    overflow-y: auto;
+}
+#fav .block-4 .recipeCont .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+#fav .block-4 .recipeCont ul {
+    margin-top: 0.6rem;
+    line-height: 1.6;
+}
+#fav .block-4 .recipeCont li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: small;
+}
+#fav .block-4 .recipeCont .line {
+    height: 1px;
+    width: 100%;
+    background-color: lightgray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#fav .stepsCont {
+    line-height: 1.45;
+}
+#fav .stepsCont .step {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: small;
+    margin-top: 0.8rem;
+}
+#fav .stepsCont .step div:nth-child(1) {
+    outline: 1px solid lightgray;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 100%;
+    padding: 5px;
+}
+#fav .block-4 button {
+    position: fixed;
+    width: 17rem;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    background-color: var(--green-bg);
+    outline: none;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    margin-top: 5px;
+    bottom: 14rem;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: 0.25s;
+    cursor: pointer;
+}
+#fav .block-4 button:hover {
+    background-color: var(--faint-green);
 }
 
 /* footer styling */

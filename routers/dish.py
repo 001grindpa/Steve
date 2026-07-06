@@ -79,6 +79,35 @@ def remove_dish(request: Request, name: str, db: Session=Depends(get_db)):
         return {"detail": "Meal removed from list"}
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This dish is not in list")
 
+# this api adds meal to planner session
+@router.put("/add-to-planner", status_code=status.HTTP_201_CREATED)
+async def add_planner(request: Request, meal: str, db: Session=Depends(get_db)):
+    # declare planner dish list session
+    if not request.session.get("planner_dishes"):
+        request.session["planner_dishes"] = []
+    # get current user
+    user = db.query(User).where(User.email == request.session.get("email")).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+    # get dish object
+    dish_obj = db.query(Dish).where(and_(Dish.user_id == user.id, Dish.name == meal)).first()
+    if not dish_obj:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Dish does not exist"
+        )
+    # check if meal is already in session
+    if dish_obj.id in request.session.get("planner_dishes"):
+        raise HTTPException(
+            status.HTTP_302_FOUND, detail=f"{meal} is already in planner"
+        )
+    print(request.session.get("planner_dishes"))
+    # add meal to planner session
+    request.session.get("planner_dishes").append(dish_obj.id) # store dish id, and get dish by id
+
+    return {"detail": request.session.get("planner_dishes")}
+
 # this api clears steve's ideas from ui
 @router.delete("/cancel-options", status_code=status.HTTP_200_OK)
 def cancel_options(request: Request):

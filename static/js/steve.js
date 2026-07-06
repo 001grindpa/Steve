@@ -1057,12 +1057,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 // add dish to planner
                 if (targetEl == dishData[i].querySelectorAll(".options .option div")[1] || targetEl == dishData[i].querySelectorAll(".options .option img")[1]) {
                     console.log("add to planner clicked");
-                    // ==logic to use ==
-                    /**
-                     * send dish name to backend ("/add-to-planner")
-                     * search dish db, get dish object
-                     * add the obj to a session
-                     */
+                    let name = dishData[i].querySelector(".dish-header h4").textContent;
+                    
+                    try {
+                        let resp = await fetch(`/add-to-planner?meal=${name}`, {
+                            method: "PUT",
+                        });
+                        let data = await resp.json();
+                        console.log(data.detail);
+
+                    } catch (e) {
+                        console.log("Unexpected error ->", e)
+                    }
                 }
             }
         })
