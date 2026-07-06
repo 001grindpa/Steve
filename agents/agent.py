@@ -41,6 +41,7 @@ def llm_caller(state: State):
         5. don't respond with markdown.
         6. You can follow up user when they talk about other things but come back to food convo after a while
         7. when user starts talking about a new dish, ask them for ingredients, don't suggest based on old ingredients
+        8. always use "and" in place of "&" in your response text
         """.strip()
     ), *state["messages"]]
     return {"messages": llm_with_tools.invoke(messages)}

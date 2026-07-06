@@ -536,7 +536,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 steveTime.textContent = `${hour}:${minute} ${period}`;
                 steve.appendChild(steveTime);
 
-
                 while (true) {
                     const { value, done } = await reader.read();
                     if (done) break;
@@ -682,6 +681,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // const dishOptionsIcon = body.querySelectorAll(".block-3 .dish-cont .dish-header img");
         // const dishOptionsCont = body.querySelectorAll(".block-3 .dish-cont .options");
         const dishesBlock = body.querySelector(".block-3");
+        const noticeCont = body.querySelector(".noticeCont");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -1040,7 +1040,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                         if (data.detail == "Meal removed from list") {
                             dishesBlock.removeChild(dishData[i]);
                         }
-
+                        // create notification for status
+                        let notice = document.createElement("div");
+                        notice.classList.add("notice");
+                        notice.style.backgroundColor = "blue";
+                        notice.textContent = data.detail;
+                        noticeCont.prepend(notice);
+                        notice.classList.add("show");
+                        setTimeout(() => {
+                            notice.classList.add("remove");
+                        }, 4000);
                     } catch (e) {
                         console.log("Unexpected error -> ", e);
                     }
@@ -1048,6 +1057,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 // add dish to planner
                 if (targetEl == dishData[i].querySelectorAll(".options .option div")[1] || targetEl == dishData[i].querySelectorAll(".options .option img")[1]) {
                     console.log("add to planner clicked");
+                    // ==logic to use ==
+                    /**
+                     * send dish name to backend ("/add-to-planner")
+                     * search dish db, get dish object
+                     * add the obj to a session
+                     */
                 }
             }
         })
