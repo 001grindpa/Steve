@@ -85,7 +85,8 @@ class Dish(BaseClass):
     ingredients = Column(String(1000))
     user_id = Column(ForeignKey("users.id"))
 
-    users = relationship(User, back_populates="dishes")
+    users = relationship(User, back_populates="dishes") # relate to user where user is forign key
+    recipes = relationship("Recipe", back_populates="dishes") # relate to recipe as forign key
 
     def __repr__(self):
         f"<name='{self.name}', origin='{self.origin}', ingredients='{self.ingredients}'>"
@@ -118,5 +119,20 @@ class Planner(BaseClass):
     def __repr__(self):
         return f"""<id='{self.id}', breakfast='{self.breakfast}', 
         lunch='{self.lunch}', dinner='{self.dinner}', snack'{self.snacks}'>""".strip()
+
+# this db stores dish recipes
+class Recipe(BaseClass):
+    __tablename__ = "recipes"
+
+    dish_name = Column(String(1000))
+    ingredients = Column(String(1000)) # add ingredients seperated by comma
+    quantities = Column(String(255)) # ingre qunatities seperated by a comma
+    steps = Column(String(1000)) # add steps seperated by comma
+    dish_id = Column(ForeignKey("dishes.id"))
+
+    dishes = relationship(Dish, back_populates="recipes") # relate to dishes where dishes is foreign key
+
+    def __repr__(self):
+        return f"<id='{self.id}', dish_name='{self.dish_name}', ingredients='{self.ingredients}', quantity='{self.quantities}', steps='{self.steps}', dish_id='{self.dish_id}'>"
 
 Base.metadata.create_all(engine)

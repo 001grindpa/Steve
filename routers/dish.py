@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
-from models import get_db, Dish, DishData, User
+from models import get_db, Dish, DishData, User, Recipe
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_
@@ -76,7 +76,11 @@ def remove_dish(request: Request, name: str, db: Session=Depends(get_db)):
     if dish:
         db.delete(dish)
         db.commit()
+        if dish.id in request.session.get("planner_dishes"):
+            request.session.get("planner_dishes").remove(dish.id)
+            print("removed from planner")
         return {"detail": "Meal removed from list"}
+    
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This dish is not in list")
 
 # this api adds meal to planner session
@@ -106,7 +110,25 @@ async def add_planner(request: Request, meal: str, db: Session=Depends(get_db)):
     # add meal to planner session
     request.session.get("planner_dishes").append(dish_obj.id) # store dish id, and get dish by id
 
-    return {"detail": request.session.get("planner_dishes")}
+    return {"detail": "Added to planner"}
+
+# this api seraches the recipe db to get dish recipe or calls agent to get a new recipe
+@router.get("/get-recipe", status_code=status.HTTP_200_OK)
+def get_recipe(request: Request, name: str, db: Session=Depends(get_db)):
+    # get dish obj
+    dish_obj = db.query(Dish).where(Dish.name == name).first()
+    if not dish_obj:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="This dish does not exist"
+        )
+    # check if recipe in db, retrieve it
+    recipe_data = db.query(Recipe).where(Recipe.dish_id == dish_obj.id).first()
+    if not recipe_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Recipe not found"
+        )
+    
+    return {"detail": recipe_data}
 
 # this api clears steve's ideas from ui
 @router.delete("/cancel-options", status_code=status.HTTP_200_OK)

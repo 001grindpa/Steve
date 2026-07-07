@@ -1075,7 +1075,7 @@ main .notice.show.remove {
     bottom: 0;
     backdrop-filter: blur(3px);
     background-color: var(--faded-black-lvl-1);
-    /* display: none; */
+    display: none;
 }
 #fav .block-4 .recipeCont {
     width: 17rem;
@@ -1088,6 +1088,12 @@ main .notice.show.remove {
     transform: translateX(-50%);
     border-radius: 0.7rem;
     overflow-y: auto;
+}
+#fav .block-4 .recipeCont img {
+    width: 2.5rem;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    display: none;
 }
 #fav .block-4 .recipeCont .title {
     display: flex;
@@ -1141,7 +1147,7 @@ main .notice.show.remove {
     color: white;
     border-radius: 5px;
     margin-top: 5px;
-    bottom: 14rem;
+    bottom: 15.2rem;
     left: 50%;
     transform: translateX(-50%);
     transition: 0.25s;

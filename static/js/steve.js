@@ -678,10 +678,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const bugerLogoCheck = body.querySelector("#check-menu");
         const searchInput = body.querySelector(".block-2 #search input");
         const searchForm = body.querySelector(".block-2 #search");
-        // const dishOptionsIcon = body.querySelectorAll(".block-3 .dish-cont .dish-header img");
-        // const dishOptionsCont = body.querySelectorAll(".block-3 .dish-cont .options");
         const dishesBlock = body.querySelector(".block-3");
         const noticeCont = body.querySelector(".noticeCont");
+        const recipeCont = body.querySelector(".block-4");
+        const rmRecipeBtn = body.querySelector(".block-4 button");
+        const recipeContent = body.querySelector(".block-4 .recipeCont .main-content")
+        const recipeLoader = body.querySelector(".block-4 .recipeCont img");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -1055,7 +1057,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                 }
                 // add dish to planner
-                if (targetEl == dishData[i].querySelectorAll(".options .option div")[1] || targetEl == dishData[i].querySelectorAll(".options .option img")[1]) {
+                else if (targetEl == dishData[i].querySelectorAll(".options .option div")[1] || targetEl == dishData[i].querySelectorAll(".options .option img")[1]) {
                     console.log("add to planner clicked");
                     let name = dishData[i].querySelector(".dish-header h4").textContent;
                     
@@ -1066,10 +1068,66 @@ document.addEventListener("DOMContentLoaded", async () => {
                         let data = await resp.json();
                         console.log(data.detail);
 
+                        // create notification for status
+                        let notice = document.createElement("div");
+                        notice.classList.add("notice");
+                        notice.style.backgroundColor = "blue";
+                        notice.textContent = data.detail;
+                        noticeCont.prepend(notice);
+                        notice.classList.add("show");
+                        setTimeout(() => {
+                            notice.classList.add("remove");
+                        }, 4000);
+
                     } catch (e) {
                         console.log("Unexpected error ->", e)
                     }
                 }
+                else if (targetEl == dishData[i].querySelector(".recipe")) {
+                    let dishName = dishData[i].querySelector(".dish-header h4").textContent;
+                    // let timeToMake = dishData[i].querySelector(".sub-details .sub-detail div").textContent;
+                    // let des = dishData[i].querySelector(".content div").textContent;
+                    // let ingre = dishData[i].querySelector(".content .uses").textContent;
+                    // let origin = dishData[i].querySelector(".content .origin").textContent;
+                    console.log("recipe button clicked");
+                    // recipeContent.textContent = "";
+                    recipeLoader.style.display = "block";
+                    recipeContent.style.display = "none";
+                    rmRecipeBtn.disabled = true;
+                    rmRecipeBtn.style.cursor = "progress";
+                    rmRecipeBtn.textContent = "loading...";
+                    /**
+                     * send dish name, query dishes db, return dish obj
+                     * check if dish id in recipe as foreign key, return recipe obj
+                     * else call agent to generate dish recipe (add to db) if none in db
+                     */
+                    try {
+                        let resp = await fetch(`/get-recipe?name=${dishName}`);
+                        let data = await resp.json();
+
+                        console.log(data.detail);
+                    } catch(e) {
+                        console.log(e);
+                    }
+                    setTimeout(() => {
+                        recipeLoader.style.display = "none";
+                        recipeContent.style.display = "block";
+                        rmRecipeBtn.disabled = false;
+                        rmRecipeBtn.style.cursor = "pointer";
+                        rmRecipeBtn.textContent = "ok";
+                    }, 3000);
+
+                    // display recipe el
+                    recipeCont.style.display = "block";
+                    body.style.overflowY = "hidden";
+                }
+            }
+        })
+        // removes recipe el when clicked
+        rmRecipeBtn.addEventListener("click", () => {
+            if (recipeCont.style.display == "block") {
+                recipeCont.style.display = "none";
+                body.style.overflowY = "auto";
             }
         })
     }
