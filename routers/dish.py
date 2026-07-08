@@ -7,6 +7,7 @@ from hash import Hash
 from routers import user
 from oauth2 import get_current_user
 from kit import DishDetail
+from agents.recipe_agent import query_graph
 
 router = APIRouter(tags=["Dish Routes"])
 templates = Jinja2Templates(directory="templates")
@@ -114,7 +115,7 @@ async def add_planner(request: Request, meal: str, db: Session=Depends(get_db)):
 
 # this api seraches the recipe db to get dish recipe or calls agent to get a new recipe
 @router.get("/get-recipe", status_code=status.HTTP_200_OK)
-def get_recipe(request: Request, name: str, db: Session=Depends(get_db)):
+async def get_recipe(request: Request, name: str, db: Session=Depends(get_db)):
     # get dish obj
     dish_obj = db.query(Dish).where(Dish.name == name).first()
     if not dish_obj:
@@ -124,11 +125,12 @@ def get_recipe(request: Request, name: str, db: Session=Depends(get_db)):
     # check if recipe in db, retrieve it
     recipe_data = db.query(Recipe).where(Recipe.dish_id == dish_obj.id).first()
     if not recipe_data:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Recipe not found"
-        )
+        new_recipe_data = await query_graph(f"name={dish_obj.name}, ingredients={dish_obj.ingredients}, time_to_prepare={dish_obj.time}, origin={dish_obj.origin}")
+        print(new_recipe_data)
+        return {"detail": "recipe retrieved"}
     
     return {"detail": recipe_data}
+# [{"dish_name":"Homemade Fresh Spaghetti with Tomato Sauce","ingredients":"flour, eggs, tomatoes, onions, olive oil, salt, pepper","quantities":"flour 2 cups, eggs 3, tomatoes 4 cups diced, onions 1 medium diced, olive oil 2 tbsp, salt 1 tsp, pepper 1/2 tsp","steps":"Combine flour and eggs to form dough, knead until smooth, let rest 30 minutes; roll dough thin, cut into spaghetti strands; bring a large pot of salted water to boil, cook pasta 2-3 minutes until al dente, drain; in a skillet heat olive oil, sauté onions until translucent, add tomatoes, cook 5 minutes until softened, season with salt and pepper; toss cooked pasta with sauce, serve hot"}]
 
 # this api clears steve's ideas from ui
 @router.delete("/cancel-options", status_code=status.HTTP_200_OK)

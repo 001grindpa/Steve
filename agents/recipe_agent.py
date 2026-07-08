@@ -36,6 +36,8 @@ def llm_caller(state: State):
             {"quantities": "example, 1 cup, 2 spoons.. of those ingredinets, respect position"},
             {"steps": "procedure steps seperated by a comma"}
         ]
+        4. Do not repeat ingredient name in quantity data. Do not number the steps.
+        5. For the steps property string value, only use a comma when inserting the next step.
         """.strip()
     ), *state["messages"]]
     return {"messages": [llm_with_tool.invoke(messages)]}
@@ -64,6 +66,6 @@ async def query_graph(q: str)->str:
     r = await graph.ainvoke({"messages": q}, config=config)
     print(r["messages"][-1].content)
 
-asyncio.run(query_graph("""name=Pineapple Mango Rice Pudding,
-                        ingredients="rice, milk, sugar, vanilla extract, cinnamon,
-                        pineapple, mango" """.strip()))
+# asyncio.run(query_graph("""name=Pineapple Mango Rice Pudding,
+#                         ingredients="rice, milk, sugar, vanilla extract, cinnamon,
+#                         pineapple, mango" """.strip()))

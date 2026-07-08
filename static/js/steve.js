@@ -1096,11 +1096,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                     rmRecipeBtn.disabled = true;
                     rmRecipeBtn.style.cursor = "progress";
                     rmRecipeBtn.textContent = "loading...";
-                    /**
-                     * send dish name, query dishes db, return dish obj
-                     * check if dish id in recipe as foreign key, return recipe obj
-                     * else call agent to generate dish recipe (add to db) if none in db
-                     */
+                   
+                    // display recipe el
+                    recipeCont.style.display = "block";
+                    body.style.overflowY = "hidden";
+                    
                     try {
                         let resp = await fetch(`/get-recipe?name=${dishName}`);
                         let data = await resp.json();
@@ -1117,9 +1117,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         rmRecipeBtn.textContent = "ok";
                     }, 3000);
 
-                    // display recipe el
-                    recipeCont.style.display = "block";
-                    body.style.overflowY = "hidden";
                 }
             }
         })
