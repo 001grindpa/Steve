@@ -8,6 +8,8 @@ from routers import user
 from oauth2 import get_current_user
 from kit import DishDetail
 from agents.recipe_agent import query_graph
+import ast
+import json
 
 router = APIRouter(tags=["Dish Routes"])
 templates = Jinja2Templates(directory="templates")
@@ -74,6 +76,12 @@ def remove_dish(request: Request, name: str, db: Session=Depends(get_db)):
     # check if dish in db
     dish = db.query(Dish).where(and_(Dish.name == name,
                                      Dish.user_id == current_user.id)).first()
+    # remove the associated recipe
+    recipe = db.query(Recipe).where(Recipe.dish_id == dish.id).first()
+    if recipe:
+        db.delete(recipe)
+        db.commit()
+
     if dish:
         db.delete(dish)
         db.commit()
@@ -113,7 +121,7 @@ async def add_planner(request: Request, meal: str, db: Session=Depends(get_db)):
 
     return {"detail": "Added to planner"}
 
-# this api seraches the recipe db to get dish recipe or calls agent to get a new recipe
+# this api searches the recipe db to get dish recipe or calls agent to get a new recipe
 @router.get("/get-recipe", status_code=status.HTTP_200_OK)
 async def get_recipe(request: Request, name: str, db: Session=Depends(get_db)):
     # get dish obj
@@ -125,12 +133,26 @@ async def get_recipe(request: Request, name: str, db: Session=Depends(get_db)):
     # check if recipe in db, retrieve it
     recipe_data = db.query(Recipe).where(Recipe.dish_id == dish_obj.id).first()
     if not recipe_data:
-        new_recipe_data = await query_graph(f"name={dish_obj.name}, ingredients={dish_obj.ingredients}, time_to_prepare={dish_obj.time}, origin={dish_obj.origin}")
-        print(new_recipe_data)
-        return {"detail": "recipe retrieved"}
-    
+        new_recipe_data_raw = await query_graph(f"name={dish_obj.name}, ingredients={dish_obj.ingredients}, time_to_prepare={dish_obj.time}, origin={dish_obj.origin}")
+        new_recipe_data = ast.literal_eval(new_recipe_data_raw)
+        # create the recipe obj
+        new_recipe_obj = Recipe(
+            dish_name=new_recipe_data[0].get("dish_name"),
+            ingredients=new_recipe_data[1].get("ingredients"),
+            quantities=new_recipe_data[2].get("quantities"),
+            steps=new_recipe_data[3].get("steps")
+            )
+        dish_obj.recipes.append(new_recipe_obj)
+        db.commit()
+        recipe_data = db.query(Recipe).where(Recipe.dish_id == dish_obj.id).first()
+        return {"detail": recipe_data}
+
     return {"detail": recipe_data}
-# [{"dish_name":"Homemade Fresh Spaghetti with Tomato Sauce","ingredients":"flour, eggs, tomatoes, onions, olive oil, salt, pepper","quantities":"flour 2 cups, eggs 3, tomatoes 4 cups diced, onions 1 medium diced, olive oil 2 tbsp, salt 1 tsp, pepper 1/2 tsp","steps":"Combine flour and eggs to form dough, knead until smooth, let rest 30 minutes; roll dough thin, cut into spaghetti strands; bring a large pot of salted water to boil, cook pasta 2-3 minutes until al dente, drain; in a skillet heat olive oil, sauté onions until translucent, add tomatoes, cook 5 minutes until softened, season with salt and pepper; toss cooked pasta with sauce, serve hot"}]
+
+# [{"dish_name":"Homemade Fresh Spaghetti with Tomato Sauce",
+# "ingredients":"flour, eggs, tomatoes, onions, olive oil, salt, pepper",
+# "quantities":"flour 2 cups, eggs 3, tomatoes 4 cups diced, onions 1 medium diced, olive oil 2 tbsp, salt 1 tsp, pepper 1/2 tsp",
+# "steps":"Combine flour and eggs to form dough, knead until smooth, let rest 30 minutes; roll dough thin, cut into spaghetti strands; bring a large pot of salted water to boil, cook pasta 2-3 minutes until al dente, drain; in a skillet heat olive oil, sauté onions until translucent, add tomatoes, cook 5 minutes until softened, season with salt and pepper; toss cooked pasta with sauce, serve hot"}]
 
 # this api clears steve's ideas from ui
 @router.delete("/cancel-options", status_code=status.HTTP_200_OK)

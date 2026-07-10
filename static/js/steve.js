@@ -1093,6 +1093,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     // recipeContent.textContent = "";
                     recipeLoader.style.display = "block";
                     recipeContent.style.display = "none";
+                    recipeContent.innerHTML = "";
                     rmRecipeBtn.disabled = true;
                     rmRecipeBtn.style.cursor = "progress";
                     rmRecipeBtn.textContent = "loading...";
@@ -1106,8 +1107,79 @@ document.addEventListener("DOMContentLoaded", async () => {
                         let data = await resp.json();
 
                         console.log(data.detail);
+                        // get ingredients
+                        let ingredients = data.detail["ingredients"].split(", ");
+                        // get steps
+                        let steps = data.detail["steps"].split(", ");
+                        // get quantities
+                        let quantities = data.detail["quantities"].split(", ");
+
+                        // create dynamic recipeContent
+                        // create recipe name
+                        let recipeName = document.createElement("h3");
+                        recipeName.textContent = data.detail["dish_name"];
+                        recipeContent.appendChild(recipeName);
+                        //create the ingredients container
+                        let ingreCont = document.createElement("div");
+                        ingreCont.classList.add("ingreCont");
+                        recipeContent.appendChild(ingreCont) // append it to parent first
+                        //create children
+                        let ingreContTitle = document.createElement("div");
+                        ingreContTitle.classList.add("title");
+                        ingreCont.appendChild(ingreContTitle) // append title cont
+                        //create title children
+                        let ingreTitle = document.createElement("h4");
+                        ingreTitle.textContent = "Ingredients";
+                        ingreContTitle.appendChild(ingreTitle); // append first child
+                        let nOfIngres = document.createElement("div");
+                        nOfIngres.textContent = ingredients.length;
+                        ingreContTitle.appendChild(nOfIngres); // append second child
+
+                        // create unordered list el, ingreCont child 
+                        let list = document.createElement("ul");
+                        ingreCont.appendChild(list); // append to parent
+                        ingredients.forEach((ingredient, index) => {
+                            let listItem = document.createElement("li");
+                            list.appendChild(listItem);
+                            let ingreDiv = document.createElement("div");
+                            ingreDiv.textContent = ingredient;
+                            listItem.appendChild(ingreDiv); // append li child
+                            let quantity = document.createElement("div");
+                            quantity.textContent = quantities[index];
+                            listItem.appendChild(quantity);
+                        });
+
+                        // create line, ingreCont child
+                        let line = document.createElement("div");
+                        line.classList.add("line");
+                        ingreCont.appendChild(line);
+
+                        // create steps cont, ingreCont child
+                        let stepsCont = document.createElement("div");
+                        stepsCont.classList.add("stepsCont");
+                        ingreCont.appendChild(stepsCont); // append to parent
+                        // create steps children
+                        let stepsHeader = document.createElement("h4");
+                        stepsHeader.textContent = "Steps";
+                        stepsCont.appendChild(stepsHeader);
+                        // steps
+                        steps.forEach((step, index) => {
+                            let stepDiv = document.createElement("div");
+                            stepDiv.classList.add("step");
+                            stepsCont.appendChild(stepDiv); // append to parent
+                            let stepIndex = document.createElement("div");
+                            stepIndex.textContent = index+1;
+                            stepDiv.appendChild(stepIndex); // append to parent
+                            let stepData = document.createElement("div");
+                            stepData.textContent = step.trim();
+                            stepDiv.appendChild(stepData); // append child
+                        })
+
                     } catch(e) {
                         console.log(e);
+                        alert("Unexpected error, try again");
+                        recipeCont.style.display = "none";
+                        body.style.overflowY = "auto";
                     }
                     setTimeout(() => {
                         recipeLoader.style.display = "none";

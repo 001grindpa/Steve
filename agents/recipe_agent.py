@@ -64,7 +64,7 @@ config = {"configurable": {"thread_id": 1000}}
 
 async def query_graph(q: str)->str:
     r = await graph.ainvoke({"messages": q}, config=config)
-    print(r["messages"][-1].content)
+    return r["messages"][-1].content
 
 # asyncio.run(query_graph("""name=Pineapple Mango Rice Pudding,
 #                         ingredients="rice, milk, sugar, vanilla extract, cinnamon,

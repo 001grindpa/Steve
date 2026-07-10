@@ -1136,6 +1136,9 @@ main .notice.show.remove {
     border-radius: 100%;
     padding: 5px;
 }
+#fav .stepsCont .step div:nth-child(2) {
+    text-align: right;
+}
 #fav .block-4 button {
     position: fixed;
     width: 17rem;
