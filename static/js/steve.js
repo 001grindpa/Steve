@@ -1199,5 +1199,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 body.style.overflowY = "auto";
             }
         })
+    } else if (document.body.id == "planner") {
+        const body = document.querySelector("body");
+        const subBody = body.querySelector(".sub-body");
+        const loader = body.querySelector(".loader");
+        const sideMenu = body.querySelector(".block-1");
+        const bugerLogo = body.querySelector("#check-menu + label");
+
+        // render page after window loads
+        window.addEventListener("load", () => {
+            loader.style.display = "none";
+            subBody.style.display = "block";
+        })
     }
 })

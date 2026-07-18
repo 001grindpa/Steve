@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class="loader">
+        <img src="{{ url_for('static', path='gifs/water-loader.gif') }}" alt="laoder">
+        <div>loading...</div>
+    </div>
+    <div class="sub-body">
+        <header>
+            <div>
+                <!-- <img src="{{ url_for('static', path='images/right-arrow.png') }}" alt="arrow-logo"> -->
+            </div>
+        </header>
+        <main>
+            <div class="noticeCont">
+                <!-- <div class="notice show">query field is empty</div> -->
+            </div>
+            <input type="checkbox" id="check-menu">
+            <label for="check-menu">
+                <img class="arrow-right" src="{{ url_for('static', path='images/menu.png') }}" alt="menu-logo">
+            </label>
+            <div class="block-1">
+                <div class="flex-zone">
+                    <div class="above-menu">
+                        <div class="logo-cont">
+                            <div class="logo">
+                                <img src="{{ url_for('static', path='images/steve-logo.png') }}" alt="logo">
+                            </div>
+                            <div class="logo-text">
+                                <h2>Steve</h2>
+                                <div>Your AI Chef</div>
+                            </div>
+                        </div>
+                        <label for="check-menu">
+                            <img class="arrow" src="{{ url_for('static', path='images/left-arrow.png') }}" alt="arrow-logo">
+                        </label>
+                    </div>
+                    <menu>
+                        <a href="/">
+                            <div class="item">
+                                <img src="{{ url_for('static', path='images/home.png') }}" alt="home">
+                                <div>Home</div>
+                            </div>
+                        </a>
+                        <a href="/dishes">
+                            <div class="item">
+                                <img src="{{ url_for('static', path='images/love.png') }}" alt="favorites">
+                                <div>Favorites</div>
+                            </div>
+                        </a>
+                        <a href="/planner">
+                            <div class="item selected">
+                                <img src="{{ url_for('static', path='images/calender.png') }}" alt="favorites">
+                                <div>Planner</div>
+                            </div>
+                        </a>
+                        <a href="">
+                            <div class="item">
+                                <img src="{{ url_for('static', path='images/time.png') }}" alt="history">
+                                <div>History</div>
+                            </div>
+                        </a>
+                    </menu>
+                    <div class="line"></div>
+                    <div class="profile-cont">
+                        <img src="{{ url_for('static', path='images/user.png') }}" alt="user">
+                        <div class="profile">
+                            <div>{{ user }}</div>
+                            <div>View profile</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="block-2">
+                <div class="planner-header">
+                    <h3>Meal Planner</h3>
+                    <div>Plan smarter. Eat better. Every day.</div>
+                </div>
+                <div class="add-from">
+                    <div class="instruct">Assign dish to time of the day (one for each day period)</div>
+                    <div class="dishes-cont">
+                        <div class="dish">
+                            <h4>Garlic Soy & Rice bowl</h4>
+                            <button>Morning</button>
+                            <button>Afternoon</button>
+                            <button>Evening</button>
+                        </div>
+                        <div class="dish">
+                            <h4>Garlic Soy & Rice bowl</h4>
+                            <button>Morning</button>
+                            <button>Afternoon</button>
+                            <button>Evening</button>
+                        </div>
+                        <div class="dish">
+                            <h4>Garlic Soy & Rice bowl</h4>
+                            <button>Morning</button>
+                            <button>Afternoon</button>
+                            <button>Evening</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="block-3">
+                <div class="content">
+                    <div class="plan-txt">
+                        <h4>Today's Plan</h4>
+                    </div>
+                    <div class="date-bg">
+                        <button><img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow"></button>
+                        <div class="date">Wednesday, May 15, 1984</div>
+                        <button><img src="{{ url_for('static', path='images/right-arrow.png') }}" alt="right-arrow"></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

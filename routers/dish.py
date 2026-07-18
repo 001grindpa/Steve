@@ -67,6 +67,11 @@ async def dishes(request: Request, db: Session=Depends(get_db)):
         user_dishes = db.query(Dish).where(Dish.user_id == current_user.id).all()
         return {"detail": user_dishes}
 
+# this api returns the planner page template for rendering
+@router.get("/planner", status_code=status.HTTP_200_OK)
+def planner(request: Request):
+    return templates.TemplateResponse(request, "planner.html", {"page_id": "planner"})
+
 # this api removes fav dishes from db
 @router.delete("/remove-dish", status_code=status.HTTP_200_OK)
 def remove_dish(request: Request, name: str, db: Session=Depends(get_db)):

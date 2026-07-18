@@ -63,7 +63,7 @@ memory = MemorySaver()
 graph = builder.compile(checkpointer=memory)
 
 # create config for each user and call graph with it
-config = {"configurable": {"thread_id": "1"}}
+# config = {"configurable": {"thread_id": "1"}}
 
 # r = asyncio.run(graph.ainvoke({"messages": ["onion, pepper, yam"]}, config=config))
 # print(r["messages"][-1].content)

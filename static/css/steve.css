@@ -17,6 +17,9 @@
     --faded-yellow: rgba(255, 255, 0, 0.311);
     --faded-red: rgba(255, 0, 0, 0.311);
     --smaller-txt: 12px;
+    --slightly-faded-yellow: rgba(255, 255, 0, 0.481);
+    --faded-orange: rgba(255, 166, 0, 0.328);
+    --slightly-faded-orange: rgba(255, 166, 0, 0.493);
 }
 .loader {
     width: fit-content;
@@ -1158,6 +1161,118 @@ main .notice.show.remove {
 }
 #fav .block-4 button:hover {
     background-color: var(--faint-green);
+}
+
+/* styling for planner page */
+#planner .block-2 {
+    padding: 15px 10px;
+}
+#planner .block-2 .planner-header {
+    margin-left: 45px;
+    margin-bottom: 20px;
+}
+#planner .block-2 .planner-header div {
+    font-size: small;
+}
+#planner .block-2 .add-from {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+#planner .block-2 .add-from .instruct {
+    font-size: small;
+    color: var(--green-txt);
+    margin-bottom: 10px;
+}
+#planner .block-2 .add-from .dishes-cont {
+    padding: 5px;
+    overflow-x: auto;
+    display: flex;
+    gap: 1rem;
+}
+#planner .block-2 .add-from .dishes-cont::-webkit-scrollbar {
+    display: none;
+}
+#planner .block-2 .add-from .dishes-cont .dish {
+    width: fit-content;
+    outline: 1px solid lightgray;
+    padding: 5px;
+    border-radius: 5px;
+}
+#planner .block-2 .add-from .dishes-cont .dish h4 {
+    margin-bottom: 5px;
+}
+#planner .block-2 .add-from .dishes-cont .dish button {
+    display: block;
+    margin: auto;
+    margin-bottom: 5px;
+    width: 150px;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+}
+#planner .block-2 .add-from .dishes-cont .dish button:nth-child(2) {
+    background-color: var(--faded-yellow);
+    transition: 0.3s;
+    cursor: pointer;
+}
+#planner .block-2 .add-from .dishes-cont .dish button:nth-child(2):hover {
+    background-color: var(--slightly-faded-yellow);
+}
+#planner .block-2 .add-from .dishes-cont .dish button:nth-child(3) {
+    background-color: var(--faded-orange);
+    transition: 0.3s;
+    cursor: pointer;
+}
+#planner .block-2 .add-from .dishes-cont .dish button:nth-child(3):hover {
+    background-color: var(--slightly-faded-orange);
+}
+#planner .block-2 .add-from .dishes-cont .dish button:nth-child(4) {
+    background-color: lightgray;
+    transition: 0.3s;
+    cursor: pointer;
+}
+#planner .block-2 .add-from .dishes-cont .dish button:nth-child(4):hover {
+    background-color: var(--faded-black-lvl-1);
+}
+#planner .block-3 {
+    padding: 10px;
+}
+#planner .block-3 .content {
+    padding: 20px 15px;
+    border-radius: 10px 10px 0 0;
+}
+#planner .block-3 .plan-txt {
+    width: fit-content;
+    margin-bottom: 5px;
+}
+#planner .block-3 .date-bg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+#planner .block-3 .date-bg button {
+    border-radius: 100%;
+    border: none;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.647);
+    transition: 0.25s;
+    cursor: pointer;
+}
+#planner .block-3 .date-bg button:hover {
+    background-color: var(--faded-black);
+}
+#planner .block-3 .date-bg button img {
+    width: 12px;
+}
+#planner .block-3 .date-bg .date {
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: small;
+    font-weight: bold;
 }
 
 /* footer styling */
