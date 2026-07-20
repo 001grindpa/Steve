@@ -1090,6 +1090,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     // let ingre = dishData[i].querySelector(".content .uses").textContent;
                     // let origin = dishData[i].querySelector(".content .origin").textContent;
                     console.log("recipe button clicked");
+                    console.log("recipe button clicked again");
                     // recipeContent.textContent = "";
                     recipeLoader.style.display = "block";
                     recipeContent.style.display = "none";
@@ -1188,7 +1189,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         rmRecipeBtn.style.cursor = "pointer";
                         rmRecipeBtn.textContent = "ok";
                     }, 3000);
-
                 }
             }
         })

@@ -148,16 +148,12 @@ async def get_recipe(request: Request, name: str, db: Session=Depends(get_db)):
             steps=new_recipe_data[3].get("steps")
             )
         dish_obj.recipes.append(new_recipe_obj)
-        db.commit()
+        db.commit();
         recipe_data = db.query(Recipe).where(Recipe.dish_id == dish_obj.id).first()
+        print("data sent")
         return {"detail": recipe_data}
-
+    print("data sent")
     return {"detail": recipe_data}
-
-# [{"dish_name":"Homemade Fresh Spaghetti with Tomato Sauce",
-# "ingredients":"flour, eggs, tomatoes, onions, olive oil, salt, pepper",
-# "quantities":"flour 2 cups, eggs 3, tomatoes 4 cups diced, onions 1 medium diced, olive oil 2 tbsp, salt 1 tsp, pepper 1/2 tsp",
-# "steps":"Combine flour and eggs to form dough, knead until smooth, let rest 30 minutes; roll dough thin, cut into spaghetti strands; bring a large pot of salted water to boil, cook pasta 2-3 minutes until al dente, drain; in a skillet heat olive oil, sauté onions until translucent, add tomatoes, cook 5 minutes until softened, season with salt and pepper; toss cooked pasta with sauce, serve hot"}]
 
 # this api clears steve's ideas from ui
 @router.delete("/cancel-options", status_code=status.HTTP_200_OK)
