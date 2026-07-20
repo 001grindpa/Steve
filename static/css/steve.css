@@ -1257,12 +1257,12 @@ main .notice.show.remove {
     border: none;
     padding: 10px;
     background-color: white;
-    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.647);
+    box-shadow: 0 0 5px 1px black;
     transition: 0.25s;
     cursor: pointer;
 }
 #planner .block-3 .date-bg button:hover {
-    background-color: var(--faded-black);
+    background-color: rgb(211, 211, 211);
 }
 #planner .block-3 .date-bg button img {
     width: 12px;
@@ -1273,6 +1273,44 @@ main .notice.show.remove {
     border-radius: 20px;
     font-size: small;
     font-weight: bold;
+}
+#planner .block-3 .content-2 {
+    padding: 20px 15px;
+    border-radius: 0 0 10px 10px;
+}
+#planner .block-3 .content-2 .add-meal-cont {
+    width: 200px;
+    padding: 10px;
+    background-color: yellow;
+    border-radius: 8px;
+}
+#planner .block-3 .content-2 .add-meal-cont .head div {
+    font-size: small;
+}
+#planner .block-3 .content-2 .add-meal-cont .bg .meal {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    justify-content: space-between;
+    background-color: white;
+    border-radius: 7px;
+}
+#planner .block-3 .content-2 .add-meal-cont .bg .meal img {
+    width: 15px;
+    align-self: flex-start;
+}
+#planner .block-3 .content-2 .add-meal-cont .bg .add-meal {
+    display: flex;
+    margin-top: 1rem;
+    gap: 5px;
+    outline: 1px dashed orange;
+    padding: 10px 30px;
+    border-radius: 7px;
+    font-size: small;
+}
+#planner .block-3 .content-2 .add-meal-cont .bg .add-meal img {
+    width: 20px;
+    height: 20px;
 }
 
 /* footer styling */
