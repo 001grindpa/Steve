@@ -1204,12 +1204,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         const subBody = body.querySelector(".sub-body");
         const loader = body.querySelector(".loader");
         const sideMenu = body.querySelector(".block-1");
+        const bugerLogoCheck = body.querySelector("#check-menu");
         const bugerLogo = body.querySelector("#check-menu + label");
 
         // render page after window loads
         window.addEventListener("load", () => {
             loader.style.display = "none";
             subBody.style.display = "block";
+        })
+
+        body.addEventListener("click", (e) => {
+            // removes floating sidebar menu
+            if (bugerLogoCheck.checked) {
+                bugerLogo.click();
+            }
+        })
+
+        sideMenu.addEventListener("click", (e) => {
+            e.stopPropagation();
+        })
+        bugerLogo.addEventListener("click", (e) => {
+            e.stopPropagation();
         })
     }
 })

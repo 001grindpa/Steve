@@ -1282,11 +1282,11 @@ main .notice.show.remove {
     overflow-x: auto;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     gap: 1rem;
 }
 #planner .block-3 .content-2 .add-meal-cont {
-    width: fit-content;
+    width: 250px;
     padding: 10px;
     padding-bottom: 40px;
     border-radius: 8px;
@@ -1318,29 +1318,41 @@ main .notice.show.remove {
     cursor: pointer;
 }
 #planner .block-3 .content-2 .add-meal-cont .bg .add-meal {
+    margin: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 1rem;
-    gap: 5px;
+    gap: 1rem;
     padding: 10px 30px;
     border-radius: 7px;
     font-size: small;
     cursor: pointer;
-    width: 200px;
+    width: 170px;
 }
-#planner .block-3 .content-2 .add-meal-cont .bg .add-meal:nth-child(1) {
-    outline: 1px dashed orange;
+#planner .block-3 .content-2 .add-meal-cont:nth-child(1) .bg .add-meal {
+    outline: 2px dashed yellow;
 }
-#planner .block-3 .content-2 .add-meal-cont .bg .add-meal:nth-child(2) {
-    outline: 1px dashed yellow;
+#planner .block-3 .content-2 .add-meal-cont:nth-child(2) .bg .add-meal {
+    outline: 2px dashed orange;
 }
-#planner .block-3 .content-2 .add-meal-cont .bg .add-meal:nth-child(3) {
-    outline: 1px dashed lightgray;
+#planner .block-3 .content-2 .add-meal-cont:nth-child(3) .bg .add-meal {
+    outline: 2px dashed lightgray;
 }
 #planner .block-3 .content-2 .add-meal-cont .bg .add-meal img {
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    padding: 5px;
+}
+#planner .block-3 .content-2 .add-meal-cont:nth-child(1) .bg .add-meal img {
+    background-color: yellow;
+}
+#planner .block-3 .content-2 .add-meal-cont:nth-child(2) .bg .add-meal img {
+    background-color: orange;
+}
+#planner .block-3 .content-2 .add-meal-cont:nth-child(3) .bg .add-meal img {
+    background-color: gray;
 }
 
 /* footer styling */
@@ -1627,6 +1639,9 @@ footer .copyright-cont {
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+    #planner .block-2 {
+        margin-top: 70px;
     }
 }
 @media(min-width: 1400px) {
