@@ -1206,6 +1206,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         const sideMenu = body.querySelector(".block-1");
         const bugerLogoCheck = body.querySelector("#check-menu");
         const bugerLogo = body.querySelector("#check-menu + label");
+        const dishesCont = body.querySelector(".block-2 .add-from .dishes-cont");
+        const dateCont = body.querySelector(".block-3 .date-bg .date");
+        const dateContWeekDay = body.querySelector(".block-3 .date-bg .date span:nth-child(1)");
+        const dateContMonth = body.querySelector(".block-3 .date-bg .date span:nth-child(2)");
+        const dateContDate = body.querySelector(".block-3 .date-bg .date span:nth-child(3)");
+        const dateContYear = body.querySelector(".block-3 .date-bg .date span:nth-child(4)");
+        const leftBtn = body.querySelector(".block-3 .date-bg button:nth-child(1)");
+        const rightBtn = body.querySelector(".block-3 .date-bg button:nth-child(3)");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -1226,5 +1234,73 @@ document.addEventListener("DOMContentLoaded", async () => {
         bugerLogo.addEventListener("click", (e) => {
             e.stopPropagation();
         })
+
+        // make a request to get all dishes added to planner
+        try {
+            let resp = await fetch("/planner-dishes");
+            let data = await resp.json();
+
+            console.log("Dishes added to Planner: ", data.detail);
+
+            // create each dish item and append to parent cont
+            dishesCont.innerHTML = "";
+
+            data.detail.forEach(el => {
+                let item = document.createElement("div");
+                item.classList.add("dish");
+                dishesCont.appendChild(item); // append to parent first
+                // create item children
+                let itemHeader = document.createElement("h4");
+                itemHeader.textContent = el["name"];
+                item.appendChild(itemHeader); // append to parent
+                // create item's body child
+                let itemBody = document.createElement("div");
+                itemBody.classList.add("about");
+                itemBody.textContent = el["description"];
+                item.appendChild(itemBody);
+            })
+
+        } catch (e) {
+            console.log("Unexpected error => ", e);
+        }
+        // handle date container data
+        const months = ["January", "February", "March", 
+            "April", "May", "June", "July", "August", "September", 
+            "October", "November", "December"
+        ];
+        const days = {
+            0: "Sunday", 1: "Monday", 2: "Tuesday",
+            3: "Wednesday", 4: "Thursday", 5: "Friday",
+            6: "Saturday"
+        }
+        let weekday = new Date().toLocaleString("default", {weekday: "long"});
+        let month = new Date().toLocaleString("default", {month: "long"});
+        let date = new Date().getDate();
+        let year = new Date().getFullYear();
+        
+        dateContWeekDay.textContent = weekday;
+        dateContMonth.textContent = month;
+        dateContDate.textContent = date;
+        dateContYear.textContent = year;
+
+        let currentDay = new Date().getDay();
+        // console.log(currentDay);
+        let firstDayOfMonth = new Date(year, month, 0);
+        console.log(firstDayOfMonth);
+
+        // use event listeners to change date
+        rightBtn.addEventListener("click", () => {
+            currentDay = eval(currentDay + 1) % 7;
+            dateContWeekDay.textContent = days[currentDay];
+        });
+        
+        leftBtn.addEventListener("click", () => {
+            if (currentDay == 0) {
+                currentDay = 6;
+            } else {
+                currentDay = eval(currentDay - 1);
+            }
+            dateContWeekDay.textContent = days[currentDay];
+        });
     }
 })

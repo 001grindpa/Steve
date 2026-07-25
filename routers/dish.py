@@ -126,6 +126,18 @@ async def add_planner(request: Request, meal: str, db: Session=Depends(get_db)):
 
     return {"detail": "Added to planner"}
 
+# this api returns dishes added to planner session from db
+@router.get("/planner-dishes", status_code=status.HTTP_200_OK)
+def planner_dishes(request: Request, db: Session=Depends(get_db)):
+    print(request.session.get("planner_dishes"))
+
+    dishes = []
+    for dish in request.session.get("planner_dishes"):
+        dish_data = db.query(Dish).where(Dish.id == dish).first()
+        dishes.append(dish_data)
+
+    return {"detail": dishes}
+
 # this api searches the recipe db to get dish recipe or calls agent to get a new recipe
 @router.get("/get-recipe", status_code=status.HTTP_200_OK)
 async def get_recipe(request: Request, name: str, db: Session=Depends(get_db)):
