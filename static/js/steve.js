@@ -1214,6 +1214,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const dateContYear = body.querySelector(".block-3 .date-bg .date span:nth-child(4)");
         const leftBtn = body.querySelector(".block-3 .date-bg button:nth-child(1)");
         const rightBtn = body.querySelector(".block-3 .date-bg button:nth-child(3)");
+        const noticeCont = body.querySelector("main .noticeCont");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -1264,19 +1265,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Unexpected error => ", e);
         }
         // handle date container data
-        const months = ["January", "February", "March", 
-            "April", "May", "June", "July", "August", "September", 
-            "October", "November", "December"
-        ];
+        const months = {
+            0: "Jan", 1: "Feb", 2: "March", 
+            3: "April", 4: "May", 5: "June", 6: "Jul", 7: "Aug", 8: "Sept", 
+            9: "Oct", 10: "Nov", 11: "Dec"
+        };
         const days = {
-            0: "Sunday", 1: "Monday", 2: "Tuesday",
-            3: "Wednesday", 4: "Thursday", 5: "Friday",
-            6: "Saturday"
+            0: "Sun", 1: "Mon", 2: "Tues",
+            3: "Wed", 4: "Thurs", 5: "Fri",
+            6: "Sat"
         }
-        let weekday = new Date().toLocaleString("default", {weekday: "long"});
-        let month = new Date().toLocaleString("default", {month: "long"});
+        let weekday = new Date().toLocaleString("default", {weekday: "short"});
+        let month = new Date().toLocaleString("default", {month: "short"});
         let date = new Date().getDate();
         let year = new Date().getFullYear();
+        let monthIndex = new Date().getMonth();
         
         dateContWeekDay.textContent = weekday;
         dateContMonth.textContent = month;
@@ -1284,23 +1287,81 @@ document.addEventListener("DOMContentLoaded", async () => {
         dateContYear.textContent = year;
 
         let currentDay = new Date().getDay();
-        // console.log(currentDay);
-        let firstDayOfMonth = new Date(year, month, 0);
-        console.log(firstDayOfMonth);
+        let currentDate = date;
+        let currentMonthIndex = monthIndex;
+        let currentYear = year;
+        let totalDaysInMonth;
 
         // use event listeners to change date
         rightBtn.addEventListener("click", () => {
+            // update day of the week
             currentDay = eval(currentDay + 1) % 7;
             dateContWeekDay.textContent = days[currentDay];
+
+            // update date and month
+            totalDaysInMonth = new Date(year, currentMonthIndex+1, 0).getDate();
+            currentDate = (currentDate + 1) % (totalDaysInMonth+1);
+            if (currentDate == 0) {
+                currentMonthIndex = (currentMonthIndex + 1) % 12;
+                currentDate = 1;
+                dateContMonth.textContent = months[currentMonthIndex];
+            }
+            // update year
+             if (currentMonthIndex == 0 && currentDate == 1) {
+                currentYear += 1;
+                dateContYear.textContent = currentYear;
+            }
+
+            dateContDate.textContent = currentDate;
         });
         
         leftBtn.addEventListener("click", () => {
+            if (month == months[currentMonthIndex] && currentDate == date) {
+                console.log("clicked");
+                // create notification for status
+                let notice = document.createElement("div");
+                notice.classList.add("notice");
+                notice.style.backgroundColor = "green";
+                notice.textContent = "Please check history for previous days data";
+                noticeCont.prepend(notice);
+                notice.classList.add("show");
+                setTimeout(() => {
+                    notice.classList.add("remove");
+                }, 4000);
+                return;
+            }
+            // update year
+            // check upkeep
+            if (currentMonthIndex == 0 && currentDate == 1) {
+                currentMonthIndex = 11;
+                currentDate = 32; // 1 will be removed from it in the code that updates date below
+            }
+            // perform upkeep
+            if (currentMonthIndex == 11 && currentDate == 32) {
+                currentYear -= 1;
+                dateContYear.textContent = currentYear;
+                dateContMonth.textContent = months[currentMonthIndex];
+            }
+
+            // update day of the week
             if (currentDay == 0) {
                 currentDay = 6;
             } else {
                 currentDay = eval(currentDay - 1);
             }
             dateContWeekDay.textContent = days[currentDay];
+            
+            // update date and month
+            currentDate -= 1;
+            if (currentDate == 0) {
+                currentMonthIndex -= 1;
+                totalDaysInMonth = new Date(year, currentMonthIndex+1, 0).getDate();
+                currentDate = totalDaysInMonth;
+                // update month to prev month
+                dateContMonth.textContent = months[currentMonthIndex];
+            }
+
+            dateContDate.textContent = currentDate;
         });
     }
 })

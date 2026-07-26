@@ -478,6 +478,10 @@ main .notice {
     background-color: red;
     padding: 7px 15px;
     color: white;
+    text-align: center;
+    border-radius: 10px;
+    font-size: small;
+    line-height: 1.4;
 }
 main .notice.show {
     animation: show 1s forwards;

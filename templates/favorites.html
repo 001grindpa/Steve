@@ -65,7 +65,7 @@
                     <div class="profile-cont">
                         <img src="{{ url_for('static', path='images/user.png') }}" alt="user">
                         <div class="profile">
-                            <div>{{ user }}</div>
+                            <div>{{ request.session.get("username") }}</div>
                             <div>View profile</div>
                         </div>
                     </div>
