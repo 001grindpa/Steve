@@ -1269,6 +1269,8 @@ main .notice.show.remove {
     gap: 1rem;
 }
 #planner .block-3 .content-2 .add-meal-cont {
+    min-width: 230px;
+    min-height: 210px;
     width: 250px;
     padding: 10px;
     padding-bottom: 40px;
@@ -1286,7 +1288,14 @@ main .notice.show.remove {
 #planner .block-3 .content-2 .add-meal-cont .head div {
     font-size: small;
 }
+#planner .block-3 .content-2 .add-meal-cont .bg {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    height: 200px;
+}
 #planner .block-3 .content-2 .add-meal-cont .bg .meal {
+    position: relative;
     display: flex;
     gap: 1rem;
     padding: 10px;
@@ -1294,11 +1303,47 @@ main .notice.show.remove {
     justify-content: space-between;
     background-color: white;
     border-radius: 7px;
+    width: fit-content;
+}
+#planner .block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont {
+    position: absolute;
+    font-size: small;
+    top: 50%;
+    right: 0;
+    padding: 10px;
+    border-radius: 10px;
+    color: black;
+    background: linear-gradient(white, lightgray);
+    outline: 1px solid lightgray;
+    display: flex;
+    flex-flow: column;
+    gap: 0.5rem;
+}
+#planner .block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont, #planner .show-recipe-cont {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 10px;
+}
+#planner .block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont:hover, #planner .show-recipe-cont:hover {
+    transition: 0.25s;
+    background-color: var(--faded-black-lvl-1);
+    color: white;
+}
+#planner .block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont img {
+    background-color: white;
+    padding: 5px;
+    border-radius: 100%;
 }
 #planner .block-3 .content-2 .add-meal-cont .bg .meal img {
     width: 15px;
     align-self: flex-start;
     cursor: pointer;
+    padding: 6px;
+    border-radius: 100%;
+    transition: 0.3s;
 }
 #planner .block-3 .content-2 .add-meal-cont .bg .add-meal {
     margin: auto;
@@ -1311,7 +1356,8 @@ main .notice.show.remove {
     border-radius: 7px;
     font-size: small;
     cursor: pointer;
-    width: 170px;
+    width: fit-content;
+    display: none;
 }
 #planner .block-3 .content-2 .add-meal-cont:nth-child(1) .bg .add-meal {
     outline: 2px dashed yellow;
