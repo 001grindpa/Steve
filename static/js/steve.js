@@ -1215,6 +1215,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const leftBtn = body.querySelector(".block-3 .date-bg button:nth-child(1)");
         const rightBtn = body.querySelector(".block-3 .date-bg button:nth-child(3)");
         const noticeCont = body.querySelector("main .noticeCont");
+        const addDishCont = body.querySelector(".block-3 .content-2");
+        const addMeal = body.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -1223,10 +1225,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
 
         body.addEventListener("click", (e) => {
+            let target = e.target;
             // removes floating sidebar menu
             if (bugerLogoCheck.checked) {
                 bugerLogo.click();
             }
+            // remove all floating menus etc
+            let menu = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont");
+            let menuIcons = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .menuIcon");
+            let recipeIcon = document.querySelectorAll(".recipeIcon");
+            let recipeTxt = document.querySelectorAll(".show-recipe-cont div");
+
+            for (let i=0; i < menuIcons.length; i++) {
+                if (target==menuIcons[i]||target==menu[i]||target==recipeIcon[i]||target==recipeTxt[i]) {
+                    return;
+                }
+            }
+            
+            menu.forEach(el => {
+                if (el.style.display == "block") {
+                    el.style.display = "none";
+                }
+            })
         })
 
         sideMenu.addEventListener("click", (e) => {
@@ -1236,10 +1256,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
         })
 
-        // make a request to get all dishes added to planner
+        // auto make a request to get all dishes added to planner
+        let data;
         try {
             let resp = await fetch("/planner-dishes");
-            let data = await resp.json();
+            data = await resp.json();
 
             console.log("Dishes added to Planner: ", data.detail);
 
@@ -1313,6 +1334,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             dateContDate.textContent = currentDate;
+            
+            // add future meals 
         });
         
         leftBtn.addEventListener("click", () => {
@@ -1363,5 +1386,148 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             dateContDate.textContent = currentDate;
         });
+
+        // clicking the dynamically added items menu icon pops up menu
+        // read content-2 container for clicked items
+
+        let allPeriodCont = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg");
+        
+        // use a loop to interact with period dish based on the one clicked
+        for (let i = 0; i < allPeriodCont.length; i++) {
+            allPeriodCont[i].addEventListener("click", (e) => {
+                let menuIcons = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .menuIcon");
+                let menu = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont");
+
+                let target = e.target;
+
+                if (target == menuIcons[i]) {
+                    if (menu[i].style.display == "block") {
+                        menu[i].style.display="none";
+                    } else {
+                        menu[i].style.display="block";
+                    }
+                }
+            })
+        }
+        
+        // go through 'data' content, add seperate them into three arrays based on their 
+        let morningDishes = [];
+        let afternoonDishes = [];
+        let eveningDishes = [];
+        data.detail.forEach(el => {
+            let mealTime = el["time"].split("m")[0];
+            if (mealTime.trim() <= 20) {
+                morningDishes.push(el["name"]);
+            } else if (mealTime.trim() > 20 && mealTime.trim() <= 30) {
+                afternoonDishes.push(el["name"]);
+            } else if (mealTime.trim() >= 31) {
+                eveningDishes.push(el["name"]);
+            }
+        });
+        // console.log("Morning Dishes: %s\nAfternoon Dishes: %s\nEvening Dishes: %s", morningDishes, afternoonDishes, eveningDishes);
+
+        // use the loop to check which meals qualify for which period
+        for (let i=0; i < addMeal.length; i++) {
+            addMeal[i].addEventListener("click", async (e) => {
+                let plannerDishes = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish");
+                let dishNames = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish h4");
+                // if morning
+                if (i == 0) {
+                    if (addMeal[i].style.backgroundColor == "var(--faded-yellow)") {
+                        addMeal[i].style.backgroundColor = "transparent";
+                        addMeal[i].classList.remove("choosen"); // remove as choosen
+                        // remove selectable if exists
+                        plannerDishes.forEach(el => {
+                            if (el.classList.contains("selectable")) {
+                                el.classList.remove("selectable");
+                            }
+                        })
+                    } else {
+                        // remove choosen from other addMeal containers and disable them
+                        addMeal.forEach(el => {
+                            if (el.classList.contains("choosen")) {
+                                el.classList.remove("choosen");
+                                el.click();
+                            }
+                        });
+
+                        addMeal[i].classList.add("choosen") // make choosen
+                        addMeal[i].style.backgroundColor = "var(--faded-yellow)";
+                        dishNames.forEach((el, index) => {
+                            morningDishes.forEach(el2 => {
+                                // add selectable if eligible
+                                if (el.textContent == el2) {
+                                    plannerDishes[index].classList.add("selectable");
+                                }
+                            })
+                        })
+                    }
+                }
+                // if afternoon
+                if (i == 1) {
+                    if (addMeal[i].style.backgroundColor == "var(--faded-orange)") {
+                        addMeal[i].style.backgroundColor = "transparent";
+                        addMeal[i].classList.remove("choosen"); // remove as choosen
+                        // remove selectable if exists
+                        plannerDishes.forEach(el => {
+                            if (el.classList.contains("selectable")) {
+                                el.classList.remove("selectable");
+                            }
+                        })
+                    } else {
+                        // remove choosen from other addMeal containers and disable them
+                        addMeal.forEach(el => {
+                            if (el.classList.contains("choosen")) {
+                                el.classList.remove("choosen");
+                                el.click();
+                            }
+                        });
+
+                        addMeal[i].classList.add("choosen") // make choosen
+                        addMeal[i].style.backgroundColor = "var(--faded-orange)";
+                        dishNames.forEach((el, index) => {
+                            afternoonDishes.forEach(el2 => {
+                                // add selectable if eligible
+                                if (el.textContent == el2) {
+                                    plannerDishes[index].classList.add("selectable");
+                                }
+                            })
+                        })
+                    }
+                }
+                // if evening
+                if (i == 2) {
+                    if (addMeal[i].style.backgroundColor == "var(--faded-black)") {
+                        addMeal[i].style.backgroundColor = "transparent";
+                        addMeal[i].classList.remove("choosen"); // remove as choosen
+                        // remove selectable if exists
+                        plannerDishes.forEach(el => {
+                            if (el.classList.contains("selectable")) {
+                                el.classList.remove("selectable");
+                            }
+                        })
+                    } else {
+                        // remove choosen from other addMeal containers and disable them
+                        addMeal.forEach(el => {
+                            if (el.classList.contains("choosen")) {
+                                el.classList.remove("choosen");
+                                el.click();
+                            }
+                        });
+
+                        addMeal[i].classList.add("choosen") // make choosen
+                        addMeal[i].style.backgroundColor = "var(--faded-black)";
+                        dishNames.forEach((el, index) => {
+                            eveningDishes.forEach(el2 => {
+                                // add selectable if eligible
+                                if (el.textContent == el2) {
+                                    plannerDishes[index].classList.add("selectable");
+                                }
+                            })
+                        })
+                    }
+                }
+            })
+        }
     }
 })

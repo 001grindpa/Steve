@@ -20,6 +20,7 @@
     --slightly-faded-yellow: rgba(255, 255, 0, 0.481);
     --faded-orange: rgba(255, 166, 0, 0.328);
     --slightly-faded-orange: rgba(255, 166, 0, 0.493);
+    --pale-green: rgb(225, 240, 225);
 }
 .loader {
     width: fit-content;
@@ -1211,6 +1212,14 @@ main .notice.show.remove {
     padding: 5px;
     border-radius: 5px;
 }
+#planner .block-2 .add-from .dishes-cont .dish.selectable {
+    box-shadow: 0 0 5px 5px lightgreen;
+    cursor: pointer;
+    transition: 0.25s;
+}
+#planner .block-2 .add-from .dishes-cont .dish.selectable:hover {
+    background-color: var(--very-faint-green);
+}
 #planner .block-2 .add-from .dishes-cont .dish h4 {
     margin-bottom: 5px;
 }
@@ -1261,7 +1270,7 @@ main .notice.show.remove {
 #planner .block-3 .content-2 {
     padding: 20px 15px;
     border-radius: 0 0 10px 10px;
-    background-color: rgb(225, 240, 225);
+    background-color: var(--pale-green);
     overflow-x: auto;
     display: flex;
     align-items: center;
@@ -1304,6 +1313,10 @@ main .notice.show.remove {
     background-color: white;
     border-radius: 7px;
     width: fit-content;
+    display: none;
+}
+#planner .block-3 .content-2 .add-meal-cont .bg .meal .menuIcon:hover {
+    background-color: var(--faded-black);
 }
 #planner .block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont {
     position: absolute;
@@ -1312,12 +1325,13 @@ main .notice.show.remove {
     right: 0;
     padding: 10px;
     border-radius: 10px;
-    color: black;
-    background: linear-gradient(white, lightgray);
-    outline: 1px solid lightgray;
+    color: white;
+    background: linear-gradient(gray, black);
+    outline: 1px solid white;
     display: flex;
     flex-flow: column;
     gap: 0.5rem;
+    display: none;
 }
 #planner .block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont, #planner .show-recipe-cont {
     display: flex;
@@ -1329,8 +1343,8 @@ main .notice.show.remove {
 }
 #planner .block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont:hover, #planner .show-recipe-cont:hover {
     transition: 0.25s;
-    background-color: var(--faded-black-lvl-1);
-    color: white;
+    background-color: var(--milk-white);
+    color: black;
 }
 #planner .block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont img {
     background-color: white;
@@ -1350,14 +1364,12 @@ main .notice.show.remove {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 1rem;
     gap: 1rem;
     padding: 10px 30px;
     border-radius: 7px;
     font-size: small;
     cursor: pointer;
     width: fit-content;
-    display: none;
 }
 #planner .block-3 .content-2 .add-meal-cont:nth-child(1) .bg .add-meal {
     outline: 2px dashed yellow;
