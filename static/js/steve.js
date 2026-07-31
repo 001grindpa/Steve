@@ -1232,14 +1232,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             // remove all floating menus etc
             let menu = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont");
-            let menuIcons = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .menuIcon");
-            let recipeIcon = document.querySelectorAll(".recipeIcon");
-            let recipeTxt = document.querySelectorAll(".show-recipe-cont div");
+            let menuIcon = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .menuIcon");
+            let showRecipe = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont");
+            let removeMeal = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .show-recipe-cont");
 
-            for (let i=0; i < menuIcons.length; i++) {
-                if (target==menuIcons[i]||target==menu[i]||target==recipeIcon[i]||target==recipeTxt[i]) {
-                    return;
-                }
+            if (showRecipe || removeMeal || menuIcon || e.target == menu) {
+                return;
             }
             
             menu.forEach(el => {
@@ -1529,5 +1527,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             })
         }
+        // include selectable meal to time period
+        dishesCont.addEventListener("click", (e) => {
+            let plannerDish = e.target.closest(".block-2 .add-from .dishes-cont .dish.selectable");
+            let mealAdder = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
+            let addedMeal = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal");
+
+            if (plannerDish) {
+                mealAdder.forEach((el, index) => {
+                    if (el.classList.contains("choosen")) {
+                        // construct the dish container
+                        // add dish container to add-meal-cont
+                        el.style.display="none";
+                        addedMeal[index].style.display="flex";
+                    }
+                })
+            }
+        })
     }
 })
