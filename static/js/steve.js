@@ -1232,11 +1232,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             // remove all floating menus etc
             let menu = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont");
-            let menuIcon = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .menuIcon");
-            let showRecipe = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont");
-            let removeMeal = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .show-recipe-cont");
-
-            if (showRecipe || removeMeal || menuIcon || e.target == menu) {
+            let menuIcon = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .menuIcon");
+            let menuCont = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont");
+            if (menuIcon || menuCont) {
                 return;
             }
             
@@ -1528,21 +1526,84 @@ document.addEventListener("DOMContentLoaded", async () => {
             })
         }
         // include selectable meal to time period
+        let hiddenDishIndex = [];
+
         dishesCont.addEventListener("click", (e) => {
             let plannerDish = e.target.closest(".block-2 .add-from .dishes-cont .dish.selectable");
             let mealAdder = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
-            let addedMeal = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal");
-
+            let addMealBg = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg");
+            let plannerDishes = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish");
+            
             if (plannerDish) {
                 mealAdder.forEach((el, index) => {
                     if (el.classList.contains("choosen")) {
                         // construct the dish container
+                        // remove existing dish
+                        if (addMealBg[index].querySelector(".meal")) {
+                            addMealBg[index].removeChild(addMealBg[index].querySelector(".meal"));
+                        }
+
+                        // hide selected dish from list of planner dishes;
+                        for (let i=0; i < plannerDishes.length; i++) {
+                            if (plannerDish == plannerDishes[i]) {
+                                hiddenDishIndex.push(i);
+                                console.log("hidden dish index: ", i);
+                            }
+                        }
+                        plannerDish.style.display="none";
+
+                        // start creating selected dish content
+                        let meal = document.createElement("div");
+                        meal.classList.add("meal");
+                        addMealBg[index].prepend(meal); // prepend to parent
+                        // create meal header for name
+                        let h4 = document.createElement("h4");
+                        h4.textContent = plannerDish.querySelector("h4").textContent;
+                        meal.appendChild(h4);
+                        // create and append menu data
+                        let menuIcon = document.createElement("img");
+                        menuIcon.classList.add("menuIcon");
+                        menuIcon.src = "static/images/dots.png";
+                        meal.appendChild(menuIcon); // append to parent
+                        // create meal menu cont data
+                        let menuCont = document.createElement("div");
+                        menuCont.classList.add("meal-menu-cont");
+                        meal.appendChild(menuCont); // append to parent
+                        let recipeCont = document.createElement("div");
+                        recipeCont.classList.add("show-recipe-cont");
+                        menuCont.appendChild(recipeCont); // append child
+                        // create recipe cont children
+                        let recipeIcon = document.createElement("img");
+                        recipeIcon.classList.add("recipeIcon");
+                        recipeIcon.src = "static/images/recipe.png";
+                        recipeCont.appendChild(recipeIcon);
+                        let recipeDiv = document.createElement("div");
+                        recipeDiv.textContent = "Show recipe";
+                        recipeCont.appendChild(recipeDiv);
+                        // create remove cont and it's children
+                        let removeCont = document.createElement("div");
+                        removeCont.classList.add("remove-meal-cont");
+                        menuCont.appendChild(removeCont); // append to parent
+                        let deleteIcon = document.createElement("img");
+                        deleteIcon.classList.add("deleteIcon");
+                        deleteIcon.src = "static/images/trash_can.png";
+                        removeCont.appendChild(deleteIcon); // append to parent
+                        let removeDiv = document.createElement("div");
+                        removeDiv.textContent = "Remove dish";
+                        removeCont.appendChild(removeDiv);
+                        
                         // add dish container to add-meal-cont
+                        el.click();
                         el.style.display="none";
-                        addedMeal[index].style.display="flex";
+                        meal.style.display="flex";
                     }
                 })
             }
         })
+        // remove selected meal from shedule
+        addDishCont.addEventListener("click", () => {
+            
+        })
+
     }
 })
