@@ -696,22 +696,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             let clickedEl = e.target;
             // console.log("clicked el: ", clickedEl);
             // get generated dishes el/objects from DOM
-            const dishOptionsIcon = body.querySelectorAll(".block-3 .dish-cont .dish-header img");
-            const dishOptionsCont = body.querySelectorAll(".block-3 .dish-cont .options");
-            const dishData = body.querySelectorAll(".block-3 .dish-cont");
+            const dishOptionsIcon = e.target.closest(".block-3 .dish-cont .dish-header img");
+            const optionCont = e.target.closest(".block-3 .dish-cont .options");
+            const dishOptionsCont = document.querySelectorAll(".block-3 .dish-cont .options");
             // prevents removal if clicked on container
-            for(let i=0; i < dishOptionsIcon.length; i++) {
-                if (clickedEl === dishOptionsIcon[i] || 
-                    clickedEl === dishOptionsCont[i] ||
-                    clickedEl === dishData[i].querySelectorAll(".options .option div")[0] ||
-                    clickedEl === dishData[i].querySelectorAll(".options .option div")[1] ||
-                    clickedEl === dishData[i].querySelectorAll(".options .option div")[2] ||
-                    clickedEl === dishData[i].querySelectorAll(".options .option img")[0] ||
-                    clickedEl === dishData[i].querySelectorAll(".options .option img")[1] ||
-                    clickedEl === dishData[i].querySelectorAll(".options .option img")[2]) {
-                    // console.log("clicked icon");
-                    return;
-                } 
+            if (dishOptionsIcon || optionCont) {
+                return
             }
             // 
             dishOptionsCont.forEach((el) => {
@@ -1225,7 +1215,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
 
         body.addEventListener("click", (e) => {
-            let target = e.target;
             // removes floating sidebar menu
             if (bugerLogoCheck.checked) {
                 bugerLogo.click();
@@ -1382,29 +1371,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             dateContDate.textContent = currentDate;
         });
-
-        // clicking the dynamically added items menu icon pops up menu
-        // read content-2 container for clicked items
-
-        let allPeriodCont = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg");
-        
-        // use a loop to interact with period dish based on the one clicked
-        for (let i = 0; i < allPeriodCont.length; i++) {
-            allPeriodCont[i].addEventListener("click", (e) => {
-                let menuIcons = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .menuIcon");
-                let menu = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont");
-
-                let target = e.target;
-
-                if (target == menuIcons[i]) {
-                    if (menu[i].style.display == "block") {
-                        menu[i].style.display="none";
-                    } else {
-                        menu[i].style.display="block";
-                    }
-                }
-            })
-        }
         
         // go through 'data' content, add seperate them into three arrays based on their 
         let morningDishes = [];
@@ -1526,8 +1492,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             })
         }
         // include selectable meal to time period
-        let hiddenDishIndex = [];
-
         dishesCont.addEventListener("click", (e) => {
             let plannerDish = e.target.closest(".block-2 .add-from .dishes-cont .dish.selectable");
             let mealAdder = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
@@ -1538,18 +1502,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 mealAdder.forEach((el, index) => {
                     if (el.classList.contains("choosen")) {
                         // construct the dish container
-                        // remove existing dish
+                        // auto remove existing dish
                         if (addMealBg[index].querySelector(".meal")) {
                             addMealBg[index].removeChild(addMealBg[index].querySelector(".meal"));
                         }
 
                         // hide selected dish from list of planner dishes;
-                        for (let i=0; i < plannerDishes.length; i++) {
-                            if (plannerDish == plannerDishes[i]) {
-                                hiddenDishIndex.push(i);
-                                console.log("hidden dish index: ", i);
-                            }
-                        }
                         plannerDish.style.display="none";
 
                         // start creating selected dish content
@@ -1557,9 +1515,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         meal.classList.add("meal");
                         addMealBg[index].prepend(meal); // prepend to parent
                         // create meal header for name
-                        let h4 = document.createElement("h4");
-                        h4.textContent = plannerDish.querySelector("h4").textContent;
-                        meal.appendChild(h4);
+                        let h3 = document.createElement("h3");
+                        h3.textContent = plannerDish.querySelector("h4").textContent;
+                        meal.appendChild(h3);
                         // create and append menu data
                         let menuIcon = document.createElement("img");
                         menuIcon.classList.add("menuIcon");
@@ -1600,9 +1558,59 @@ document.addEventListener("DOMContentLoaded", async () => {
                 })
             }
         })
-        // remove selected meal from shedule
-        addDishCont.addEventListener("click", () => {
+
+        // handle;
+        // display corresponding menu when menuIcon is clicked
+        // remove selected meal from shedule and show recipe
+        addDishCont.addEventListener("click", (e) => {
+            // clicking the dynamically added items menu icon pops up menu
+            // read content-2 container for clicked items
+
+            let menuIcons = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .menuIcon");
+            let menuIcon = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .menuIcon");
+            let menu = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont");
+
+            if (menuIcon) {
+                console.log("clicked menu icon");
+                menuIcons.forEach((el, index) => {
+                    if (el == menuIcon) {
+                        if (menu[index].style.display == "block") {
+                            menu[index].style.display="none";
+                        } else {
+                            menu[index].style.display="block";
+                        }
+                    }
+                })
+            }
+
+
+            // make an api call that removes added planner meal from db
+            // displays it back on the addable meals
+            let removeMeal = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont");
+            let removeMealEls = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont");
+             let addedDishBgs = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg");
+            let plannerDishes = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish");
+            let mealAdder = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
+            let addedDishes = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal");
             
+            if (removeMeal) {
+                removeMealEls.forEach((el, index) => {
+                    if (el == removeMeal) {
+                        let addedMealName = addedDishes[index].querySelector("h3").textContent;
+                        plannerDishes.forEach(el => {
+                            // if still exists display back the hidden/intially added planner dish on
+                            // the list of planner dishes to be added
+                            if (el.querySelector("h4").textContent == addedMealName) {
+                                el.style.display="block";
+                            }
+                        })
+                        // remove the dish from added
+                        addedDishBgs[index].removeChild(addedDishes[index]);
+                        // display the addMeal el
+                        mealAdder[index].style.display="flex";
+                    }
+                })
+            }
         })
 
     }
