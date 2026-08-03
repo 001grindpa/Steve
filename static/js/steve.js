@@ -1571,7 +1571,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             let menu = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont");
 
             if (menuIcon) {
-                console.log("clicked menu icon");
                 menuIcons.forEach((el, index) => {
                     if (el == menuIcon) {
                         if (menu[index].style.display == "block") {
@@ -1588,7 +1587,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             // displays it back on the addable meals
             let removeMeal = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont");
             let removeMealEls = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont");
-             let addedDishBgs = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg");
+            let addedDishBgs = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg");
+            let addedDishBg = e.target.closest(".block-3 .content-2 .add-meal-cont .bg");
             let plannerDishes = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish");
             let mealAdder = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
             let addedDishes = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal");
@@ -1605,9 +1605,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                             }
                         })
                         // remove the dish from added
-                        addedDishBgs[index].removeChild(addedDishes[index]);
-                        // display the addMeal el
-                        mealAdder[index].style.display="flex";
+                        // total added dish length is dynamic(1-3), unlike the bg and 'add dish' el
+                        // which share thesame static length(3). therefore, the tpotal index of added dishes may
+                        // not correspond to the bg and the 'add dish' el total indices.
+                        if (addedDishBg) {
+                            // bgIndex for bg is thesame as mealAdder index, ass noted above.
+                            addedDishBgs.forEach((bg, bgIndex) => {
+                                if (addedDishBg == bg) {
+                                    bg.removeChild(addedDishes[index]);
+                                    // display the addMeal el
+                                    mealAdder[bgIndex].style.display="flex";
+                                }
+                            })
+                        }
                     }
                 })
             }
