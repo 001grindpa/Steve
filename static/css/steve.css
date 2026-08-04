@@ -1081,7 +1081,7 @@ main .notice.show.remove {
     width: 20rem;
     height: 20rem;
 }
-#fav .block-4 {
+.block-4 {
     position: fixed;
     z-index: 50;
     top: 0;
@@ -1092,7 +1092,7 @@ main .notice.show.remove {
     background-color: var(--faded-black-lvl-1);
     display: none;
 }
-#fav .block-4 .recipeCont {
+.block-4 .recipeCont {
     width: 17rem;
     height: 30rem;
     padding: 20px;
@@ -1104,57 +1104,37 @@ main .notice.show.remove {
     border-radius: 0.7rem;
     overflow-y: auto;
 }
-#fav .block-4 .recipeCont img {
+.block-4 .recipeCont img {
     width: 2.5rem;
     margin-left: 50%;
     transform: translateX(-50%);
     display: none;
 }
-#fav .block-4 .recipeCont .title {
+.block-4 .recipeCont .title {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 5px;
 }
-#fav .block-4 .recipeCont ul {
+.block-4 .recipeCont ul {
     margin-top: 0.6rem;
     line-height: 1.6;
 }
-#fav .block-4 .recipeCont li {
+.block-4 .recipeCont li {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
     font-size: small;
 }
-#fav .block-4 .recipeCont .line {
+.block-4 .recipeCont .line {
     height: 1px;
     width: 100%;
     background-color: lightgray;
     margin-top: 10px;
     margin-bottom: 10px;
 }
-#fav .stepsCont {
-    line-height: 1.45;
-}
-#fav .stepsCont .step {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    font-size: small;
-    margin-top: 0.8rem;
-}
-#fav .stepsCont .step div:nth-child(1) {
-    outline: 1px solid lightgray;
-    width: fit-content;
-    height: fit-content;
-    border-radius: 100%;
-    padding: 5px;
-}
-#fav .stepsCont .step div:nth-child(2) {
-    text-align: right;
-}
-#fav .block-4 button {
+.block-4 button {
     position: fixed;
     width: 17rem;
     padding-top: 7px;
@@ -1171,8 +1151,28 @@ main .notice.show.remove {
     transition: 0.25s;
     cursor: pointer;
 }
-#fav .block-4 button:hover {
+.block-4 button:hover {
     background-color: var(--faint-green);
+}
+.block-4 .stepsCont {
+    line-height: 1.45;
+}
+.block-4 .stepsCont .step {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: small;
+    margin-top: 0.8rem;
+}
+.block-4 .stepsCont .step div:nth-child(1) {
+    outline: 1px solid lightgray;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 100%;
+    padding: 5px;
+}
+.block-4 .stepsCont .step div:nth-child(2) {
+    text-align: right;
 }
 
 /* styling for planner page */
@@ -1227,7 +1227,7 @@ main .notice.show.remove {
     padding: 7px 10px;
     border: none;
     border-radius: 7px;
-    font-size: small;
+    font-size: var(--smaller-txt);
     font-weight: bold;
     background-color: orangered;
     color: white;

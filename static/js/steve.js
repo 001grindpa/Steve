@@ -1189,6 +1189,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 body.style.overflowY = "auto";
             }
         })
+
     } else if (document.body.id == "planner") {
         const body = document.querySelector("body");
         const subBody = body.querySelector(".sub-body");
@@ -1207,6 +1208,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const noticeCont = body.querySelector("main .noticeCont");
         const addDishCont = body.querySelector(".block-3 .content-2");
         const addMeal = body.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
+        const recipeCont = body.querySelector(".block-4");
+        const rmRecipeBtn = body.querySelector(".block-4 button");
+        const recipeContent = body.querySelector(".block-4 .recipeCont .main-content")
+        const recipeLoader = body.querySelector(".block-4 .recipeCont img");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -1636,7 +1641,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 })
             }
 
-
             // make an api call that removes added planner meal from db
             // displays it back on the addable meals
             let removeMeal = e.target.closest(".block-3 .content-2 .add-meal-cont .bg .meal .meal-menu-cont .remove-meal-cont");
@@ -1675,7 +1679,124 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                 })
             }
-        })
 
+            // get recipe upn request
+            let showRecipe = e.target.closest(".show-recipe-cont");
+            let showRecipes = document.querySelectorAll(".show-recipe-cont");
+
+            if (showRecipe) {
+                showRecipes.forEach(async (el, i) => {
+                    if (el == showRecipe) {
+                        let dishName = addedDishes[i].querySelector("h3").textContent;
+                        console.log("Recipe meal name: ", dishName);
+
+                        recipeLoader.style.display = "block";
+                        recipeContent.style.display = "none";
+                        recipeContent.innerHTML = "";
+                        rmRecipeBtn.disabled = true;
+                        rmRecipeBtn.style.cursor = "progress";
+                        rmRecipeBtn.textContent = "loading...";
+                    
+                        // display recipe el
+                        recipeCont.style.display = "block";
+                        body.style.overflowY = "hidden";
+                        
+                        try {
+                            let resp = await fetch(`/get-recipe?name=${dishName}`);
+                            let data = await resp.json();
+
+                            console.log(data.detail);
+                            // get ingredients
+                            let ingredients = data.detail["ingredients"].split(", ");
+                            // get steps
+                            let steps = data.detail["steps"].split(", ");
+                            // get quantities
+                            let quantities = data.detail["quantities"].split(", ");
+
+                            // create dynamic recipeContent
+                            // create recipe name
+                            let recipeName = document.createElement("h3");
+                            recipeName.textContent = data.detail["dish_name"];
+                            recipeContent.appendChild(recipeName);
+                            //create the ingredients container
+                            let ingreCont = document.createElement("div");
+                            ingreCont.classList.add("ingreCont");
+                            recipeContent.appendChild(ingreCont) // append it to parent first
+                            //create children
+                            let ingreContTitle = document.createElement("div");
+                            ingreContTitle.classList.add("title");
+                            ingreCont.appendChild(ingreContTitle) // append title cont
+                            //create title children
+                            let ingreTitle = document.createElement("h4");
+                            ingreTitle.textContent = "Ingredients";
+                            ingreContTitle.appendChild(ingreTitle); // append first child
+                            let nOfIngres = document.createElement("div");
+                            nOfIngres.textContent = ingredients.length;
+                            ingreContTitle.appendChild(nOfIngres); // append second child
+
+                            // create unordered list el, ingreCont child 
+                            let list = document.createElement("ul");
+                            ingreCont.appendChild(list); // append to parent
+                            ingredients.forEach((ingredient, index) => {
+                                let listItem = document.createElement("li");
+                                list.appendChild(listItem);
+                                let ingreDiv = document.createElement("div");
+                                ingreDiv.textContent = ingredient;
+                                listItem.appendChild(ingreDiv); // append li child
+                                let quantity = document.createElement("div");
+                                quantity.textContent = quantities[index];
+                                listItem.appendChild(quantity);
+                            });
+
+                            // create line, ingreCont child
+                            let line = document.createElement("div");
+                            line.classList.add("line");
+                            ingreCont.appendChild(line);
+
+                            // create steps cont, ingreCont child
+                            let stepsCont = document.createElement("div");
+                            stepsCont.classList.add("stepsCont");
+                            ingreCont.appendChild(stepsCont); // append to parent
+                            // create steps children
+                            let stepsHeader = document.createElement("h4");
+                            stepsHeader.textContent = "Steps";
+                            stepsCont.appendChild(stepsHeader);
+                            // steps
+                            steps.forEach((step, index) => {
+                                let stepDiv = document.createElement("div");
+                                stepDiv.classList.add("step");
+                                stepsCont.appendChild(stepDiv); // append to parent
+                                let stepIndex = document.createElement("div");
+                                stepIndex.textContent = index+1;
+                                stepDiv.appendChild(stepIndex); // append to parent
+                                let stepData = document.createElement("div");
+                                stepData.textContent = step.trim();
+                                stepDiv.appendChild(stepData); // append child
+                            })
+
+                        } catch(e) {
+                            console.log(e);
+                            alert("Unexpected error, try again");
+                            recipeCont.style.display = "none";
+                            body.style.overflowY = "auto";
+                        }
+                        setTimeout(() => {
+                            recipeLoader.style.display = "none";
+                            recipeContent.style.display = "block";
+                            rmRecipeBtn.disabled = false;
+                            rmRecipeBtn.style.cursor = "pointer";
+                            rmRecipeBtn.textContent = "ok";
+                        }, 3000);
+                    }
+                })
+            }
+        })
+        // removes recipe el when clicked
+        rmRecipeBtn.addEventListener("click", () => {
+            if (recipeCont.style.display == "block") {
+                recipeCont.style.display = "none";
+                body.style.overflowY = "auto";
+            }
+        })
     }
 })
