@@ -1205,6 +1205,12 @@ main .notice.show.remove {
 #planner .block-2 .add-from .dishes-cont::-webkit-scrollbar {
     display: none;
 }
+#planner .block-2 .add-from .dishes-cont .pre-dish {
+    width: fit-content;
+    margin: auto;
+    color: var(--faded-black-lvl-1);
+    font-size: small;
+}
 #planner .block-2 .add-from .dishes-cont .dish {
     min-width: 150px;
     width: 200px;
@@ -1216,6 +1222,27 @@ main .notice.show.remove {
     box-shadow: 0 0 5px 5px lightgreen;
     cursor: pointer;
     transition: 0.25s;
+}
+#planner .block-2 .add-from .dishes-cont .dish button {
+    padding: 7px 10px;
+    border: none;
+    border-radius: 7px;
+    font-size: small;
+    font-weight: bold;
+    background-color: orangered;
+    color: white;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    margin-top: 10px;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.25s;
+}
+#planner .block-2 .add-from .dishes-cont .dish button:hover {
+    background-color: rgb(227, 61, 0);
+}
+#planner .block-2 .add-from .dishes-cont .dish.selectable button {
+    display: none;
 }
 #planner .block-2 .add-from .dishes-cont .dish.selectable:hover {
     background-color: var(--very-faint-green);
@@ -1312,7 +1339,7 @@ main .notice.show.remove {
     justify-content: space-between;
     background-color: white;
     border-radius: 7px;
-    width: fit-content;
+    width: 90%;
     display: none;
 }
 #planner .block-3 .content-2 .add-meal-cont .bg .meal .menuIcon:hover {

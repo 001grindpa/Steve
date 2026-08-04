@@ -1250,26 +1250,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Dishes added to Planner: ", data.detail);
 
             // create each dish item and append to parent cont
-            dishesCont.innerHTML = "";
+            if (data.detail.length != 0) {
+                dishesCont.innerHTML = "";
 
-            data.detail.forEach(el => {
-                let item = document.createElement("div");
-                item.classList.add("dish");
-                dishesCont.appendChild(item); // append to parent first
-                // create item children
-                let itemHeader = document.createElement("h4");
-                itemHeader.textContent = el["name"];
-                item.appendChild(itemHeader); // append to parent
-                // create item's body child
-                let itemBody = document.createElement("div");
-                itemBody.classList.add("about");
-                itemBody.textContent = el["description"];
-                item.appendChild(itemBody);
-            })
+                data.detail.forEach(el => {
+                    let item = document.createElement("div");
+                    item.classList.add("dish");
+                    dishesCont.appendChild(item); // append to parent first
+                    // create item children
+                    let itemHeader = document.createElement("h4");
+                    itemHeader.textContent = el["name"];
+                    item.appendChild(itemHeader); // append to parent
+                    // create item's body child
+                    let itemBody = document.createElement("div");
+                    itemBody.classList.add("about");
+                    itemBody.textContent = el["description"];
+                    item.appendChild(itemBody);
+                    // create remove dish button
+                    let removeDish = document.createElement("button");
+                    removeDish.innerHTML = "Remove from addable";
+                    item.appendChild(removeDish);
+                })
+            }
 
         } catch (e) {
             console.log("Unexpected error => ", e);
         }
+
         // handle date container data
         const months = {
             0: "Jan", 1: "Feb", 2: "March", 
@@ -1557,6 +1564,53 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                 })
             }
+            // handle meal removal from list of planner addable meals
+            let removeAddableBtns = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish button");
+            let removeAddableBtn = e.target.closest(".block-2 .add-from .dishes-cont .dish button");
+
+            if (removeAddableBtn) {
+                removeAddableBtns.forEach((btn, i) => {
+                    if (btn == removeAddableBtn) {
+                        let mealName = plannerDishes[i].querySelector("h4").textContent;
+                        data.detail.forEach(async el => {
+                            if (el["name"] == mealName) {
+                                let id = el["id"];
+                                console.log("Meal name: %s\nIt's ID: ", mealName, id);
+                                // make backend call that remove meal from plannerDishes session
+                                // remove from UI too
+                                try {
+                                    let resp = await fetch(`/remove-addable?id=${id}`, {
+                                        method: "DELETE"
+                                    });
+                                    let d = await resp.json();
+                                    console.log("status: ", d.detail);
+                                    dishesCont.removeChild(plannerDishes[i]);
+                                    // display pre dish caption if planner dishes is empty
+                                    if (dishesCont.innerHTML == "") {
+                                        let preDish = document.createElement("div");
+                                        preDish.classList.add("pre-dish");
+                                        preDish.textContent = "Addable meals will appear here...";
+                                        dishesCont.appendChild(preDish);
+                                    }
+                                    // create notification for status
+                                    let notice = document.createElement("div");
+                                    notice.classList.add("notice");
+                                    notice.style.backgroundColor = "gray";
+                                    notice.textContent = d.detail;
+                                    noticeCont.prepend(notice);
+                                    notice.classList.add("show");
+                                    setTimeout(() => {
+                                        notice.classList.add("remove");
+                                    }, 4000);
+
+                                } catch(e) {
+                                    console.log("Unexpected error -> ", e);
+                                }
+                            }
+                        })
+                    }
+                })
+            }
         })
 
         // handle;
@@ -1609,7 +1663,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         // which share thesame static length(3). therefore, the tpotal index of added dishes may
                         // not correspond to the bg and the 'add dish' el total indices.
                         if (addedDishBg) {
-                            // bgIndex for bg is thesame as mealAdder index, ass noted above.
+                            // bgIndex for bg is thesame as mealAdder index, as noted above.
                             addedDishBgs.forEach((bg, bgIndex) => {
                                 if (addedDishBg == bg) {
                                     bg.removeChild(addedDishes[index]);

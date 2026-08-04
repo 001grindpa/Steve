@@ -138,6 +138,15 @@ def planner_dishes(request: Request, db: Session=Depends(get_db)):
 
     return {"detail": dishes}
 
+# this api removes addable planner dish from session
+@router.delete("/remove-addable", status_code=status.HTTP_200_OK)
+async def remove_addable(request: Request, id: int, db: Session=Depends(get_db)):
+    # remove from session
+    if id in request.session.get("planner_dishes"):
+        request.session.get("planner_dishes").remove(id)
+        return {"detail": "Removed addable from list"}
+    HTTPException(detail="Invalid dish id", status_code=status.HTTP_406_NOT_ACCEPTABLE)
+
 # this api searches the recipe db to get dish recipe or calls agent to get a new recipe
 @router.get("/get-recipe", status_code=status.HTTP_200_OK)
 async def get_recipe(request: Request, name: str, db: Session=Depends(get_db)):
