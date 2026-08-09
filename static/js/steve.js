@@ -1509,9 +1509,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             let mealAdder = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
             let addMealBg = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg");
             let plannerDishes = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish");
+            let currentDate = document.querySelectorAll(".block-3 .date-bg .date span");
+            let dayTime = document.querySelectorAll(".content-2 .add-meal-cont .head h4");
             
             if (plannerDish) {
-                mealAdder.forEach((el, index) => {
+                mealAdder.forEach(async (el, index) => {
                     if (el.classList.contains("choosen")) {
                         // construct the dish container
                         // auto remove existing dish
@@ -1566,6 +1568,42 @@ document.addEventListener("DOMContentLoaded", async () => {
                         el.click();
                         el.style.display="none";
                         meal.style.display="flex";
+
+                        // make backend request to add dish to planner db
+                        dayTime = dayTime[index].textContent;
+                        currentDate = `${currentDate[1].textContent}-${currentDate[2].textContent}-${currentDate[3].textContent}`;
+
+                        let content = {
+                            "name": h3.textContent,
+                            "date": currentDate,
+                            "dayTime": dayTime
+                        }
+
+                        try {
+                            let resp = await fetch("/store-planned-meal", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(content)
+                            });
+                            let d = await resp.json();
+                            // console.log(d.detail);
+
+                            // create notification for status
+                            let notice = document.createElement("div");
+                            notice.classList.add("notice");
+                            notice.style.backgroundColor = "green";
+                            notice.textContent = d.detail;
+                            noticeCont.prepend(notice);
+                            notice.classList.add("show");
+                            setTimeout(() => {
+                                notice.classList.add("remove");
+                            }, 4000);
+                        } 
+                        catch(e) {
+                            console.log("Unexpected error -> ", e);
+                        }
                     }
                 })
             }

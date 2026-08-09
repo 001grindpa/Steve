@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
-from models import get_db, Dish, DishData, User, Recipe
+from models import get_db, Dish, DishData, User, Recipe, Planner, PlannerDishDetail
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_
@@ -146,6 +146,66 @@ async def remove_addable(request: Request, id: int, db: Session=Depends(get_db))
         request.session.get("planner_dishes").remove(id)
         return {"detail": "Removed addable from list"}
     HTTPException(detail="Invalid dish id", status_code=status.HTTP_406_NOT_ACCEPTABLE)
+
+# this api stores planned meal for each day
+@router.post("/store-planned-meal", status_code=status.HTTP_201_CREATED)
+async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
+    # check if dish in dishes db
+    dish_data = await request.json()
+    date = dish_data.get("date") # date-format: month-day-year
+
+    dish_id = db.query(Dish).where(Dish.name == dish_data.get("name")).first()
+    if not dish_id:
+        raise HTTPException(detail="Dish not found", status_code=status.HTTP_404_NOT_FOUND)
+    current_user = db.query(User).where(User.email == request.session.get("email")).first()
+
+    # check if date exists in db, update planner dish if true
+    planner_meal = db.query(Planner).where(Planner.date == dish_data.get("date")).first()
+    if planner_meal and dish_data.get("dayTime") == "Morning":
+        planner_meal.breakfast = dish_data.get("name")
+        db.commit()
+        return {"detail": f"Morning meal for {dish_data.get("date")} updated"}
+    elif planner_meal and dish_data.get("dayTime") == "Afternoon":
+        planner_meal.lunch = dish_data.get("name")
+        db.commit()
+        return {"detail": f"Afternoon meal for {dish_data.get("date")} updated"}
+    elif planner_meal and dish_data.get("dayTime") == "Evening":
+        planner_meal.dinner = dish_data.get("name")
+        db.commit()
+        return {"detail": f"Evening meal for {dish_data.get("date")} updated"}
+    # create new planner meal if not exist
+    if not planner_meal:
+        if dish_data.get("dayTime") == "Morning":
+            new_planner_meal = Planner(
+                breakfast=dish_data.get("name"), lunch="", dinner="", date=dish_data.get("date"),
+                snacks=""
+                )
+            current_user.planner.append(new_planner_meal)
+            db.commit()
+            return {"detail": f"Morning meal for {dish_data.get("date")} created"}
+        elif dish_data.get("dayTime") == "Afternoon":
+            new_planner_meal = Planner(
+                breakfast="", lunch=dish_data.get("name"), dinner="", date=dish_data.get("date"),
+                snacks=""
+                )
+            current_user.planner.append(new_planner_meal)
+            db.commit()
+            return {"detail": f"Afternoon meal for {dish_data.get("date")} created"}
+        elif dish_data.get("dayTime") == "Evening":
+            new_planner_meal = Planner(
+                breakfast="", lunch="", dinner=dish_data.get("name"), date=dish_data.get("date"),
+                snacks=""
+                )
+            current_user.planner.append(new_planner_meal)
+            db.commit()
+            return {"detail": f"Evening meal for {dish_data.get("date")} created"}
+
+
+    # breakfast = Column(String(1000))
+    # lunch = Column(String(1000))
+    # dinner = Column(String(1000))
+    # snacks = Column(String(1000))
+    # date = Column(String(1000))
 
 # this api searches the recipe db to get dish recipe or calls agent to get a new recipe
 @router.get("/get-recipe", status_code=status.HTTP_200_OK)

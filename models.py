@@ -19,7 +19,7 @@ class DishData(BaseModel):
     origin: str
     ingredients: str
 
-# user models
+# user schemas
 class CreateUser(BaseModel):
     password: str
     confirm_pw: str
@@ -34,6 +34,12 @@ class UserData(LoginUser):
     dishes: List[DishData]
     class Config():
         orm_mode = True
+
+# planner dish schemas
+class PlannerDishDetail(BaseModel):
+    name: str
+    date: str
+    dayTime: str
         
 # jwt decoded token class
 class TokenData(BaseModel):
@@ -111,6 +117,7 @@ class Planner(BaseClass):
     lunch = Column(String(1000))
     dinner = Column(String(1000))
     snacks = Column(String(1000))
+    date = Column(String(1000))
     user_id = Column(ForeignKey("users.id"))
 
     # establish relationship with user table
