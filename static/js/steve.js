@@ -1207,7 +1207,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const rightBtn = body.querySelector(".block-3 .date-bg button:nth-child(3)");
         const noticeCont = body.querySelector("main .noticeCont");
         const addDishCont = body.querySelector(".block-3 .content-2");
+        const addMealBg = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg");
         const addMeal = body.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
+        const mealAdder = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
         const recipeCont = body.querySelector(".block-4");
         const rmRecipeBtn = body.querySelector(".block-4 button");
         const recipeContent = body.querySelector(".block-4 .recipeCont .main-content")
@@ -1246,7 +1248,125 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
         })
 
-        // auto make a request to get all dishes added to planner
+        // implement a function that creates and returns a added dish el
+        function createAddedDish(index, dishName) {
+            // if meal is already added to planner display as none on addable meals list
+            mealAdder[index].style.display="none";
+            // start creating(morning) dish content
+            let meal = document.createElement("div");
+            meal.classList.add("meal");
+            meal.style.display="flex";
+            addMealBg[index].prepend(meal); // prepend to parent
+            // create meal header for name
+            let h3 = document.createElement("h3");
+            h3.textContent = dishName;
+            meal.appendChild(h3);
+            // create and append menu data
+            let menuIcon = document.createElement("img");
+            menuIcon.classList.add("menuIcon");
+            menuIcon.src = "static/images/dots.png";
+            meal.appendChild(menuIcon); // append to parent
+            // create meal menu cont data
+            let menuCont = document.createElement("div");
+            menuCont.classList.add("meal-menu-cont");
+            meal.appendChild(menuCont); // append to parent
+            let recipeCont = document.createElement("div");
+            recipeCont.classList.add("show-recipe-cont");
+            menuCont.appendChild(recipeCont); // append child
+            // create recipe cont children
+            let recipeIcon = document.createElement("img");
+            recipeIcon.classList.add("recipeIcon");
+            recipeIcon.src = "static/images/recipe.png";
+            recipeCont.appendChild(recipeIcon);
+            let recipeDiv = document.createElement("div");
+            recipeDiv.textContent = "Show recipe";
+            recipeCont.appendChild(recipeDiv);
+            // create remove cont and it's children
+            let removeCont = document.createElement("div");
+            removeCont.classList.add("remove-meal-cont");
+            menuCont.appendChild(removeCont); // append to parent
+            let deleteIcon = document.createElement("img");
+            deleteIcon.classList.add("deleteIcon");
+            deleteIcon.src = "static/images/trash_can.png";
+            removeCont.appendChild(deleteIcon); // append to parent
+            let removeDiv = document.createElement("div");
+            removeDiv.textContent = "Remove dish";
+            removeCont.appendChild(removeDiv);
+        }
+
+        // implement a function that queries planner db for added meals
+        async function queryPlannerDB() {
+            // display all addable meals for the current day
+            /**
+             * query backend db, check already planned meals for today and
+             * display the ones not added
+             */
+            let plannerDishes = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish");
+            let addedDishes = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal");
+            let activeDate = document.querySelectorAll(".block-3 .date-bg .date span");
+            activeDate = `${activeDate[1].textContent}-${activeDate[2].textContent}-${activeDate[3].textContent}`;
+            
+            let currentMeals = {};
+            try {
+                let resp = await fetch(`/planner-added-meals?q=${activeDate}`);
+                let d = await resp.json();
+                console.log("Meals for %s: ", activeDate, d.detail);
+                // remove current added dishes
+                addMealBg.forEach(el => {
+                    if (el.querySelector(".meal")) {
+                        el.removeChild(el.querySelector(".meal"));
+                        // display corresponding add-meal el
+                        el.querySelector(".add-meal").style.display="flex";
+                    }
+                })
+
+                // push retrieved meals to currentMeals
+                for (let i in d.detail) {
+                    if (i == "breakfast" || i == "dinner" || i == "lunch" && d.detail[i].trim() != "") {
+                        if (i == "breakfast") {
+                            currentMeals[d.detail[i]] = "morning";
+                        } else if (i == "lunch") {
+                            currentMeals[d.detail[i]] = "afternoon";
+                        } else {
+                            currentMeals[d.detail[i]] = "evening";
+                        }
+                    }
+                }
+
+                // display all addable meals(planner dishes)
+                plannerDishes.forEach(el => {
+                    el.style.display="block";
+                })
+                
+                plannerDishes.forEach(el => {
+                    for (let el2 in currentMeals) {
+                        if (el.querySelector("h4").textContent == el2) {
+                            // if meal is already added to planner display as none on addable meals list
+                            el.style.display="none";
+                            // render this meal in the added meal section under it's respective dayTime
+                            if (currentMeals[el2] == "morning") {
+                                createAddedDish(0, el2);
+                            } else if (currentMeals[el2] == "afternoon") {
+                                createAddedDish(1, el2);
+                            } else if (currentMeals[el2] == "evening") {
+                                createAddedDish(2, el2);
+                            }
+                        }
+                    }
+                })
+                console.log("current meals: ", currentMeals);
+                
+            } catch(e) {
+                console.log("Unexpected error -> ", e);
+            }
+        }
+
+        // auto call function that retrieves planner added dish for present day
+        setTimeout(async () => {
+            await queryPlannerDB();
+        }, 2000);
+
+        // auto make a request to get all dishes addable to planner db
         let data;
         try {
             let resp = await fetch("/planner-dishes");
@@ -1311,7 +1431,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let totalDaysInMonth;
 
         // use event listeners to change date
-        rightBtn.addEventListener("click", () => {
+        rightBtn.addEventListener("click", async () => {
             // update day of the week
             currentDay = eval(currentDay + 1) % 7;
             dateContWeekDay.textContent = days[currentDay];
@@ -1332,10 +1452,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             dateContDate.textContent = currentDate;
             
-            // add future meals 
+            await queryPlannerDB();
         });
         
-        leftBtn.addEventListener("click", () => {
+        leftBtn.addEventListener("click", async () => {
             if (month == months[currentMonthIndex] && currentDate == date) {
                 console.log("clicked");
                 // create notification for status
@@ -1382,6 +1502,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             dateContDate.textContent = currentDate;
+
+            await queryPlannerDB();
         });
         
         // go through 'data' content, add seperate them into three arrays based on their 
@@ -1506,8 +1628,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         // include selectable meal to time period
         dishesCont.addEventListener("click", (e) => {
             let plannerDish = e.target.closest(".block-2 .add-from .dishes-cont .dish.selectable");
-            let mealAdder = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
-            let addMealBg = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg");
             let plannerDishes = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish");
             let currentDate = document.querySelectorAll(".block-3 .date-bg .date span");
             let dayTime = document.querySelectorAll(".content-2 .add-meal-cont .head h4");
@@ -1688,8 +1808,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             let plannerDishes = document.querySelectorAll(".block-2 .add-from .dishes-cont .dish");
             let mealAdder = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .add-meal");
             let addedDishes = document.querySelectorAll(".block-3 .content-2 .add-meal-cont .bg .meal");
-            
+            let currentDate = document.querySelectorAll(".block-3 .date-bg .date span");
+            // let dayTime = document.querySelectorAll(".content-2 .add-meal-cont .head h4");
+
             if (removeMeal) {
+                currentDate = `${currentDate[1].textContent}-${currentDate[2].textContent}-${currentDate[3].textContent}`;
+                let mealType;
                 removeMealEls.forEach((el, index) => {
                     if (el == removeMeal) {
                         let addedMealName = addedDishes[index].querySelector("h3").textContent;
@@ -1706,8 +1830,45 @@ document.addEventListener("DOMContentLoaded", async () => {
                         // not correspond to the bg and the 'add dish' el total indices.
                         if (addedDishBg) {
                             // bgIndex for bg is thesame as mealAdder index, as noted above.
-                            addedDishBgs.forEach((bg, bgIndex) => {
+                            addedDishBgs.forEach(async (bg, bgIndex) => {
                                 if (addedDishBg == bg) {
+                                    // assign meal dayTime
+                                    if (bgIndex == 0) {
+                                        mealType = "breakfast"
+                                    } else if (bgIndex == 1) {
+                                        mealType = "lunch";
+                                    } else {
+                                        mealType = "dinner";
+                                    }
+                                    let mealData = {
+                                        "date": currentDate,
+                                        "name": addedMealName,
+                                        "type": mealType
+                                    }
+                                    // send backend request to remove added meal from planner dishes db
+                                    try {
+                                        let resp = await fetch("/drop-planner-meal", {
+                                            method: "DELETE",
+                                            headers: {
+                                                "Content-Type": "application/json"
+                                            },
+                                            body: JSON.stringify(mealData)
+                                        });
+                                        let d = await resp.json();
+                                        // create notification for status
+                                        let notice = document.createElement("div");
+                                        notice.classList.add("notice");
+                                        notice.style.backgroundColor = "gray";
+                                        notice.textContent = d.detail;
+                                        noticeCont.prepend(notice);
+                                        notice.classList.add("show");
+                                        setTimeout(() => {
+                                            notice.classList.add("remove");
+                                        }, 4000);
+                                    } catch(e) {
+                                        console.log("Unexpected error: ", e);
+                                    }
+
                                     bg.removeChild(addedDishes[index]);
                                     // display the addMeal el
                                     mealAdder[bgIndex].style.display="flex";

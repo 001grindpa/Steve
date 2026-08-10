@@ -39,7 +39,7 @@ async def add_dish(request: Request, index: int, db:Session = Depends(get_db)):
     # add dish object to db
     current_user.dishes.append(new_dish)
     db.commit()
-    return {"detail": "Meal added to list successfully"}
+    return {"detail": "Meal added to favorites"}
 
 # this endpoint returns the page template
 @router.get("/dishes", status_code=status.HTTP_200_OK)
@@ -124,7 +124,7 @@ async def add_planner(request: Request, meal: str, db: Session=Depends(get_db)):
     # add meal to planner session
     request.session.get("planner_dishes").append(dish_obj.id) # store dish id, and get dish by id
 
-    return {"detail": "Added to planner"}
+    return {"detail": "Added to planner section"}
 
 # this api returns dishes added to planner session from db
 @router.get("/planner-dishes", status_code=status.HTTP_200_OK)
@@ -200,12 +200,41 @@ async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
             db.commit()
             return {"detail": f"Evening meal for {dish_data.get("date")} created"}
 
+# this api returns existing planner meals for requested date
+@router.get("/planner-added-meals", status_code=status.HTTP_200_OK)
+async def planner_added_meals(request: Request, q: str, db: Session=Depends(get_db)):
+    # check if date exists already
+    planner_meals = db.query(Planner).where(Planner.date == q).first()
+    if planner_meals:
+        return {"detail": planner_meals}
+    
+    raise HTTPException(
+        detail="Not found", status_code=status.HTTP_404_NOT_FOUND
+    )
 
-    # breakfast = Column(String(1000))
-    # lunch = Column(String(1000))
-    # dinner = Column(String(1000))
-    # snacks = Column(String(1000))
-    # date = Column(String(1000))
+# this api is used for deleting meals in planner
+@router.delete("/drop-planner-meal", status_code=status.HTTP_200_OK)
+async def remove_planner_meal(request: Request, db: Session=Depends(get_db)):
+    # dish details is dictionary containing properties for date, dish_name and dayTime
+    dish_details = await request.json()
+
+    # check if meal in planner db
+    planner_meal = db.query(Planner).where(Planner.date == dish_details.get("date")).first()
+    if planner_meal:
+        if dish_details.get("type") == "breakfast":
+            planner_meal.breakfast = ""
+            db.commit()
+        elif dish_details.get("type") == "lunch":
+            planner_meal.lunch = ""
+            db.commit()
+        elif dish_details.get("type") == "dinner":
+            planner_meal.dinner = ""
+            db.commit()
+    else:
+        raise HTTPException(
+            detail="Meal not found in Planner", status_code=status.HTTP_404_NOT_FOUND
+        )
+    return {"detail": f"{dish_details.get("name")} removed from Planner for {dish_details.get("date")}"}
 
 # this api searches the recipe db to get dish recipe or calls agent to get a new recipe
 @router.get("/get-recipe", status_code=status.HTTP_200_OK)
