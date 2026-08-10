@@ -1343,17 +1343,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                         if (el.querySelector("h4").textContent == el2) {
                             // if meal is already added to planner display as none on addable meals list
                             el.style.display="none";
-                            // render this meal in the added meal section under it's respective dayTime
-                            if (currentMeals[el2] == "morning") {
-                                createAddedDish(0, el2);
-                            } else if (currentMeals[el2] == "afternoon") {
-                                createAddedDish(1, el2);
-                            } else if (currentMeals[el2] == "evening") {
-                                createAddedDish(2, el2);
-                            }
                         }
                     }
                 })
+                
+                for (let el2 in currentMeals) {
+                    // render this meal in the added meal section under it's respective dayTime
+                    if (currentMeals[el2] == "morning") {
+                        createAddedDish(0, el2);
+                    } else if (currentMeals[el2] == "afternoon") {
+                        createAddedDish(1, el2);
+                    } else if (currentMeals[el2] == "evening") {
+                        createAddedDish(2, el2);
+                    }
+                }
                 console.log("current meals: ", currentMeals);
                 
             } catch(e) {
