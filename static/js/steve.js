@@ -1322,7 +1322,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 // push retrieved meals to currentMeals
                 for (let i in d.detail) {
-                    if (i == "breakfast" || i == "dinner" || i == "lunch" && d.detail[i].trim() != "") {
+                    if (i === "breakfast" || i === "dinner" || i === "lunch" && d.detail[i].trim() !== "") {
                         if (i == "breakfast") {
                             currentMeals[d.detail[i]] = "morning";
                         } else if (i == "lunch") {
@@ -1349,11 +1349,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 
                 for (let el2 in currentMeals) {
                     // render this meal in the added meal section under it's respective dayTime
-                    if (currentMeals[el2] == "morning") {
+                    if (currentMeals[el2] == "morning" && el2.trim() !== "") {
                         createAddedDish(0, el2);
-                    } else if (currentMeals[el2] == "afternoon") {
+                    } else if (currentMeals[el2] == "afternoon" && el2.trim() !== "") {
                         createAddedDish(1, el2);
-                    } else if (currentMeals[el2] == "evening") {
+                    } else if (currentMeals[el2] == "evening" && el2.trim() !== "") {
                         createAddedDish(2, el2);
                     }
                 }
@@ -1367,7 +1367,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // auto call function that retrieves planner added dish for present day
         setTimeout(async () => {
             await queryPlannerDB();
-        }, 2000);
+        }, 2500);
 
         // auto make a request to get all dishes addable to planner db
         let data;
