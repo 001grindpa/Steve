@@ -491,8 +491,12 @@ main .notice.show.remove {
     animation: remove 1s forwards;
 }
 
-#index {
-    
+#index .inner-body {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    height: 100vh;
+    overflow-y: auto;
 }
 #check-menu {
     display: none;
@@ -909,8 +913,12 @@ main .notice.show.remove {
 }
 
 /* favorites page styling */
-#fav {
-    
+#fav .sub-body {
+    /* display: flex; */
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    height: 100vh;
+    overflow-y: auto;
 }
 #fav .block-2 .fav-header {
     width: fit-content;
@@ -1145,7 +1153,7 @@ main .notice.show.remove {
     color: white;
     border-radius: 5px;
     margin-top: 5px;
-    bottom: 15.2rem;
+    bottom: 21%;
     left: 50%;
     transform: translateX(-50%);
     transition: 0.25s;
@@ -1176,6 +1184,13 @@ main .notice.show.remove {
 }
 
 /* styling for planner page */
+#planner main {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    height: 100vh;
+    overflow-y: auto;
+}
 #planner .block-2 {
     padding: 15px 10px;
 }

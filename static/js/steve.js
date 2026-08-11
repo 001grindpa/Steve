@@ -688,7 +688,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // render page after window loads
         window.addEventListener("load", () => {
             loader.style.display = "none";
-            subBody.style.display = "block";
+            subBody.style.display = "flex";
         })
 
         // clicking body removes floating elements
@@ -1219,6 +1219,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.addEventListener("load", () => {
             loader.style.display = "none";
             subBody.style.display = "block";
+            // auto call function that retrieves planner added dish for present day
+            setTimeout(async () => {
+                await queryPlannerDB();
+            }, 1000);
         })
 
         body.addEventListener("click", (e) => {
@@ -1363,11 +1367,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Unexpected error -> ", e);
             }
         }
-
-        // auto call function that retrieves planner added dish for present day
-        setTimeout(async () => {
-            await queryPlannerDB();
-        }, 2500);
 
         // auto make a request to get all dishes addable to planner db
         let data;

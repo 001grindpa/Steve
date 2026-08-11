@@ -6,22 +6,160 @@
         <div>loading...</div>
     </div>
     <div class="sub-body">
-        <header>
-            <div>
-                <!-- <img src="{{ url_for('static', path='images/right-arrow.png') }}" alt="arrow-logo"> -->
-            </div>
-        </header>
-        <main>
-            <div class="noticeCont">
-                <!-- <div class="notice show">query field is empty</div> -->
-            </div>
-            <input type="checkbox" id="check-menu">
-            <label for="check-menu">
-                <img class="arrow-right" src="{{ url_for('static', path='images/menu.png') }}" alt="menu-logo">
-            </label>
-            <div class="block-1">
-                <div class="flex-zone">
-                    <div class="above-menu">
+        <div class="inner-body">
+            <header>
+                <div>
+                    <!-- <img src="{{ url_for('static', path='images/right-arrow.png') }}" alt="arrow-logo"> -->
+                </div>
+            </header>
+            <main>
+                <div class="noticeCont">
+                    <!-- <div class="notice show">query field is empty</div> -->
+                </div>
+                <input type="checkbox" id="check-menu">
+                <label for="check-menu">
+                    <img class="arrow-right" src="{{ url_for('static', path='images/menu.png') }}" alt="menu-logo">
+                </label>
+                <div class="block-1">
+                    <div class="flex-zone">
+                        <div class="above-menu">
+                            <div class="logo-cont">
+                                <div class="logo">
+                                    <img src="{{ url_for('static', path='images/steve-logo.png') }}" alt="logo">
+                                </div>
+                                <div class="logo-text">
+                                    <h2>Steve</h2>
+                                    <div>Your AI Chef</div>
+                                </div>
+                            </div>
+                            <label for="check-menu">
+                                <img class="arrow" src="{{ url_for('static', path='images/left-arrow.png') }}" alt="arrow-logo">
+                            </label>
+                        </div>
+                        <menu>
+                            <a href="">
+                                <div class="item selected">
+                                    <img src="{{ url_for('static', path='images/home.png') }}" alt="home">
+                                    <div>Home</div>
+                                </div>
+                            </a>
+                            <a href="/dishes">
+                                <div class="item">
+                                    <img src="{{ url_for('static', path='images/love.png') }}" alt="favorites">
+                                    <div>Favorites</div>
+                                </div>
+                            </a>
+                            <a href="/planner">
+                                <div class="item">
+                                    <img src="{{ url_for('static', path='images/calender.png') }}" alt="favorites">
+                                    <div>Planner</div>
+                                </div>
+                            </a>
+                            <a href="">
+                                <div class="item">
+                                    <img src="{{ url_for('static', path='images/time.png') }}" alt="history">
+                                    <div>History</div>
+                                </div>
+                            </a>
+                        </menu>
+                        <div class="line"></div>
+                        <div class="profile-cont">
+                            <img src="{{ url_for('static', path='images/user.png') }}" alt="user">
+                            <div class="profile">
+                                <div>{{ user }}</div>
+                                <div>View profile</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="back">Welcome back, {{ user }}!</div>
+                <div class="grid-cont">
+                    <div class="block-2">
+                        <div class="chat-area">
+                            <div class="chat-cont">
+                            <!-- store chat to db and use jinja to render it here from db on page reload -->
+                                <!-- <div class="user-cont">
+                                    <div class="user">
+                                        <div class="user-txt">Hello, I'm steve. Tell me me what ingredients you have</div>
+                                        <div class="user-time">10:30 <span>AM</span></div>
+                                    </div>
+                                </div>
+                                <div class="steve-cont">
+                                    <div class="steve">
+                                        <div class="txt">Hello, I'm steve. Tell me me what ingredients you have</div>
+                                        <div class="time">10:30 AM</div>
+                                    </div>
+                                    <img src="{{ url_for('static', path='gifs/loading-dots.gif') }}" alt="thinking">
+                                </div> -->
+                            </div>
+                            <div class="input-cont">
+                                <img id="trash_can" src="{{ url_for('static', path='images/trash_can.png') }}" alt="trash_can">
+                                <div>Clear chat</div>
+                                <form action="">
+                                    <input id="query" type="text" name="query" placeholder="Message Steve..." autocomplete="off" autofocus>
+                                    <button type="submit"><img src="{{ url_for('static', path='images/send_white.png') }}" alt="send_logo"></button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="important">Steve can make mistakes. Check important info.</div>
+                    </div>
+                    <div class="block-3-cont">
+                        <div class="block-3">
+                            <h3>Steve's recipe ideas ✨</h3>
+                            <div class="ingre-cont">
+                                <div class="cancel">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                {% if request.session.get("dishes") %}
+                                    <div class="before-ingre">Based on your ingredients</div>
+                                    {% for data in request.session.get("dishes") %}
+                                            {% if data.get("user's ingredients") %}
+                                            <div class="ingre">
+                                                <div>{{ data.get("user's ingredients") }}</div>
+                                            </div>
+                                            {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="dishes">
+                                <!--Used jnja to render generated dishes from session-->
+                                <div class="pre-info">Steve's ideas will appear here.</div>
+                                {% if request.session.get("dishes") %}
+                                    {% for data in request.session.get("dishes") %}
+                                        {% if not data.get("user's ingredients") %}
+                                            <div class="dish">
+                                                <div class="one">
+                                                    <h4>{{ data.get("name") }}</h4>
+                                                    <div>
+                                                        <div class="info">
+                                                            <img src="{{ url_for('static', path='images/time.png') }}" alt="time">
+                                                            <div>{{ data.get("time_it_takes") }}</div>
+                                                        </div>
+                                                        <div class="info">
+                                                            <img src="{{ url_for('static', path='images/chart.png') }}" alt="chart">
+                                                            <div>{{ data.get("difficulty") }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="desc">{{ data.get("description") }}</div>
+                                                    <div class="uses">Uses: {{ data.get("ingredients") }}</div>
+                                                </div>
+                                                <div class="two">
+                                                    <img src="{{ url_for('static', path='images/love.png') }}" alt="fav">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <img id="green-loader" src="{{ url_for('static', path='gifs/green_loader.gif') }}" alt="loader">
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <div class="footer-grid">
+                    <div class="section-1">
                         <div class="logo-cont">
                             <div class="logo">
                                 <img src="{{ url_for('static', path='images/steve-logo.png') }}" alt="logo">
@@ -31,218 +169,82 @@
                                 <div>Your AI Chef</div>
                             </div>
                         </div>
-                        <label for="check-menu">
-                            <img class="arrow" src="{{ url_for('static', path='images/left-arrow.png') }}" alt="arrow-logo">
-                        </label>
-                    </div>
-                    <menu>
-                        <a href="">
-                            <div class="item selected">
-                                <img src="{{ url_for('static', path='images/home.png') }}" alt="home">
-                                <div>Home</div>
-                            </div>
-                        </a>
-                        <a href="/dishes">
-                            <div class="item">
-                                <img src="{{ url_for('static', path='images/love.png') }}" alt="favorites">
-                                <div>Favorites</div>
-                            </div>
-                        </a>
-                        <a href="/planner">
-                            <div class="item">
-                                <img src="{{ url_for('static', path='images/calender.png') }}" alt="favorites">
-                                <div>Planner</div>
-                            </div>
-                        </a>
-                        <a href="">
-                            <div class="item">
-                                <img src="{{ url_for('static', path='images/time.png') }}" alt="history">
-                                <div>History</div>
-                            </div>
-                        </a>
-                    </menu>
-                    <div class="line"></div>
-                    <div class="profile-cont">
-                        <img src="{{ url_for('static', path='images/user.png') }}" alt="user">
-                        <div class="profile">
-                            <div>{{ user }}</div>
-                            <div>View profile</div>
+                        <div class="intro">Your smart cooking companion that helps you make the most of what you have.</div>
+                        <div class="social-cont">
+                            <a href="https://x.com/0xgrindpa"><img src="{{ url_for('static', path='images/twitter.png') }}" alt="x logo"></a>
+                            <a href="https://github.com/001grindpa/Steve"><img src="{{ url_for('static', path='images/github.png') }}" alt="github logo"></a>
+                            <img src="{{ url_for('static', path='images/linkedin-2.png') }}" alt="linkedin logo">
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="back">Welcome back, {{ user }}!</div>
-            <div class="grid-cont">
-                <div class="block-2">
-                    <div class="chat-area">
-                        <div class="chat-cont">
-                        <!-- store chat to db and use jinja to render it here from db on page reload -->
-                            <!-- <div class="user-cont">
-                                <div class="user">
-                                    <div class="user-txt">Hello, I'm steve. Tell me me what ingredients you have</div>
-                                    <div class="user-time">10:30 <span>AM</span></div>
+                    <div class="section-2">
+                        <div class="sub-section">
+                            <input type="checkbox" id="f" checked>
+                            <label for="f">
+                                <div class="head">
+                                    <h4>Product</h4>
+                                    <div class="arrow">
+                                        <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow.png">
+                                    </div>
                                 </div>
+                            </label>
+                            <div class="line"></div>
+                            <div class="content">
+                                <div>How it works</div>
+                                <div>Meal Planner</div>
+                                <div>Pricing</div>
                             </div>
-                            <div class="steve-cont">
-                                <div class="steve">
-                                    <div class="txt">Hello, I'm steve. Tell me me what ingredients you have</div>
-                                    <div class="time">10:30 AM</div>
+                        </div>
+                        <div class="sub-section">
+                            <input type="checkbox" id="f1" checked>
+                            <label for="f1">
+                                <div class="head">
+                                    <h4>Resources</h4>
+                                    <div class="arrow">
+                                        <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow.png">
+                                    </div>
                                 </div>
-                                <img src="{{ url_for('static', path='gifs/loading-dots.gif') }}" alt="thinking">
-                            </div> -->
-                        </div>
-                        <div class="input-cont">
-                            <img id="trash_can" src="{{ url_for('static', path='images/trash_can.png') }}" alt="trash_can">
-                            <div>Clear chat</div>
-                            <form action="">
-                                <input id="query" type="text" name="query" placeholder="Message Steve..." autocomplete="off" autofocus>
-                                <button type="submit"><img src="{{ url_for('static', path='images/send_white.png') }}" alt="send_logo"></button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="important">Steve can make mistakes. Check important info.</div>
-                </div>
-                <div class="block-3-cont">
-                    <div class="block-3">
-                        <h3>Steve's recipe ideas ✨</h3>
-                        <div class="ingre-cont">
-                            <div class="cancel">
-                                <div></div>
-                                <div></div>
+                            </label>
+                            <div class="line"></div>
+                            <div class="content">
+                                <div>Help Center</div>
+                                <div>Blog</div>
+                                <div>Recipe Ideas</div>
                             </div>
-                            {% if request.session.get("dishes") %}
-                                <div class="before-ingre">Based on your ingredients</div>
-                                {% for data in request.session.get("dishes") %}
-                                        {% if data.get("user's ingredients") %}
-                                        <div class="ingre">
-                                            <div>{{ data.get("user's ingredients") }}</div>
-                                        </div>
-                                        {% endif %}
-                                {% endfor %}
-                            {% endif %}
                         </div>
-                        <div class="dishes">
-                            <!--Used jnja to render generated dishes from session-->
-                            <div class="pre-info">Steve's ideas will appear here.</div>
-                            {% if request.session.get("dishes") %}
-                                {% for data in request.session.get("dishes") %}
-                                    {% if not data.get("user's ingredients") %}
-                                        <div class="dish">
-                                            <div class="one">
-                                                <h4>{{ data.get("name") }}</h4>
-                                                <div>
-                                                    <div class="info">
-                                                        <img src="{{ url_for('static', path='images/time.png') }}" alt="time">
-                                                        <div>{{ data.get("time_it_takes") }}</div>
-                                                    </div>
-                                                    <div class="info">
-                                                        <img src="{{ url_for('static', path='images/chart.png') }}" alt="chart">
-                                                        <div>{{ data.get("difficulty") }}</div>
-                                                    </div>
-                                                </div>
-                                                <div class="desc">{{ data.get("description") }}</div>
-                                                <div class="uses">Uses: {{ data.get("ingredients") }}</div>
-                                            </div>
-                                            <div class="two">
-                                                <img src="{{ url_for('static', path='images/love.png') }}" alt="fav">
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                        <img id="green-loader" src="{{ url_for('static', path='gifs/green_loader.gif') }}" alt="loader">
-                    </div>
-                </div>
-            </div>
-        </main>
-        <footer>
-            <div class="footer-grid">
-                <div class="section-1">
-                    <div class="logo-cont">
-                        <div class="logo">
-                            <img src="{{ url_for('static', path='images/steve-logo.png') }}" alt="logo">
-                        </div>
-                        <div class="logo-text">
-                            <h2>Steve</h2>
-                            <div>Your AI Chef</div>
-                        </div>
-                    </div>
-                    <div class="intro">Your smart cooking companion that helps you make the most of what you have.</div>
-                    <div class="social-cont">
-                        <a href="https://x.com/0xgrindpa"><img src="{{ url_for('static', path='images/twitter.png') }}" alt="x logo"></a>
-                        <a href="https://github.com/001grindpa/Steve"><img src="{{ url_for('static', path='images/github.png') }}" alt="github logo"></a>
-                        <img src="{{ url_for('static', path='images/linkedin-2.png') }}" alt="linkedin logo">
-                    </div>
-                </div>
-                <div class="section-2">
-                    <div class="sub-section">
-                        <input type="checkbox" id="f" checked>
-                        <label for="f">
-                            <div class="head">
-                                <h4>Product</h4>
-                                <div class="arrow">
-                                    <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow.png">
+                        <div class="sub-section">
+                            <input type="checkbox" id="f2" checked>
+                            <label for="f2">
+                                <div class="head">
+                                    <h4>Company</h4>
+                                    <div class="arrow">
+                                        <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow.png">
+                                    </div>
                                 </div>
+                            </label>
+                            <div class="line"></div>
+                            <div class="content">
+                                <div>About Steve</div>
+                                <div>Privacy Policy</div>
+                                <div>Terms of Service</div>
                             </div>
-                        </label>
-                        <div class="line"></div>
+                        </div>
+                    </div>
+                    <div class="section-3">
+                        <h4>Stay in the loop</h4>
                         <div class="content">
-                            <div>How it works</div>
-                            <div>Meal Planner</div>
-                            <div>Pricing</div>
+                            <div>Get tips, recipe ideas and updates from Steve.</div>
                         </div>
-                    </div>
-                    <div class="sub-section">
-                        <input type="checkbox" id="f1" checked>
-                        <label for="f1">
-                            <div class="head">
-                                <h4>Resources</h4>
-                                <div class="arrow">
-                                    <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow.png">
-                                </div>
-                            </div>
-                        </label>
-                        <div class="line"></div>
-                        <div class="content">
-                            <div>Help Center</div>
-                            <div>Blog</div>
-                            <div>Recipe Ideas</div>
-                        </div>
-                    </div>
-                    <div class="sub-section">
-                        <input type="checkbox" id="f2" checked>
-                        <label for="f2">
-                            <div class="head">
-                                <h4>Company</h4>
-                                <div class="arrow">
-                                    <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow.png">
-                                </div>
-                            </div>
-                        </label>
-                        <div class="line"></div>
-                        <div class="content">
-                            <div>About Steve</div>
-                            <div>Privacy Policy</div>
-                            <div>Terms of Service</div>
-                        </div>
+                        <form action="">
+                            <input type="text" name="sub" placeholder="Enter your email">
+                            <button>Subscribe</button>
+                        </form>
                     </div>
                 </div>
-                <div class="section-3">
-                    <h4>Stay in the loop</h4>
-                    <div class="content">
-                        <div>Get tips, recipe ideas and updates from Steve.</div>
-                    </div>
-                    <form action="">
-                        <input type="text" name="sub" placeholder="Enter your email">
-                        <button>Subscribe</button>
-                    </form>
+                <div class="copyright-cont">
+                    <div>&copy; <span>2026</span> Steve AI Chef. All rights reserved.</div>
                 </div>
-            </div>
-            <div class="copyright-cont">
-                <div>&copy; <span>2026</span> Steve AI Chef. All rights reserved.</div>
-            </div>
-        </footer>
+            </footer>
+        </div>
     </div>
 
 {% endblock %}
