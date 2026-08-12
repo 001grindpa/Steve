@@ -158,3 +158,8 @@ def clear_chat(request: Request, db:Session=Depends(get_db)):
         db.delete(chat)
         db.commit()
     return {"detail": "chats cleared"}
+
+# this api returns history template on page request
+@router.get("/history", status_code=status.HTTP_200_OK)
+def history(request: Request):
+    return templates.TemplateResponse(request, "history.html", {"page_id": "history"})

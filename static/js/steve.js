@@ -2000,4 +2000,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         })
     }
+    else if (document.body.id == "history") {
+        const body = document.querySelector("body");
+        const subBody = body.querySelector(".sub-body");
+        const loader = body.querySelector(".loader");
+        const sideMenu = body.querySelector(".block-1");
+        const bugerLogoCheck = body.querySelector("#check-menu");
+        const bugerLogo = body.querySelector("#check-menu + label");
+
+        // render page after window loads
+        window.addEventListener("load", () => {
+            loader.style.display = "none";
+            subBody.style.display = "block";
+            // auto call function that retrieves planner added dish for present day
+            setTimeout(async () => {
+                await queryPlannerDB();
+            }, 1000);
+        })
+    }
 })
