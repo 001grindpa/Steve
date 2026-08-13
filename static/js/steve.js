@@ -2011,7 +2011,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // render page after window loads
         window.addEventListener("load", () => {
             loader.style.display = "none";
-            subBody.style.display = "block";
+            subBody.style.display = "flex";
             // auto call function that retrieves planner added dish for present day
             setTimeout(async () => {
                 await queryPlannerDB();

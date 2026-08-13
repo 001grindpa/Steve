@@ -1191,7 +1191,7 @@ main .notice.show.remove {
     height: 100vh;
     overflow-y: auto;
 }
-#planner .block-2 {
+.block-2 {
     padding: 15px 10px;
 }
 #planner .block-2 .planner-header {
@@ -1437,6 +1437,66 @@ main .notice.show.remove {
 #planner .block-3 .content-2 .add-meal-cont:nth-child(3) .bg .add-meal img {
     background-color: gray;
 }
+
+/* history page styling */
+#history .sub-body {
+    /* display: flex; */
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    height: 100vh;
+    overflow-y: auto;
+}
+#history .block-2 .history-header {
+    margin-left: 55px;
+}
+#history .block-2 .history-header h3 {
+    color: var(--green-txt);
+}
+#history .block-2 .history-header div {
+    font-size: small;
+}
+#history .block-2 .content {
+    padding: 5px;
+    margin-top: 20px;
+}
+#history .block-2 .content .date div {
+    font-weight: bold;
+}
+#history .block-2 .content .date div span {
+    opacity: 0.6;
+}
+#history .block-2 .content .dish-cont {
+    outline: 1px solid var(--faded-black);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 0.4rem;
+    display: flex;
+    justify-content: space-between;
+    line-height: 1.4;
+}
+#history .block-2 .content .dish-cont .dish div {
+    min-width: 220px;
+    max-width: 400px;
+    font-size: small;
+}
+#history .block-2 .content .dish-cont a {
+    width: fit-content;
+    height: fit-content;
+}
+#history .block-2 .content .dish-cont a button {
+    padding: 10px 15px;
+    border: none;
+    outline: 1px solid orange;
+    color: orange;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+#history .block-2 .content .dish-cont a button:hover {
+    color: white;
+    background-color: orange;
+}
+
 
 /* footer styling */
 footer .footer-grid {
@@ -1723,7 +1783,7 @@ footer .copyright-cont {
         align-items: center;
         justify-content: space-between;
     }
-    #planner .block-2 {
+    #planner .block-2, #history .block-2 {
         margin-top: 70px;
     }
 }
