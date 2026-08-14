@@ -1,5 +1,9 @@
-from fastapi import APIRouter, Depends, status, Request, HTTPException
-from models import get_db, Dish, DishData, User, Recipe, Planner, PlannerDishDetail
+from fastapi import (
+    APIRouter, Depends, status, Request, HTTPException
+)
+from models import (
+    get_db, Dish, User, Recipe, Planner, History
+)
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import and_
@@ -9,7 +13,7 @@ from oauth2 import get_current_user
 from kit import DishDetail
 from agents.recipe_agent import query_graph
 import ast
-import json
+import datetime
 
 router = APIRouter(tags=["Dish Routes"])
 templates = Jinja2Templates(directory="templates")
@@ -38,7 +42,20 @@ async def add_dish(request: Request, index: int, db:Session = Depends(get_db)):
                 description=selected_dish.get("description"), ingredients=selected_dish.get("ingredients"))
     # add dish object to db
     current_user.dishes.append(new_dish)
+    # add dish to history
+    # get current date
+    now = datetime.datetime.now()
+    month = now.strftime("%b")
+    date = f"{month}-{now.day}-{now.year}"
+
+    fav_history = History(
+        favorites="true", planner="", date=date, name=new_dish.name, 
+        description=new_dish.description, dayTime=""
+    )
+    current_user.history.append(fav_history)
+
     db.commit()
+
     return {"detail": "Meal added to favorites"}
 
 # this endpoint returns the page template
@@ -152,7 +169,17 @@ async def remove_addable(request: Request, id: int, db: Session=Depends(get_db))
 async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
     # check if dish in dishes db
     dish_data = await request.json()
-    # date-format: month-day-year
+    # create function that adds data to history
+    def add_to_history(dayTime: str):
+        # add to history
+        # get dish from dishes
+        dish = db.query(Dish).where(Dish.name == dish_data.get("name")).first()
+        planner_history = History(
+                favorites="", planner="true", date=dish_data.get("date"), name=dish.name, 
+                description=dish.description, dayTime=dayTime
+            )
+        current_user.history.append(planner_history)
+
     # get current user
     user = db.query(User).where(User.email == request.session.get("email")).first()
 
@@ -167,16 +194,23 @@ async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
     planner_meal = db.query(Planner).where(
         and_(Planner.date == dish_data.get("date"), Planner.user_id == user.id)
     ).first()
+    # declare user history
+    user_history = db.query(History).where(and_(
+        History.date == dish_data.get("date"), History.user_id == user.id
+    )).first()
     if planner_meal and dish_data.get("dayTime") == "Morning":
         planner_meal.breakfast = dish_data.get("name")
+        user_history.dayTime = "morning"
         db.commit()
         return {"detail": f"Morning meal for {dish_data.get("date")} updated"}
     elif planner_meal and dish_data.get("dayTime") == "Afternoon":
         planner_meal.lunch = dish_data.get("name")
+        user_history.dayTime = "afternoon"
         db.commit()
         return {"detail": f"Afternoon meal for {dish_data.get("date")} updated"}
     elif planner_meal and dish_data.get("dayTime") == "Evening":
         planner_meal.dinner = dish_data.get("name")
+        user_history.dayTime = "evening"
         db.commit()
         return {"detail": f"Evening meal for {dish_data.get("date")} updated"}
     # create new planner meal if not exist
@@ -187,6 +221,8 @@ async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
                 snacks=""
                 )
             current_user.planner.append(new_planner_meal)
+            # add to history
+            add_to_history("morning") # this function adds data to history db
             db.commit()
             return {"detail": f"Morning meal for {dish_data.get("date")} created"}
         elif dish_data.get("dayTime") == "Afternoon":
@@ -195,6 +231,8 @@ async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
                 snacks=""
                 )
             current_user.planner.append(new_planner_meal)
+            # add to history
+            add_to_history("afternoon") # this function adds data to history db
             db.commit()
             return {"detail": f"Afternoon meal for {dish_data.get("date")} created"}
         elif dish_data.get("dayTime") == "Evening":
@@ -203,6 +241,8 @@ async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
                 snacks=""
                 )
             current_user.planner.append(new_planner_meal)
+            # add to history
+            add_to_history("evening") # this function adds data to history db
             db.commit()
             return {"detail": f"Evening meal for {dish_data.get("date")} created"}
 

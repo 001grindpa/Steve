@@ -163,3 +163,5 @@ def clear_chat(request: Request, db:Session=Depends(get_db)):
 @router.get("/history", status_code=status.HTTP_200_OK)
 def history(request: Request):
     return templates.TemplateResponse(request, "history.html", {"page_id": "history"})
+
+# this api gets stored history data

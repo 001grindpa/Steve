@@ -75,6 +75,7 @@ class User(BaseClass):
 
     dishes = relationship("Dish", back_populates="users")
     planner = relationship("Planner", back_populates="users")
+    history = relationship("History", back_populates="users")
 
     def __repr__(self):
         return f"<username='{self.username}', email='{self.email}'>"
@@ -127,19 +128,36 @@ class Planner(BaseClass):
         return f"""<id='{self.id}', breakfast='{self.breakfast}', 
         lunch='{self.lunch}', dinner='{self.dinner}', snack'{self.snacks}'>""".strip()
 
-# this db stores dish recipes
+# this table stores dish recipes
 class Recipe(BaseClass):
     __tablename__ = "recipes"
 
     dish_name = Column(String(1000))
-    ingredients = Column(String(1000)) # add ingredients seperated by comma
-    quantities = Column(String(255)) # ingre qunatities seperated by a comma
-    steps = Column(String(1000)) # add steps seperated by comma
+    ingredients = Column(String(1000))
+    quantities = Column(String(255))
+    steps = Column(String(1000))
     dish_id = Column(ForeignKey("dishes.id"))
 
     dishes = relationship(Dish, back_populates="recipes") # relate to dishes where dishes is foreign key
 
     def __repr__(self):
         return f"<id='{self.id}', dish_name='{self.dish_name}', ingredients='{self.ingredients}', quantity='{self.quantities}', steps='{self.steps}', dish_id='{self.dish_id}'>"
+
+# this table stores activity history
+class History(BaseClass):
+    __tablename__ = "history"
+
+    favorites = Column(String(255))
+    planner = Column(String(255))
+    date = Column(String(1000))
+    name = Column(String(1000))
+    description = Column(String(1000))
+    dayTime = Column(String(255))
+    user_id = Column(ForeignKey("users.id"))
+
+    users = relationship(User, back_populates="history")
+
+    def __repr__(self):
+        return f"<id='{self.id}', date='{self.date}', name='{self.description}', user_id='{self.user_id}'>"
 
 Base.metadata.create_all(engine)
