@@ -152,15 +152,21 @@ async def remove_addable(request: Request, id: int, db: Session=Depends(get_db))
 async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
     # check if dish in dishes db
     dish_data = await request.json()
-    date = dish_data.get("date") # date-format: month-day-year
+    # date-format: month-day-year
+    # get current user
+    user = db.query(User).where(User.email == request.session.get("email")).first()
 
-    dish_id = db.query(Dish).where(Dish.name == dish_data.get("name")).first()
+    dish_id = db.query(Dish).where(
+        and_(Dish.name == dish_data.get("name"), Dish.user_id == user.id)
+    ).first()
     if not dish_id:
         raise HTTPException(detail="Dish not found", status_code=status.HTTP_404_NOT_FOUND)
     current_user = db.query(User).where(User.email == request.session.get("email")).first()
 
     # check if date exists in db, update planner dish if true
-    planner_meal = db.query(Planner).where(Planner.date == dish_data.get("date")).first()
+    planner_meal = db.query(Planner).where(
+        and_(Planner.date == dish_data.get("date"), Planner.user_id == user.id)
+    ).first()
     if planner_meal and dish_data.get("dayTime") == "Morning":
         planner_meal.breakfast = dish_data.get("name")
         db.commit()
@@ -218,8 +224,13 @@ async def remove_planner_meal(request: Request, db: Session=Depends(get_db)):
     # dish details is dictionary containing properties for date, dish_name and dayTime
     dish_details = await request.json()
 
+    # get current user
+    user = db.query(User).where(User.email == request.session.get("email")).first()
+
     # check if meal in planner db
-    planner_meal = db.query(Planner).where(Planner.date == dish_details.get("date")).first()
+    planner_meal = db.query(Planner).where(
+        and_(Planner.date == dish_details.get("date"), Planner.user_id == user.id)
+    ).first()
     if planner_meal:
         if dish_details.get("type") == "breakfast":
             planner_meal.breakfast = ""

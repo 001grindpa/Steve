@@ -2007,6 +2007,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const sideMenu = body.querySelector(".block-1");
         const bugerLogoCheck = body.querySelector("#check-menu");
         const bugerLogo = body.querySelector("#check-menu + label");
+        const tabs = body.querySelectorAll(".block-2 .tabs-cont div");
+        const switchCheck = body.querySelector(".block-2 #switch");
+        const history = body.querySelector(".block-2 .content-cont");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -2016,6 +2019,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             setTimeout(async () => {
                 await queryPlannerDB();
             }, 1000);
+        })
+        // handle tab switching
+        tabs[0].addEventListener("click", () => {
+            switchCheck.checked = false;
+            tabs[0].style.color = "var(--green-txt)";
+            tabs[1].style.color = "gray";
+        })
+        tabs[1].addEventListener("click", () => {
+            switchCheck.checked = true;
+            tabs[0].style.color = "gray";
+            tabs[1].style.color = "var(--green-txt)";
         })
     }
 })

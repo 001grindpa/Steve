@@ -101,7 +101,7 @@ def get_user(username: str, db: Session=Depends(get_db)):
     return user
 
 # logout endpoint
-@router.delete("/logout", status_code=status.HTTP_308_PERMANENT_REDIRECT)
+@router.post("/logout", status_code=status.HTTP_308_PERMANENT_REDIRECT)
 def logout(request: Request):
     request.session["username"] = None
     request.session["email"] = None

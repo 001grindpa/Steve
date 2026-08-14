@@ -1474,6 +1474,45 @@ main .notice.show.remove {
     justify-content: space-between;
     line-height: 1.4;
 }
+#history .block-2 #switch:checked + .tabs-cont::after {
+    transform: translateX(89%);
+}
+#history .block-2 #switch {
+    display: none;
+}
+#history .block-2 .tabs-cont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: fit-content;
+    margin: auto;
+    margin-top: 0.8rem;
+    background-color: lightgray;
+    border-radius: 20px;
+    padding: 5px;
+    position: relative;
+}
+#history .block-2 .tabs-cont::after {
+    content: "";
+    background-color: white;
+    box-shadow: 0 0 5px 1px var(--faded-black-lvl-1);
+    position: absolute;
+    height: 77%;
+    width: 50%;
+    border-radius: 20px;
+    left: 5px;
+    transition: 0.25s;
+}
+#history .block-2 .tabs-cont div {
+    padding: 7px 10px;
+    cursor: pointer;
+    z-index: 1;
+    color: gray;
+}
+#history .block-2 .tabs-cont div:nth-child(1) {
+    color: var(--green-txt);
+}
 #history .block-2 .content .dish-cont .dish div {
     min-width: 220px;
     max-width: 400px;
