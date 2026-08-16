@@ -1518,6 +1518,16 @@ main .notice.show.remove {
     max-width: 400px;
     font-size: small;
 }
+#history .block-2 .content .dish-cont .dayTime {
+    font-size: var(--smaller-txt);
+    background: gray;
+    padding: 5px 10px;
+    color: white;
+    width: fit-content;
+    height: fit-content;
+    align-self: flex-start;
+    border-radius: 20px;
+}
 #history .block-2 .content .dish-cont a {
     width: fit-content;
     height: fit-content;
@@ -1534,6 +1544,30 @@ main .notice.show.remove {
 #history .block-2 .content .dish-cont a button:hover {
     color: white;
     background-color: orange;
+}
+#history .block-2 .nav-cont {
+    width: fit-content;
+    margin: auto;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+#history .block-2 .nav-cont img {
+    width: 0.8rem;
+    height: 0.8rem;
+    padding: 15px;
+    border-radius: 100%;
+    transition: ease 0.3s;
+    cursor: pointer;
+}
+#history .block-2 .nav-cont img:hover {
+    background-color: var(--faded-black);
+}
+#history .block-2 .nav-cont img:nth-child(2) {
+    width: 1rem;
+    height: 1rem;
 }
 
 

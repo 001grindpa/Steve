@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse, StreamingResponse
-from models import CreateUser, LoginUser, UserData, get_db, User, QueryData, Chat
+from models import CreateUser, LoginUser, UserData, get_db, User, Chat, History
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 from hash import Hash
 import json
 from kit import (
@@ -165,3 +166,29 @@ def history(request: Request):
     return templates.TemplateResponse(request, "history.html", {"page_id": "history"})
 
 # this api gets stored history data
+@router.post("/get-history", status_code=status.HTTP_200_OK)
+async def get_history(request: Request, db: Session=Depends(get_db)):
+    q = await request.json()
+    # get user
+    user = db.query(User).where(User.email == request.session.get("email")).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+    history: str
+    # query fav history table
+    if q.get("q") == "fav":
+        history = db.query(History).where(
+            and_(History.favorites != "", History.user_id == user.id)
+        ).limit(q.get("lim")).all()
+    # query planner history table
+    elif q.get("q") == "plan":
+        history = db.query(History).where(
+            and_(History.planner != "", History.user_id == user.id)
+        ).limit(q.get("lim")).all()
+
+    if not history:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Empty history"
+        )
+    return {"detail": history}

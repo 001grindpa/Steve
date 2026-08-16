@@ -2031,5 +2031,94 @@ document.addEventListener("DOMContentLoaded", async () => {
             tabs[0].style.color = "gray";
             tabs[1].style.color = "var(--green-txt)";
         })
+
+        // get current date
+        let month = new Date().toLocaleString("default", {"month": "short"});
+        let day = new Date().getDate()
+        let year = new Date().getFullYear();
+
+        // auto render history in UI
+        let response_limit = 10;
+        try {
+            let resp = await fetch("/get-history", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({"q": "fav", "lim": response_limit})
+            });
+            let d = await resp.json();
+            console.log(d.detail);
+            history.innerHTML = "";
+
+            d.detail.forEach((el, index) => {
+                // create history content elements
+                // create main content
+                let content = document.createElement("div");
+                content.classList.add("content");
+                history.appendChild(content); // append to parent
+
+                // check if date aleady exists
+                let existingDate = document.querySelectorAll(".block-2 .content .date div span");
+                if (existingDate.length != 0) {
+                    let dateArray = existingDate[existingDate.length-1].textContent.split(" ");
+                    // console.log(dateArray[dateArray.length-2]);
+                    if (`${el["date"].split("-")[1]},` == dateArray[dateArray.length-2]) {
+                        console.log("Hey the condition works")        
+                    }
+                }
+                // create and render date el
+                let date = document.createElement("div");
+                date.classList.add("date");
+                content.appendChild(date);
+                let innerDate = document.createElement("div");
+                date.appendChild(innerDate);
+
+                // existingDate.forEach()
+                if (el["date"] == `${month}-${day}-${year}`) {
+                    innerDate.textContent = "Today ";
+                    let innerDateSpan = document.createElement("span");
+                    innerDate.appendChild(innerDateSpan);
+                    innerDateSpan.textContent = `~ ${el["date"].split("-")[0]} ${el["date"].split("-")[1]}, ${el["date"].split("-")[2]}`;
+                } else {
+                    innerDate.textContent = `${el["date"].split("-")[0]} `;
+                    let innerDateSpan = document.createElement("span");
+                    innerDate.appendChild(innerDateSpan);
+                    innerDateSpan.textContent = `${el["date"].split("-")[1]}, ${el["date"].split("-")[2]}`;
+                }
+
+                // create dish el container
+                let dishCont = document.createElement("div");
+                dishCont.classList.add("dish-cont");
+                content.appendChild(dishCont); // append to parent
+                let dish = document.createElement("div");
+                dish.classList.add("dish");
+                dishCont.appendChild(dish) // append to parent
+                let name = document.createElement("h3");
+                name.textContent = el["name"];
+                let desc = document.createElement("div");
+                desc.textContent = el["description"];
+                dish.appendChild(name);
+                dish.appendChild(desc);
+
+                // create metadata
+                if (el["favorites"] == "true") {
+                    let a = document.createElement("a");
+                    a.href = `https://google.com/search?q=tell me more about ${el["name"]}`;
+                    dishCont.appendChild(a);
+                    let btn = document.createElement("button");
+                    btn.textContent = "Learn more";
+                    a.appendChild(btn);
+                } else if (el["planner"] == "true") {
+                    let dayTime = document.createElement("div");
+                    dayTime.classList.add("dayTime");
+                    dayTime.textContent = el["dayTime"];
+                    dishCont.appendChild(dayTime);
+                }
+            })
+
+        } catch(e) {
+            console.log("Unexpected error ->", e);
+        }
     }
 })

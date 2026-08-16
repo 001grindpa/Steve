@@ -79,8 +79,8 @@
                 </div>
                 <input type="checkbox" id="switch">
                 <div class="tabs-cont">
-                    <div class="selected">Planner</div>
-                    <div>Favorites</div>
+                    <div class="selected">Favorites</div>
+                    <div>Planner</div>
                 </div>
                 <div class="content-cont">
                     <div class="content">
@@ -93,6 +93,7 @@
                                 <div>A simple burger featuring a cooked chicken patty topped with ketchup, sandwiched between a soft bun</div>
                             </div>
                             <a href="https://google.com/search?q='tell me more about Chicken Ketchup Burgers'"><button>Learn More</button></a>
+                             <!-- <div class="dayTime">Morning</div> -->
                         </div>
                     </div>
                     <div class="content">
@@ -119,6 +120,10 @@
                             <a href="https://google.com/search?q='tell me more about lemon herb grilled salmon'"><button>Learn More</button></a>
                         </div>
                     </div>
+                </div>
+                <div class="nav-cont">
+                    <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left nav">
+                    <img src="{{ url_for('static', path='images/right-arrow.png') }}" alt="right nav">
                 </div>
             </div>
         </main>
