@@ -1518,6 +1518,12 @@ main .notice.show.remove {
     max-width: 400px;
     font-size: small;
 }
+#history .block-2 .content-cont .no-history {
+    width: 20rem;
+    height: 20rem;
+    margin: 20px 50%;
+    transform: translateX(-50%);
+}
 #history .block-2 .content .dish-cont .dayTime {
     font-size: var(--smaller-txt);
     background: gray;

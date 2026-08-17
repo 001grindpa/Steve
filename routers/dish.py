@@ -200,17 +200,17 @@ async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
     )).first()
     if planner_meal and dish_data.get("dayTime") == "Morning":
         planner_meal.breakfast = dish_data.get("name")
-        user_history.dayTime = "morning"
+        add_to_history("morning")
         db.commit()
         return {"detail": f"Morning meal for {dish_data.get("date")} updated"}
     elif planner_meal and dish_data.get("dayTime") == "Afternoon":
         planner_meal.lunch = dish_data.get("name")
-        user_history.dayTime = "afternoon"
+        add_to_history("afternoon")
         db.commit()
         return {"detail": f"Afternoon meal for {dish_data.get("date")} updated"}
     elif planner_meal and dish_data.get("dayTime") == "Evening":
         planner_meal.dinner = dish_data.get("name")
-        user_history.dayTime = "evening"
+        add_to_history("evening")
         db.commit()
         return {"detail": f"Evening meal for {dish_data.get("date")} updated"}
     # create new planner meal if not exist

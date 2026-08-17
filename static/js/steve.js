@@ -1881,7 +1881,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 })
             }
 
-            // get recipe upn request
+            // get recipe api request
             let showRecipe = e.target.closest(".show-recipe-cont");
             let showRecipes = document.querySelectorAll(".show-recipe-cont");
 
@@ -2015,21 +2015,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.addEventListener("load", () => {
             loader.style.display = "none";
             subBody.style.display = "flex";
-            // auto call function that retrieves planner added dish for present day
-            setTimeout(async () => {
-                await queryPlannerDB();
-            }, 1000);
-        })
-        // handle tab switching
-        tabs[0].addEventListener("click", () => {
-            switchCheck.checked = false;
-            tabs[0].style.color = "var(--green-txt)";
-            tabs[1].style.color = "gray";
-        })
-        tabs[1].addEventListener("click", () => {
-            switchCheck.checked = true;
-            tabs[0].style.color = "gray";
-            tabs[1].style.color = "var(--green-txt)";
         })
 
         // get current date
@@ -2037,35 +2022,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         let day = new Date().getDate()
         let year = new Date().getFullYear();
 
-        // auto render history in UI
-        let response_limit = 10;
-        try {
-            let resp = await fetch("/get-history", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({"q": "fav", "lim": response_limit})
-            });
-            let d = await resp.json();
-            console.log(d.detail);
-            history.innerHTML = "";
-
-            d.detail.forEach((el, index) => {
+        // create function that creates history data content and renders to ui
+        function renderHistory(historyData) {
+            for (let el in historyData) {
                 // create history content elements
                 // create main content
                 let content = document.createElement("div");
                 content.classList.add("content");
-                history.appendChild(content); // append to parent
-
-                // check if date aleady exists
-                let existingDate = document.querySelectorAll(".block-2 .content .date div span");
-                if (existingDate.length != 0) {
-                    let dateArray = existingDate[existingDate.length-1].textContent.split(" ");
-                    // console.log(dateArray[dateArray.length-2]);
-                    if (`${el["date"].split("-")[1]},` == dateArray[dateArray.length-2]) {
-                        console.log("Hey the condition works")        
-                    }
+                if (el == `${month}-${day}-${year}`) {
+                    history.prepend(content); // prepend to parent    
+                } else {
+                    history.appendChild(content); // append to parent
                 }
                 // create and render date el
                 let date = document.createElement("div");
@@ -2074,51 +2041,98 @@ document.addEventListener("DOMContentLoaded", async () => {
                 let innerDate = document.createElement("div");
                 date.appendChild(innerDate);
 
-                // existingDate.forEach()
-                if (el["date"] == `${month}-${day}-${year}`) {
+                if (el == `${month}-${day}-${year}`) {
                     innerDate.textContent = "Today ";
                     let innerDateSpan = document.createElement("span");
                     innerDate.appendChild(innerDateSpan);
-                    innerDateSpan.textContent = `~ ${el["date"].split("-")[0]} ${el["date"].split("-")[1]}, ${el["date"].split("-")[2]}`;
+                    innerDateSpan.textContent = `~ ${el.split("-")[0]} ${el.split("-")[1]}, ${el.split("-")[2]}`;
                 } else {
-                    innerDate.textContent = `${el["date"].split("-")[0]} `;
+                    innerDate.textContent = `${el.split("-")[0]} `;
                     let innerDateSpan = document.createElement("span");
                     innerDate.appendChild(innerDateSpan);
-                    innerDateSpan.textContent = `${el["date"].split("-")[1]}, ${el["date"].split("-")[2]}`;
+                    innerDateSpan.textContent = `${el.split("-")[1]}, ${el.split("-")[2]}`;
                 }
 
-                // create dish el container
-                let dishCont = document.createElement("div");
-                dishCont.classList.add("dish-cont");
-                content.appendChild(dishCont); // append to parent
-                let dish = document.createElement("div");
-                dish.classList.add("dish");
-                dishCont.appendChild(dish) // append to parent
-                let name = document.createElement("h3");
-                name.textContent = el["name"];
-                let desc = document.createElement("div");
-                desc.textContent = el["description"];
-                dish.appendChild(name);
-                dish.appendChild(desc);
+                for (let i=0; i < historyData[el].length; i++) {
+                    // create dish el container
+                    let dishCont = document.createElement("div");
+                    dishCont.classList.add("dish-cont");
+                    content.appendChild(dishCont); // append to parent
+                    let dish = document.createElement("div");
+                    dish.classList.add("dish");
+                    dishCont.appendChild(dish) // append to parent
+                    let name = document.createElement("h3");
+                    name.textContent = historyData[el][i]["name"];
+                    let desc = document.createElement("div");
+                    desc.textContent = historyData[el][i]["description"];
+                    dish.appendChild(name);
+                    dish.appendChild(desc);
 
-                // create metadata
-                if (el["favorites"] == "true") {
-                    let a = document.createElement("a");
-                    a.href = `https://google.com/search?q=tell me more about ${el["name"]}`;
-                    dishCont.appendChild(a);
-                    let btn = document.createElement("button");
-                    btn.textContent = "Learn more";
-                    a.appendChild(btn);
-                } else if (el["planner"] == "true") {
-                    let dayTime = document.createElement("div");
-                    dayTime.classList.add("dayTime");
-                    dayTime.textContent = el["dayTime"];
-                    dishCont.appendChild(dayTime);
+                    // create metadata
+                    if (historyData[el][i]["favorites"] == "true") {
+                        let a = document.createElement("a");
+                        a.href = `https://google.com/search?q=tell me more about ${historyData[el][i]["name"]}`;
+                        dishCont.appendChild(a);
+                        let btn = document.createElement("button");
+                        btn.textContent = "Learn more";
+                        a.appendChild(btn);
+                    } else if (historyData[el][i]["planner"] == "true") {
+                        let dayTime = document.createElement("div");
+                        dayTime.classList.add("dayTime");
+                        dayTime.textContent = historyData[el][i]["dayTime"];
+                        dishCont.appendChild(dayTime);
+                    }
                 }
-            })
-
-        } catch(e) {
-            console.log("Unexpected error ->", e);
+            }
         }
+        // auto render history in UI
+        let response_limit = 10;
+        let defaultHistoryType = "fav";
+        // create a function that makes history api calls
+        async function getHistory(historyType, responseLimit) {
+            try {
+                let resp = await fetch("/get-history", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({"q": historyType, "lim": responseLimit})
+                });
+                let d = await resp.json();
+                console.log(d.detail);
+                history.innerHTML = "";
+                if (d.detail == "Empty history") {
+                    let img = document.createElement("img");
+                    img.classList.add("no-history");
+                    img.src = "static/images/no-history.png";
+                    history.appendChild(img);
+                    return;
+                }
+
+                renderHistory(d.detail);
+        
+            } catch(e) {
+                console.log("Unexpected error ->", e);
+            }
+        }
+        await getHistory(defaultHistoryType, response_limit);
+
+        // handle tab switching
+        tabs[0].addEventListener("click", async () => {
+            switchCheck.checked = false;
+            tabs[0].style.color = "var(--green-txt)";
+            tabs[1].style.color = "gray";
+
+            // make favorites history call
+            await getHistory(defaultHistoryType, response_limit);
+        })
+        tabs[1].addEventListener("click", async () => {
+            switchCheck.checked = true;
+            tabs[0].style.color = "gray";
+            tabs[1].style.color = "var(--green-txt)";
+
+            // make planner history calls
+            await getHistory("plan", response_limit);
+        })
     }
 })

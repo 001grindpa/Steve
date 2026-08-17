@@ -12,6 +12,7 @@ from kit import (
 )
 from agents.agent import graph
 import ast
+from typing import List
 
 router = APIRouter(tags=["User Routes"])
 templates = Jinja2Templates(directory="templates")
@@ -176,6 +177,7 @@ async def get_history(request: Request, db: Session=Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
     history: str
+    filtered_history: dict[str, list] = {}
     # query fav history table
     if q.get("q") == "fav":
         history = db.query(History).where(
@@ -191,4 +193,11 @@ async def get_history(request: Request, db: Session=Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Empty history"
         )
-    return {"detail": history}
+    
+    for i in history:
+        if i.date in filtered_history:
+            filtered_history[i.date].append(i)
+        else:    
+            filtered_history[i.date] = [i]
+
+    return {"detail": filtered_history}
