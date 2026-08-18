@@ -2019,21 +2019,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // get current date
         let month = new Date().toLocaleString("default", {"month": "short"});
-        let day = new Date().getDate()
+        let toDay = new Date().getDate()
         let year = new Date().getFullYear();
+        // get yesterday date
+        let yesterDayObj = new Date();
+        yesterDayObj.setDate(toDay - 1);
+        let yesterDay = yesterDayObj.getDate();
 
         // create function that creates history data content and renders to ui
         function renderHistory(historyData) {
+            // reverse the historyData properties
+            historyData = Object.fromEntries(Object.entries(historyData).reverse());
+
             for (let el in historyData) {
                 // create history content elements
                 // create main content
                 let content = document.createElement("div");
                 content.classList.add("content");
-                if (el == `${month}-${day}-${year}`) {
-                    history.prepend(content); // prepend to parent    
-                } else {
-                    history.appendChild(content); // append to parent
-                }
+                history.appendChild(content); // append to parent
                 // create and render date el
                 let date = document.createElement("div");
                 date.classList.add("date");
@@ -2041,8 +2044,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 let innerDate = document.createElement("div");
                 date.appendChild(innerDate);
 
-                if (el == `${month}-${day}-${year}`) {
+                if (el == `${month}-${toDay}-${year}`) {
                     innerDate.textContent = "Today ";
+                    let innerDateSpan = document.createElement("span");
+                    innerDate.appendChild(innerDateSpan);
+                    innerDateSpan.textContent = `~ ${el.split("-")[0]} ${el.split("-")[1]}, ${el.split("-")[2]}`;
+                } else if ((el == `${month}-${yesterDay}-${year}`)) {
+                    innerDate.textContent = "Yesterday ";
                     let innerDateSpan = document.createElement("span");
                     innerDate.appendChild(innerDateSpan);
                     innerDateSpan.textContent = `~ ${el.split("-")[0]} ${el.split("-")[1]}, ${el.split("-")[2]}`;
@@ -2099,7 +2107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     body: JSON.stringify({"q": historyType, "lim": responseLimit})
                 });
                 let d = await resp.json();
-                console.log(d.detail);
+                
                 history.innerHTML = "";
                 if (d.detail == "Empty history") {
                     let img = document.createElement("img");
