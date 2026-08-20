@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse, StreamingResponse
-from models import CreateUser, LoginUser, UserData, get_db, User, Chat, History
+from models import CreateUser, LoginUser, UserData, get_db, User, Chat, History, Planner
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from hash import Hash
@@ -188,6 +188,17 @@ async def get_history(request: Request, db: Session=Depends(get_db)):
         history = db.query(History).where(
             and_(History.planner != "", History.user_id == user.id)
         ).limit(q.get("lim")).all()
+        # check dishes table for each date and update the "choosen" attibute
+        # for choosen dishes on those dates
+        for h in history:
+            dishes = db.query(Planner).where(Planner.date == h.date).all()
+            if dishes:
+                for dish in dishes:
+                    if dish.breakfast == h.name or dish.lunch == h.name or dish.dinner == h.name:
+                        h.choosen = "choosen"
+                        db.commit()
+            else:
+                raise HTTPException(detail="Empty meal planner")
 
     if not history:
         raise HTTPException(

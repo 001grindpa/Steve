@@ -2027,9 +2027,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         let yesterDay = yesterDayObj.getDate();
 
         // create function that creates history data content and renders to ui
-        function renderHistory(historyData) {
+        function renderHistory(historyData, historyType) {
             // reverse the historyData properties
-            historyData = Object.fromEntries(Object.entries(historyData).reverse());
+            if (historyType == "fav") {
+                historyData = Object.fromEntries(Object.entries(historyData).reverse());
+            }
 
             for (let el in historyData) {
                 // create history content elements
@@ -2089,6 +2091,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         dayTime.classList.add("dayTime");
                         dayTime.textContent = historyData[el][i]["dayTime"];
                         dishCont.appendChild(dayTime);
+                        if (historyData[el][i]["choosen"] == "choosen") {
+                            dayTime.style.background = "green";
+                        }
                     }
                 }
             }
@@ -2107,6 +2112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     body: JSON.stringify({"q": historyType, "lim": responseLimit})
                 });
                 let d = await resp.json();
+                console.log("Planner history: ", d.detail);
                 
                 history.innerHTML = "";
                 if (d.detail == "Empty history") {
@@ -2117,7 +2123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     return;
                 }
 
-                renderHistory(d.detail);
+                renderHistory(d.detail, historyType);
         
             } catch(e) {
                 console.log("Unexpected error ->", e);

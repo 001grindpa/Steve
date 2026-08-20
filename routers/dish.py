@@ -50,7 +50,7 @@ async def add_dish(request: Request, index: int, db:Session = Depends(get_db)):
 
     fav_history = History(
         favorites="true", planner="", date=date, name=new_dish.name, 
-        description=new_dish.description, dayTime=""
+        description=new_dish.description, dayTime="", choosen=""
     )
     current_user.history.append(fav_history)
 
@@ -176,7 +176,7 @@ async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
         dish = db.query(Dish).where(Dish.name == dish_data.get("name")).first()
         planner_history = History(
                 favorites="", planner="true", date=dish_data.get("date"), name=dish.name, 
-                description=dish.description, dayTime=dayTime
+                description=dish.description, dayTime=dayTime, choosen=""
             )
         current_user.history.append(planner_history)
 
@@ -285,6 +285,15 @@ async def remove_planner_meal(request: Request, db: Session=Depends(get_db)):
         raise HTTPException(
             detail="Meal not found in Planner", status_code=status.HTTP_404_NOT_FOUND
         )
+    # remove choosen from meal property in history
+    meal_in_history = db.query(History).where(and_(
+        History.date == dish_details.get("date"),
+        History.name == dish_details.get("name")
+    )).first()
+    if meal_in_history:
+        meal_in_history.choosen = ""
+        db.commit()
+
     return {"detail": f"{dish_details.get("name")} removed from Planner for {dish_details.get("date")}"}
 
 # this api searches the recipe db to get dish recipe or calls agent to get a new recipe

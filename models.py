@@ -153,6 +153,7 @@ class History(BaseClass):
     name = Column(String(1000))
     description = Column(String(1000))
     dayTime = Column(String(255))
+    choosen = Column(String(255))
     user_id = Column(ForeignKey("users.id"))
 
     users = relationship(User, back_populates="history")
