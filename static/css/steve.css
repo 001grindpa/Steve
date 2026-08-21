@@ -176,7 +176,6 @@ main .section-cont-2 .about-cont .one .content div {
     }
     to {
         opacity: 0;
-        transform: scaleX(10%) translateY(-1rem);
         display: none;
     }
 }
@@ -1446,6 +1445,9 @@ main .notice.show.remove {
     height: 100vh;
     overflow-y: auto;
 }
+#history .sub-body::-webkit-scrollbar {
+    display: none;
+}
 #history .block-2 .history-header {
     margin-left: 55px;
 }
@@ -1517,6 +1519,12 @@ main .notice.show.remove {
     min-width: 220px;
     max-width: 400px;
     font-size: small;
+}
+#history .block-2 .content-cont {
+    height: 30rem;
+    max-width: 70rem;
+    overflow-y: auto;
+    margin: auto;
 }
 #history .block-2 .content-cont .no-history {
     width: 20rem;

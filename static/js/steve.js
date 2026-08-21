@@ -2010,12 +2010,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         const tabs = body.querySelectorAll(".block-2 .tabs-cont div");
         const switchCheck = body.querySelector(".block-2 #switch");
         const history = body.querySelector(".block-2 .content-cont");
+        const leftNav = body.querySelector(".block-2 .nav-cont img:nth-child(1)");
+        const rightNav = body.querySelector(".block-2 .nav-cont img:nth-child(2)");
+        const noticeCont = body.querySelector("main .noticeCont");
 
         // render page after window loads
         window.addEventListener("load", () => {
             loader.style.display = "none";
             subBody.style.display = "flex";
         })
+
+        // auto render history in UI
+        let response_limit = 2;
+        let defaultHistoryType = "fav";
 
         // get current date
         let month = new Date().toLocaleString("default", {"month": "short"});
@@ -2098,9 +2105,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
         }
-        // auto render history in UI
-        let response_limit = 10;
-        let defaultHistoryType = "fav";
+        // auto render history call
+        let lastSlide = false;
         // create a function that makes history api calls
         async function getHistory(historyType, responseLimit) {
             try {
@@ -2122,6 +2128,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                     history.appendChild(img);
                     return;
                 }
+                // check if reached last history slide
+                if (d.detail["last_slide"] == true) {
+                    lastSlide = true;
+                    delete d.detail["last_slide"];
+                } else {
+                    lastSlide = false;
+                }
+                // get only the last 2 properties from the d.detail obj
+                // convert to map
+                let map = Object.entries(d.detail);
+                // convert back to json after slicing
+                d.detail = Object.fromEntries(map.slice(-2, map.length));
 
                 renderHistory(d.detail, historyType);
         
@@ -2147,6 +2165,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // make planner history calls
             await getHistory("plan", response_limit);
+        })
+        // configure next and previous page buttons
+        rightNav.addEventListener("click", async (e) => {
+            let historyType;
+            if (switchCheck.checked === true) {
+                historyType = "plan"
+            } else {
+                historyType = "fav"
+            }
+            if (lastSlide == false) {
+                response_limit = response_limit + 2;
+                await getHistory(historyType, response_limit);
+            } else {
+                // create notification for status
+                let notice = document.createElement("div");
+                notice.classList.add("notice");
+                notice.style.backgroundColor = "gray";
+                notice.textContent = "You have reached the last slide";
+                noticeCont.prepend(notice);
+                notice.classList.add("show");
+                setTimeout(() => {
+                    notice.classList.add("remove");
+                }, 4000);
+            }
+        })
+
+        leftNav.addEventListener("click", async(e) => {
+            let historyType;
+            if (switchCheck.checked === true) {
+                historyType = "plan"
+            } else {
+                historyType = "fav"
+            }
+            if (response_limit >= 4) {
+                response_limit = response_limit - 2;
+                await getHistory(historyType, response_limit);
+            }
         })
     }
 })

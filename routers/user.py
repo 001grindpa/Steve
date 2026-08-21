@@ -8,7 +8,7 @@ from hash import Hash
 import json
 from kit import (
     check_password, email_check, stream_response, get_time, 
-    getting_dish_replies, DishDetail
+    getting_dish_replies, slice_history
 )
 from agents.agent import graph
 import ast
@@ -182,12 +182,12 @@ async def get_history(request: Request, db: Session=Depends(get_db)):
     if q.get("q") == "fav":
         history = db.query(History).where(
             and_(History.favorites != "", History.user_id == user.id)
-        ).limit(q.get("lim")).all()
+        ).all()
     # query planner history table
     elif q.get("q") == "plan":
         history = db.query(History).where(
             and_(History.planner != "", History.user_id == user.id)
-        ).limit(q.get("lim")).all()
+        ).all()
         # check dishes table for each date and update the "choosen" attibute
         # for choosen dishes on those dates
         for h in history:
@@ -210,5 +210,8 @@ async def get_history(request: Request, db: Session=Depends(get_db)):
             filtered_history[i.date].append(i)
         else:    
             filtered_history[i.date] = [i]
+    sliced = slice_history(filtered_history, q.get("lim"))
+    if sliced == filtered_history:
+        sliced.update({"last_slide": True})
 
-    return {"detail": filtered_history}
+    return {"detail": sliced}

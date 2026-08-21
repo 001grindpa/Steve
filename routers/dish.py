@@ -10,7 +10,6 @@ from sqlalchemy import and_
 from hash import Hash
 from routers import user
 from oauth2 import get_current_user
-from kit import DishDetail
 from agents.recipe_agent import query_graph
 import ast
 import datetime

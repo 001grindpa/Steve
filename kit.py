@@ -51,19 +51,12 @@ async def getting_dish_replies():
     replies = ["Ok.", "On it.", "Searching the web right now.", "You got it."]
     return choice(replies)
 
-# classes
-class DishDetail:
-    def __init__(self, name: str, origin: str, time: str, mode: str, description: str, ingredients: List[str]) -> None:
-        self.name =  name
-        self.origin = origin
-        self.time = time
-        self.mode = mode
-        self.desc = description
-        self.ingre = ingredients
+# slice filtered history dictionary
+def slice_history(history: dict, lim: int):
+    new_history = {}
+    keys = list(history.keys())[0: lim]
+    values = list(history.values())[0: lim]
 
-    def __str__(self):
-        return f"{self.name} is an {self.origin} dish, {self.desc}. It's a {self.mode} meal that takes about {self.time} to make."
-    def __repr__(self):
-        return f"<name='{self.name}', origin='{self.origin}', description='{self.desc}', ingredients='{self.ingre}', mode='{self.mode}', time/duration='{self.time}'>"
-
-# print(getting_dish_replies())
+    for k, v in zip(keys, values):
+        new_history[k] = v
+    return new_history
