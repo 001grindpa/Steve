@@ -2004,9 +2004,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const body = document.querySelector("body");
         const subBody = body.querySelector(".sub-body");
         const loader = body.querySelector(".loader");
-        const sideMenu = body.querySelector(".block-1");
         const bugerLogoCheck = body.querySelector("#check-menu");
-        const bugerLogo = body.querySelector("#check-menu + label");
         const tabs = body.querySelectorAll(".block-2 .tabs-cont div");
         const switchCheck = body.querySelector(".block-2 #switch");
         const history = body.querySelector(".block-2 .content-cont");
@@ -2016,8 +2014,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // render page after window loads
         window.addEventListener("load", () => {
+            // display loading signal
             loader.style.display = "none";
+            // display page after loading
             subBody.style.display = "flex";
+        })
+
+        // clicking body removes all floating windows
+        body.addEventListener("click", (e) => {
+            let bugerLogo = e.target.closest("#check-menu + label");
+            let sideMenu = e.target.closest(".block-1");
+            // implement exceptions to the rule
+            if (bugerLogo || sideMenu) return;
+            // apply rule
+            if (bugerLogoCheck.checked == true) {
+                bugerLogoCheck.click();
+            }
         })
 
         // auto render history in UI
