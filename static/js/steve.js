@@ -2216,4 +2216,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         })
     }
+    else if (document.body.id == "profile") {
+        const body = document.querySelector("body");
+        const subBody = body.querySelector(".sub-body");
+        const loader = body.querySelector(".loader");
+        const bugerLogoCheck = body.querySelector("#check-menu");
+
+        // render page after window loads
+        window.addEventListener("load", () => {
+            // display loading signal
+            loader.style.display = "none";
+            // display page after loading
+            subBody.style.display = "flex";
+        })
+    }
 })

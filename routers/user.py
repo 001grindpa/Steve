@@ -215,3 +215,7 @@ async def get_history(request: Request, db: Session=Depends(get_db)):
         sliced.update({"last_slide": True})
 
     return {"detail": sliced}
+
+@router.get("/profile", status_code=status.HTTP_200_OK)
+def profile(request: Request, db: Session=Depends(get_db)):
+    return templates.TemplateResponse(request, "profile.html", {"page_id": "profile"})

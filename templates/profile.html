@@ -1,0 +1,148 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <div class="loader">
+        <img src="{{ url_for('static', path='gifs/water-loader.gif') }}" alt="laoder">
+        <div>loading...</div>
+    </div>
+    <div class="sub-body">
+        <header>
+            <div>
+                <!-- <img src="{{ url_for('static', path='images/right-arrow.png') }}" alt="arrow-logo"> -->
+            </div>
+        </header>
+        <main>
+            <div class="noticeCont">
+                <!-- <div class="notice show">query field is empty</div> -->
+            </div>
+            <input type="checkbox" id="check-menu">
+            <label for="check-menu">
+                <img class="arrow-right" src="{{ url_for('static', path='images/menu.png') }}" alt="menu-logo">
+            </label>
+            <div class="block-1">
+                <div class="flex-zone">
+                    <div class="above-menu">
+                        <div class="logo-cont">
+                            <div class="logo">
+                                <img src="{{ url_for('static', path='images/steve-logo.png') }}" alt="logo">
+                            </div>
+                            <div class="logo-text">
+                                <h2>Steve</h2>
+                                <div>Your AI Chef</div>
+                            </div>
+                        </div>
+                        <label for="check-menu">
+                            <img class="arrow" src="{{ url_for('static', path='images/left-arrow.png') }}" alt="arrow-logo">
+                        </label>
+                    </div>
+                    <menu>
+                        <a href="/">
+                            <div class="item">
+                                <img src="{{ url_for('static', path='images/home.png') }}" alt="home">
+                                <div>Home</div>
+                            </div>
+                        </a>
+                        <a href="/dishes">
+                            <div class="item">
+                                <img src="{{ url_for('static', path='images/love.png') }}" alt="favorites">
+                                <div>Favorites</div>
+                            </div>
+                        </a>
+                        <a href="/planner">
+                            <div class="item">
+                                <img src="{{ url_for('static', path='images/calender.png') }}" alt="favorites">
+                                <div>Planner</div>
+                            </div>
+                        </a>
+                        <a href="/history">
+                            <div class="item selected">
+                                <img src="{{ url_for('static', path='images/time.png') }}" alt="history">
+                                <div>History</div>
+                            </div>
+                        </a>
+                    </menu>
+                    <div class="line"></div>
+                    <a href="/profile">
+                        <div class="profile-cont">
+                            <img src="{{ url_for('static', path='images/user.png') }}" alt="user">
+                            <div class="profile">
+                                <div>{{ request.session["username"] }}</div>
+                                <div>View profile</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="grid-body">
+                <section>
+                    <div class="intro">
+                        <div class="inner-intro">
+                            <h2>Profile</h2>
+                            <div>
+                                <img src="{{ url_for('static', path='images/user.png') }}" alt="pfp_placeholder">
+                            </div>
+                        </div>
+                        <div>Manage your account and preferences.</div>
+                    </div>
+                </section>
+                <section>
+                    <img src="{{ url_for('static', path='images/user.png') }}" alt="user_pfp">
+                    <div class="about">
+                        <h3>{{ request.session.get("username") }}</h3>
+                        <div>{{ request.session.get("email") }}</div>
+                    </div>
+                </section>
+                <section>
+                    <h3>Account</h3>
+                    <div class="inner-section">
+                        <div class="acc">
+                            <img src="{{ url_for('static', path='images/user.png') }}" alt="pfp">
+                            <div class="title">
+                                <h4>Personal Information</h4>
+                                <div class="desc">Edit your name, email, contact</div>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc">
+                            <img src="{{ url_for('static', path='images/lock.png') }}" alt="pfp">
+                            <div class="title">
+                                <h4>Change Password</h4>
+                                <div class="desc">Update your password</div>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc">
+                            <img src="{{ url_for('static', path='images/email.png') }}" alt="pfp">
+                            <div class="title">
+                                <h4>Email Notifications</h4>
+                                <div class="desc">Get email notifications</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h3>Preferences</h3>
+                    <div class="inner-section">
+                        <div class="acc">
+                            <img src="{{ url_for('static', path='images/user.png') }}" alt="pfp">
+                            <div class="title">
+                                <h4>App Theme</h4>
+                                <div class="desc">Change your prefered theme</div>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc">
+                            <img src="{{ url_for('static', path='images/lock.png') }}" alt="pfp">
+                            <div class="title">
+                                <h4>Push Notifications</h4>
+                                <div class="desc">Manage your push notification settings</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+{% endblock %}

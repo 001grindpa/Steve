@@ -63,13 +63,15 @@
                         </a>
                     </menu>
                     <div class="line"></div>
-                    <div class="profile-cont">
-                        <img src="{{ url_for('static', path='images/user.png') }}" alt="user">
-                        <div class="profile">
-                            <div>{{ request.session["username"] }}</div>
-                            <div>View profile</div>
+                    <a href="/profile">
+                        <div class="profile-cont">
+                            <img src="{{ url_for('static', path='images/user.png') }}" alt="user">
+                            <div class="profile">
+                                <div>{{ request.session["username"] }}</div>
+                                <div>View profile</div>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="block-2">

@@ -601,6 +601,10 @@ main .notice.show.remove {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+.block-1 .line + a {
+    text-decoration: none;
+    color: inherit;
+}
 .block-1 .profile-cont {
     display: flex;
     align-items: center;
@@ -1583,7 +1587,78 @@ main .notice.show.remove {
     width: 1rem;
     height: 1rem;
 }
-
+/* profile page styling */
+#profile main .intro {
+    margin-top: 15px;
+    margin-left: 55px;
+}
+#profile main .intro .inner-intro {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+#profile main .intro img {
+    width: 1.2rem;
+}
+#profile main .grid-body {
+    width: 100vw;
+}
+#profile main .grid-body section {
+    margin: 1rem 1rem;
+}
+#profile main .grid-body section:nth-child(2) {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    width: 400px;
+    gap: 0.5rem;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#profile main .grid-body section .inner-section {
+    padding: 1rem;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 5px;
+    width: 400px;
+}
+#profile main .grid-body section .inner-section .acc {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+#profile main .grid-body section:nth-child(2) img {
+    width: 2rem;
+    background-color: var(--pale-green);
+    border-radius: 100%;
+    padding: 8px;
+}
+#profile main .grid-body section:nth-child(2) .about div {
+    font-size: var(--smaller-txt);
+}
+#profile main .grid-body section .inner-section .acc {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+#profile main .grid-body section .inner-section .acc img {
+    width: 1.3rem;
+}
+#profile main .grid-body section .inner-section .acc .title .desc {
+    font-size: var(--smaller-txt);
+}
+#profile main .grid-body section .inner-section .line {
+    width: 90%;
+    height: 1px;
+    background-color: var(--faded-black);
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
 /* footer styling */
 footer .footer-grid {
