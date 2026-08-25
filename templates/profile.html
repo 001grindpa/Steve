@@ -97,7 +97,7 @@
                     <h3>Account</h3>
                     <div class="inner-section">
                         <div class="acc">
-                            <img src="{{ url_for('static', path='images/user.png') }}" alt="pfp">
+                            <img src="{{ url_for('static', path='images/user2.png') }}" alt="pfp">
                             <div class="title">
                                 <h4>Personal Information</h4>
                                 <div class="desc">Edit your name, email, contact</div>
@@ -125,7 +125,7 @@
                     <h3>Preferences</h3>
                     <div class="inner-section">
                         <div class="acc">
-                            <img src="{{ url_for('static', path='images/user.png') }}" alt="pfp">
+                            <img src="{{ url_for('static', path='images/moon.png') }}" alt="pfp">
                             <div class="title">
                                 <h4>App Theme</h4>
                                 <div class="desc">Change your prefered theme</div>
@@ -133,16 +133,109 @@
                         </div>
                         <div class="line"></div>
                         <div class="acc">
-                            <img src="{{ url_for('static', path='images/lock.png') }}" alt="pfp">
-                            <div class="title">
-                                <h4>Push Notifications</h4>
-                                <div class="desc">Manage your push notification settings</div>
+                            <div class="notice-cont">
+                                <img src="{{ url_for('static', path='images/notify.png') }}" alt="pfp">
+                                <div class="title">
+                                    <h4>Push Notifications</h4>
+                                    <div class="desc">Manage your push notification settings</div>
+                                </div>
                             </div>
+                            <input type="checkbox" id="push">
+                            <label for="push">
+                                <div></div>
+                            </label>
                         </div>
                     </div>
                 </section>
             </div>
         </main>
+        <footer>
+            <div class="footer-grid">
+                <div class="section-1">
+                    <div class="logo-cont">
+                        <div class="logo">
+                            <img src="{{ url_for('static', path='images/steve-logo.png') }}" alt="logo">
+                        </div>
+                        <div class="logo-text">
+                            <h2>Steve</h2>
+                            <div>Your AI Chef</div>
+                        </div>
+                    </div>
+                    <div class="intro">Your smart cooking companion that helps you make the most of what you have.</div>
+                    <div class="social-cont">
+                        <a href="https://x.com/0xgrindpa"><img src="{{ url_for('static', path='images/twitter.png') }}" alt="x logo"></a>
+                        <a href="https://github.com/001grindpa/Steve"><img src="{{ url_for('static', path='images/github.png') }}" alt="github logo"></a>
+                        <img src="{{ url_for('static', path='images/linkedin-2.png') }}" alt="linkedin logo">
+                    </div>
+                </div>
+                <div class="section-2">
+                    <div class="sub-section">
+                        <input type="checkbox" id="f" checked>
+                        <label for="f">
+                            <div class="head">
+                                <h4>Product</h4>
+                                <div class="arrow">
+                                    <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow.png">
+                                </div>
+                            </div>
+                        </label>
+                        <div class="line"></div>
+                        <div class="content">
+                            <div>How it works</div>
+                            <div>Meal Planner</div>
+                            <div>Pricing</div>
+                        </div>
+                    </div>
+                    <div class="sub-section">
+                        <input type="checkbox" id="f1" checked>
+                        <label for="f1">
+                            <div class="head">
+                                <h4>Resources</h4>
+                                <div class="arrow">
+                                    <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow.png">
+                                </div>
+                            </div>
+                        </label>
+                        <div class="line"></div>
+                        <div class="content">
+                            <div>Help Center</div>
+                            <div>Blog</div>
+                            <div>Recipe Ideas</div>
+                        </div>
+                    </div>
+                    <div class="sub-section">
+                        <input type="checkbox" id="f2" checked>
+                        <label for="f2">
+                            <div class="head">
+                                <h4>Company</h4>
+                                <div class="arrow">
+                                    <img src="{{ url_for('static', path='images/left-arrow.png') }}" alt="left-arrow.png">
+                                </div>
+                            </div>
+                        </label>
+                        <div class="line"></div>
+                        <div class="content">
+                            <div>About Steve</div>
+                            <div>Privacy Policy</div>
+                            <div>Terms of Service</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-3">
+                    <h4>Stay in the loop</h4>
+                    <div class="content">
+                        <div>Get tips, recipe ideas and updates from Steve.</div>
+                    </div>
+                    <form action="">
+                        <input type="text" name="sub" placeholder="Enter your email">
+                        <button>Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright-cont">
+                <div>&copy; <span>2026</span> Steve AI Chef. All rights reserved.</div>
+            </div>
+        </footer>
     </div>
 
 {% endblock %}

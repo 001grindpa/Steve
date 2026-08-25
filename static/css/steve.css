@@ -1588,6 +1588,16 @@ main .notice.show.remove {
     height: 1rem;
 }
 /* profile page styling */
+#profile .sub-body {
+    /* display: flex; */
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    height: 100vh;
+    overflow-y: auto;
+}
+#profile main {
+    margin-bottom: 3rem;
+}
 #profile main .intro {
     margin-top: 15px;
     margin-left: 55px;
@@ -1647,6 +1657,7 @@ main .notice.show.remove {
 }
 #profile main .grid-body section .inner-section .acc img {
     width: 1.3rem;
+    height: 1.3rem;
 }
 #profile main .grid-body section .inner-section .acc .title .desc {
     font-size: var(--smaller-txt);
@@ -1658,6 +1669,40 @@ main .notice.show.remove {
     margin: auto;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+#profile main .grid-body section .inner-section .acc .notice-cont {
+    display: flex;
+    gap: 1rem;
+}
+#profile main .grid-body section .inner-section .acc label div {
+    position: relative;
+    width: 3rem;
+    height: 1.5rem;
+    background: lightgreen;
+    border-radius: 20px;
+    z-index: -1;
+    cursor: pointer;
+}
+#profile main .grid-body section:nth-child(4) .inner-section .acc:nth-child(3) {
+    justify-content: space-between;
+}
+#profile main .grid-body section .inner-section .acc #push {
+    display: none;
+}
+#profile main .grid-body section .inner-section .acc label div::before {
+    content: "";
+    position: absolute;
+    height: 75%;
+    width: 40%;
+    background-color: white;
+    border-radius: 100%;
+    z-index: 1;
+    top: 3px;
+    left: 3.5px;
+    transition: 0.25s ease-in;
+}
+#profile main .grid-body section .inner-section .acc #push:checked + label div::before {
+    transform: translateX(21.5px);
 }
 
 /* footer styling */
