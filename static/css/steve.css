@@ -1599,8 +1599,7 @@ main .notice.show.remove {
     margin-bottom: 3rem;
 }
 #profile main .intro {
-    margin-top: 15px;
-    margin-left: 55px;
+    margin-left: 42px;
 }
 #profile main .intro .inner-intro {
     display: flex;
@@ -1611,22 +1610,47 @@ main .notice.show.remove {
     width: 1.2rem;
 }
 #profile main .grid-body {
-    width: 100vw;
+    margin: auto;
+    padding: 20px;
+    max-width: 50rem;
+    display: grid;
+    grid-template-areas: 
+    "one"
+    "two"
+    "three"
+    "four";
 }
 #profile main .grid-body section {
     margin: 1rem 1rem;
 }
+#profile main .grid-body section h3 {
+    max-width: 450px;
+    margin: auto;
+    margin-bottom: 0.3rem;
+}
+#profile main .grid-body section:nth-child(1) {
+    grid-area: one;
+    margin-left: 0;
+    cursor: pointer;
+}
 #profile main .grid-body section:nth-child(2) {
+    grid-area: two;
     padding: 1rem;
     display: flex;
     align-items: center;
-    width: 400px;
+    max-width: fit-content;
+    min-width: 20rem;
     gap: 0.5rem;
     margin-left: 50%;
     transform: translateX(-50%);
     background-color: white;
     border-radius: 5px;
-    cursor: pointer;
+}
+#profile main .grid-body section:nth-child(3) {
+    grid-area: three;
+}
+#profile main .grid-body section:nth-child(4) {
+    grid-area: four;
 }
 #profile main .grid-body section .inner-section {
     padding: 1rem;
@@ -1634,12 +1658,19 @@ main .notice.show.remove {
     transform: translateX(-50%);
     background-color: white;
     border-radius: 5px;
-    width: 400px;
+    max-width: 400px;
+    min-width: 310px;
 }
 #profile main .grid-body section .inner-section .acc {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+#profile main .grid-body section:nth-child(3) .inner-section .acc {
+    cursor: pointer;
+}
+#profile main .grid-body section .inner-section .acc select {
+    width: 80px;
 }
 #profile main .grid-body section:nth-child(2) img {
     width: 2rem;
@@ -1649,11 +1680,6 @@ main .notice.show.remove {
 }
 #profile main .grid-body section:nth-child(2) .about div {
     font-size: var(--smaller-txt);
-}
-#profile main .grid-body section .inner-section .acc {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
 }
 #profile main .grid-body section .inner-section .acc img {
     width: 1.3rem;
@@ -1683,11 +1709,14 @@ main .notice.show.remove {
     z-index: -1;
     cursor: pointer;
 }
-#profile main .grid-body section:nth-child(4) .inner-section .acc:nth-child(3) {
+#profile main .grid-body section:nth-child(4) .inner-section .acc {
     justify-content: space-between;
 }
 #profile main .grid-body section .inner-section .acc #push {
     display: none;
+}
+#profile main .grid-body section .inner-section .acc label {
+    cursor: pointer;
 }
 #profile main .grid-body section .inner-section .acc label div::before {
     content: "";
@@ -1703,6 +1732,68 @@ main .notice.show.remove {
 }
 #profile main .grid-body section .inner-section .acc #push:checked + label div::before {
     transform: translateX(21.5px);
+}
+#profile main a {
+    text-decoration: none;
+}
+#profile main .log-out {
+    margin: auto;
+    background-color: var(--faded-red);
+    color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 10px 0;
+    max-width: 22rem;
+    min-width: fit-content;
+    border-radius: 5px;
+    transition: 0.25s ease-in-out;
+}
+#profile main .log-out:hover {
+    transform: translateY(-3px);
+}
+#profile main .log-out img {
+    width: 20px;
+}
+#profile main .log-out div {
+    font-size: small;
+    font-weight: bold;
+}
+#profile .sub-body .update-cont {
+    position: absolute;
+    backdrop-filter: blur(3px);
+    background-color: var(--faded-black);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+#profile .sub-body .update-cont .update-bg {
+    background-color: gray;
+    width: fit-content;
+    padding: 15px;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 10%;
+    text-align: center;
+    color: white;
+}
+#profile .sub-body .update-cont .update-bg .person form .field {
+    margin-top: 15px;
+}
+#profile .sub-body .update-cont .update-bg .person form .field div {
+    text-align: left;
+}
+#profile .sub-body .update-cont .update-bg .person form .field input {
+    padding: 10px;
+    width: 15rem;
+    min-width: fit-content;
+    border-radius: 15px;
+    border: 1px solid white;
+    background: transparent;
+    color: white;
+    font-weight: bold;
 }
 
 /* footer styling */
@@ -1990,8 +2081,28 @@ footer .copyright-cont {
         align-items: center;
         justify-content: space-between;
     }
-    #planner .block-2, #history .block-2 {
+    #planner .block-2, #history .block-2, #profile main .grid-body {
         margin-top: 70px;
+    }
+    #profile main .grid-body section:nth-child(2), #profile main .grid-body section .inner-section {
+        margin-left: 0;
+        transform: translateX(0);
+        margin-top: 0;
+    }
+    #profile main .grid-body {
+        grid-template-areas:
+        "one one"
+        "two two" 
+        "three four";
+    }
+    #profile main .intro {
+        margin-left: 0;
+    }
+    #profile main .grid-body section:nth-child(3) {
+        margin-left: 0;
+    }
+    #profile main .log-out {
+        max-width: 49rem;
     }
 }
 @media(min-width: 1400px) {

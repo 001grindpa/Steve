@@ -62,16 +62,7 @@
                             </div>
                         </a>
                     </menu>
-                    <div class="line"></div>
-                    <a href="/profile">
-                        <div class="profile-cont">
-                            <img src="{{ url_for('static', path='images/user.png') }}" alt="user">
-                            <div class="profile">
-                                <div>{{ request.session["username"] }}</div>
-                                <div>View profile</div>
-                            </div>
-                        </div>
-                    </a>
+                    <!-- <div class="line"></div> -->
                 </div>
             </div>
             <div class="grid-body">
@@ -89,7 +80,7 @@
                 <section>
                     <img src="{{ url_for('static', path='images/user.png') }}" alt="user_pfp">
                     <div class="about">
-                        <h3>{{ request.session.get("username") }}</h3>
+                        <h2>{{ request.session.get("username") }}</h2>
                         <div>{{ request.session.get("email") }}</div>
                     </div>
                 </section>
@@ -125,11 +116,17 @@
                     <h3>Preferences</h3>
                     <div class="inner-section">
                         <div class="acc">
-                            <img src="{{ url_for('static', path='images/moon.png') }}" alt="pfp">
-                            <div class="title">
-                                <h4>App Theme</h4>
-                                <div class="desc">Change your prefered theme</div>
+                            <div class="notice-cont">
+                                <img src="{{ url_for('static', path='images/moon.png') }}" alt="pfp">
+                                <div class="title">
+                                    <h4>App Theme</h4>
+                                    <div class="desc">Change your prefered theme</div>
+                                </div>
                             </div>
+                            <select name="theme" id="theme">
+                                <option value="dark">Dark</option>
+                                <option value="light">Light</option>
+                            </select>
                         </div>
                         <div class="line"></div>
                         <div class="acc">
@@ -148,6 +145,12 @@
                     </div>
                 </section>
             </div>
+            <a href="/logout">
+                <div class="log-out">
+                    <img src="{{ url_for('static', path='images/log-out.png') }}" alt="logout-icon">
+                    <div>Log Out</div>
+                </div>
+            </a>
         </main>
         <footer>
             <div class="footer-grid">
@@ -236,6 +239,28 @@
                 <div>&copy; <span>2026</span> Steve AI Chef. All rights reserved.</div>
             </div>
         </footer>
+        <div class="update-cont">
+            <div class="update-bg">
+                <div class="person">
+                    <form action="/post">
+                        <div class="field">
+                            <div>Username</div>
+                            <input type="text" name="username" placeholder="enter username" value="{{ request.session.get('username') }}">
+                        </div>
+                        <div class="field">
+                            <div>Email</div>
+                            <input type="text" name="emnail" placeholder="enter email" value="{{ request.session.get('email') }}">
+                        </div>
+                        <div class="field">
+                            <div>Contact</div>
+                            <input type="number" name="phone" placeholder="enter phone contact">
+                        </div>
+                        <h5>Your profile helps people recognise you</h5>
+                        <button>Save profile</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
