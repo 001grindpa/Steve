@@ -2221,6 +2221,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const subBody = body.querySelector(".sub-body");
         const loader = body.querySelector(".loader");
         const bugerLogoCheck = body.querySelector("#check-menu");
+        const updateCont = body.querySelector(".sub-body .update-cont");
+        const cancelEditBtn = updateCont.querySelector(".cancel");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -2228,6 +2230,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             loader.style.display = "none";
             // display page after loading
             subBody.style.display = "flex";
+        })
+
+        cancelEditBtn.addEventListener("click", () => {
+            updateCont.style.display = "none";
         })
     }
 })

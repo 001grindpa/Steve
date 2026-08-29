@@ -255,10 +255,24 @@
                             <div>Contact</div>
                             <input type="number" name="phone" placeholder="enter phone contact">
                         </div>
-                        <h5>Your profile helps people recognise you</h5>
-                        <button>Save profile</button>
+                        <div class="info">Your profile helps people recognise you</div>
+                        <button type="submit">Save profile</button>
                     </form>
                 </div>
+                <div class="person">
+                    <form action="/post">
+                        <div class="field">
+                            <div>Old password</div>
+                            <input type="text" name="password" placeholder="enter old password" autofocus autocomplete="off">
+                        </div>
+                        <div class="field">
+                            <div>New Password</div>
+                            <input type="text" name="password2" placeholder="enter new password" autocomplete="off">
+                        </div>
+                        <button type="submit">Save password</button>
+                    </form>
+                </div>
+                <div class="cancel">Cancel</div>
             </div>
         </div>
     </div>

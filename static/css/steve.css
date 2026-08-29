@@ -1704,7 +1704,7 @@ main .notice.show.remove {
     position: relative;
     width: 3rem;
     height: 1.5rem;
-    background: lightgreen;
+    background: black;
     border-radius: 20px;
     z-index: -1;
     cursor: pointer;
@@ -1729,6 +1729,9 @@ main .notice.show.remove {
     top: 3px;
     left: 3.5px;
     transition: 0.25s ease-in;
+}
+#profile main .grid-body section .inner-section .acc #push:checked + label div {
+    background-color: lightgreen;
 }
 #profile main .grid-body section .inner-section .acc #push:checked + label div::before {
     transform: translateX(21.5px);
@@ -1772,7 +1775,7 @@ main .notice.show.remove {
 #profile .sub-body .update-cont .update-bg {
     background-color: gray;
     width: fit-content;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
     margin: auto;
     margin-top: 10%;
@@ -1784,6 +1787,8 @@ main .notice.show.remove {
 }
 #profile .sub-body .update-cont .update-bg .person form .field div {
     text-align: left;
+    font-weight: bold;
+    margin-bottom: 3px;
 }
 #profile .sub-body .update-cont .update-bg .person form .field input {
     padding: 10px;
@@ -1791,9 +1796,33 @@ main .notice.show.remove {
     min-width: fit-content;
     border-radius: 15px;
     border: 1px solid white;
-    background: transparent;
+    background: gray;
     color: white;
     font-weight: bold;
+}
+#profile .sub-body .update-cont .update-bg .person form .field input:focus {
+    outline: 2px solid white;
+}
+#profile .sub-body .update-cont .update-bg .person form button {
+    padding: 15px 30px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    margin: 15px;
+    transition: 0.25s ease;
+}
+#profile .sub-body .update-cont .update-bg .person form button:hover {
+    background-color: lightgray;
+}
+#profile .sub-body .update-cont .update-bg .person form .info {
+    margin: 10px;
+    font-weight: none;
+    font-size: var(--smaller-txt);
+}
+#profile .sub-body .update-cont .update-bg .cancel {
+    cursor: pointer;
+    width: fit-content;
+    margin: auto;
 }
 
 /* footer styling */
