@@ -2223,6 +2223,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const bugerLogoCheck = body.querySelector("#check-menu");
         const updateCont = body.querySelector(".sub-body .update-cont");
         const cancelEditBtn = updateCont.querySelector(".cancel");
+        const editProfileBtn = body.querySelector(".grid-body section:nth-child(3) .inner-section .acc:nth-child(1)");
+        const editPasswordBtn = body.querySelector(".grid-body section:nth-child(3) .inner-section .acc:nth-child(3)");
+        const editEls = updateCont.querySelectorAll(".update-bg .update");
+        const editForms = updateCont.querySelectorAll(".update-bg .update form");
+        const noticeCont = body.querySelector("main .noticeCont");
+        const usernameEl = body.querySelector(".grid-body section:nth-child(2) .about h2");
+        const emailEl = body.querySelector(".grid-body section:nth-child(2) .about div");
 
         // render page after window loads
         window.addEventListener("load", () => {
@@ -2232,8 +2239,72 @@ document.addEventListener("DOMContentLoaded", async () => {
             subBody.style.display = "flex";
         })
 
+        // pop edit profle when clicked
+        editProfileBtn.addEventListener("click", (e) => {
+            editEls[0].style.display="block";
+            updateCont.style.display="block";
+        })
+
+        // pop up edit password when clicked
+        editPasswordBtn.addEventListener("click", () => {
+            editEls[1].style.display="block";
+            updateCont.style.display="block";
+        })
+
         cancelEditBtn.addEventListener("click", () => {
             updateCont.style.display = "none";
+            editEls.forEach(el => {
+                if (el.style.display="block") el.style.display="none";
+            })
         })
+
+        // handle form submitting
+        for (let i=0; i < editForms.length; i++) {
+            editForms[i].addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const formObj = Object.fromEntries(new FormData(editForms[i]));
+                try {
+                    let resp;
+                    if (i===0) {
+                        resp = await fetch("/edit-profile", {
+                            method: "Put",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(formObj)
+                        });
+                    } else if (i===1) {
+                        resp = await fetch("/change-password", {
+                            method: "Put",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(formObj)
+                        });
+                    }
+                    let data = await resp.json();
+                    // update profile els on UI
+                    if (data.detail == "username updated") {
+                        usernameEl.textContent = formObj["username"];
+                    } else if (data.detail == "email updated") {
+                        emailEl.textContent = formObj["email"];
+                    }
+                    // remove update bg cont
+                    if (data.detail.includes("updated")) cancelEditBtn.click();
+                    // create notification for status
+                    let notice = document.createElement("div");
+                    notice.classList.add("notice");
+                    notice.style.backgroundColor = "black";
+                    notice.textContent = data.detail;
+                    noticeCont.prepend(notice);
+                    notice.classList.add("show");
+                    setTimeout(() => {
+                        notice.classList.add("remove");
+                    }, 4000);
+                } catch(e) {
+                    console.log("Unexpected error -> ", e);
+                }
+            })
+        }
     }
 })

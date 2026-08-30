@@ -1622,6 +1622,7 @@ main .notice.show.remove {
 }
 #profile main .grid-body section {
     margin: 1rem 1rem;
+    line-height: 1.4;
 }
 #profile main .grid-body section h3 {
     max-width: 450px;
@@ -1771,6 +1772,7 @@ main .notice.show.remove {
     left: 0;
     right: 0;
     bottom: 0;
+    display: none;
 }
 #profile .sub-body .update-cont .update-bg {
     background-color: gray;
@@ -1782,28 +1784,29 @@ main .notice.show.remove {
     text-align: center;
     color: white;
 }
-#profile .sub-body .update-cont .update-bg .person form .field {
+#profile .sub-body .update-cont .update-bg .update {
+    display: none;
+}
+#profile .sub-body .update-cont .update-bg .update form .field {
     margin-top: 15px;
 }
-#profile .sub-body .update-cont .update-bg .person form .field div {
+#profile .sub-body .update-cont .update-bg .update form .field div {
     text-align: left;
     font-weight: bold;
     margin-bottom: 3px;
 }
-#profile .sub-body .update-cont .update-bg .person form .field input {
+#profile .sub-body .update-cont .update-bg .update form .field input {
     padding: 10px;
     width: 15rem;
     min-width: fit-content;
     border-radius: 15px;
     border: 1px solid white;
-    background: gray;
-    color: white;
     font-weight: bold;
 }
-#profile .sub-body .update-cont .update-bg .person form .field input:focus {
-    outline: 2px solid white;
+#profile .sub-body .update-cont .update-bg .update form .field input:focus {
+    outline: 3px solid black;
 }
-#profile .sub-body .update-cont .update-bg .person form button {
+#profile .sub-body .update-cont .update-bg .update form button {
     padding: 15px 30px;
     border-radius: 20px;
     cursor: pointer;
@@ -1811,10 +1814,10 @@ main .notice.show.remove {
     margin: 15px;
     transition: 0.25s ease;
 }
-#profile .sub-body .update-cont .update-bg .person form button:hover {
+#profile .sub-body .update-cont .update-bg .update form button:hover {
     background-color: lightgray;
 }
-#profile .sub-body .update-cont .update-bg .person form .info {
+#profile .sub-body .update-cont .update-bg .update form .info {
     margin: 10px;
     font-weight: none;
     font-size: var(--smaller-txt);

@@ -241,15 +241,15 @@
         </footer>
         <div class="update-cont">
             <div class="update-bg">
-                <div class="person">
+                <div class="update">
                     <form action="/post">
                         <div class="field">
                             <div>Username</div>
-                            <input type="text" name="username" placeholder="enter username" value="{{ request.session.get('username') }}">
+                            <input type="text" autofocus name="username" placeholder="enter username" value="{{ request.session.get('username') }}">
                         </div>
                         <div class="field">
                             <div>Email</div>
-                            <input type="text" name="emnail" placeholder="enter email" value="{{ request.session.get('email') }}">
+                            <input type="text" name="email" placeholder="enter email" value="{{ request.session.get('email') }}">
                         </div>
                         <div class="field">
                             <div>Contact</div>
@@ -259,15 +259,19 @@
                         <button type="submit">Save profile</button>
                     </form>
                 </div>
-                <div class="person">
+                <div class="update">
                     <form action="/post">
                         <div class="field">
                             <div>Old password</div>
-                            <input type="text" name="password" placeholder="enter old password" autofocus autocomplete="off">
+                            <input type="text" autofocus name="password" placeholder="enter old password" autofocus autocomplete="off">
                         </div>
                         <div class="field">
                             <div>New Password</div>
                             <input type="text" name="password2" placeholder="enter new password" autocomplete="off">
+                        </div>
+                        <div class="field">
+                            <div>Confirm Password</div>
+                            <input type="text" name="confirm" placeholder="confirm new password" autocomplete="off">
                         </div>
                         <button type="submit">Save password</button>
                     </form>

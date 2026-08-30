@@ -219,3 +219,72 @@ async def get_history(request: Request, db: Session=Depends(get_db)):
 @router.get("/profile", status_code=status.HTTP_200_OK)
 def profile(request: Request, db: Session=Depends(get_db)):
     return templates.TemplateResponse(request, "profile.html", {"page_id": "profile"})
+
+@router.put("/edit-profile", status_code=status.HTTP_200_OK)
+async def edit_profile(request: Request, db=Depends(get_db)):
+    new_data = await request.json()
+    # check if input fields are empty
+    if new_data["username"].strip() == "":
+        return {"detail": "username field can not be empty"}
+    elif new_data["email"].strip() == "":
+        return {"detail": "email field can not be empty"}
+    # compare current user data
+    user_data = db.query(User).where(User.email == request.session.get("email")).first()
+    if not user_data:
+        raise HTTPException(detail="User not found", status_code=status.HTTP_404_NOT_FOUND)
+
+    if user_data.email == new_data["email"] and user_data.username == new_data["username"]:
+        return {"detail": "No changes detected"}
+    # check if new email exists in db
+    existing_user = db.query(User).where(User.email == new_data["email"]).first()
+    if not existing_user:
+        status = email_check(new_data["email"])
+        if status == "valid":
+            user_data.email = new_data["email"]
+            db.commit()
+            request.session["email"] = new_data["email"]
+            return {"detail": "email updated"}
+        else:
+            return {"detail": "check if email is correct"}
+    # if existing user is current user, check and update username field
+    if existing_user == user_data:
+        # change username
+        user_data.username = new_data["username"]
+        db.commit()
+        request.session["username"] = new_data["username"]
+        return {"detail": "username updated"}
+    else:
+        raise HTTPException(
+            detail="This email is linked to an existing user",
+            status_code=status.HTTP_302_FOUND
+        )
+
+@router.put("/change-password", status_code=status.HTTP_200_OK)
+async def change_password(request: Request, db: Session=Depends(get_db)):
+    password_data = await request.json()
+    # handle empty field error
+    if password_data["password"].strip() == "" or password_data["password2"].strip() == "" or password_data["confirm"].strip() == "":
+        raise HTTPException(
+            detail="Empty field detected", status_code=status.HTTP_406_NOT_ACCEPTABLE
+        )
+
+    current_user = db.query(User).where(User.email == request.session.get("email")).first()
+    # check if original password is currect
+    if Hash.verify_hash(password_data["password"], current_user.password):
+        state = check_password(password_data["password2"])
+        if state != "valid":
+            raise HTTPException(
+                detail=state, status_code=status.HTTP_406_NOT_ACCEPTABLE
+            )
+        elif password_data["password2"] != password_data["confirm"]:
+            return {"detail": "Check confirmation field"}
+        else:
+            password_hash = Hash.hash_func(password_data["password2"].strip())
+            current_user.password = password_hash
+            db.commit()
+            return {"detail": "Password updated"}
+    else:
+        raise HTTPException(
+            detail="Original password is incorrect",
+            status_code=status.HTTP_406_NOT_ACCEPTABLE
+        )

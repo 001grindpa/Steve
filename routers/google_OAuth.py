@@ -81,7 +81,10 @@ async def google_callback(request: Request, code: str, db: Session=Depends(get_d
 
             # check if user already exists in db, else create new user with null pw
             user = db.query(User).where(User.email == email).first()
-            if not user:
+            if user:
+                # assign username from stored data
+                name = user.username
+            else:
                 new_user = User(username=name, email=email, password="")
                 db.add(new_user)
                 db.commit()
