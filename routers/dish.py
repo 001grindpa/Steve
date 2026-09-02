@@ -2,7 +2,7 @@ from fastapi import (
     APIRouter, Depends, status, Request, HTTPException
 )
 from models import (
-    get_db, Dish, User, Recipe, Planner, History
+    get_db, Dish, User, Recipe, Planner, History, Addable
 )
 from sqlalchemy.orm import Session
 from fastapi.templating import Jinja2Templates
@@ -19,10 +19,8 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get("/to-make", status_code=status.HTTP_200_OK)
 async def to_make(request: Request):
-    dishes = ""
     if request.session.get("dishes"):
-        dishes = request.session.get("dishes")
-    return {"detail": dishes}
+        return {"detail": request.session.get("dishes")}
 
 # this API endpoint recieves the array index of the dish object you intend to save
 # then it saves it from the active dishes session data to the db
@@ -108,7 +106,11 @@ def remove_dish(request: Request, name: str, db: Session=Depends(get_db)):
         db.commit()
         if dish.id in request.session.get("planner_dishes"):
             request.session.get("planner_dishes").remove(dish.id)
-            print("removed from planner")
+            # update addables in db
+            addables = db.query(Addable).where(Addable.user_id == current_user.id).first()
+            addables.addable = request.session.get("planner_dishes")
+            db.commit()
+
         return {"detail": "Meal removed from list"}
     
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="This dish is not in list")
@@ -136,17 +138,25 @@ async def add_planner(request: Request, meal: str, db: Session=Depends(get_db)):
         raise HTTPException(
             status.HTTP_302_FOUND, detail=f"{meal} is already in planner"
         )
-    print(request.session.get("planner_dishes"))
     # add meal to planner session
     request.session.get("planner_dishes").append(dish_obj.id) # store dish id, and get dish by id
+    # add all addable to db
+    addables = db.query(Addable).where(Addable.user_id == user.id).first()
+    if addables:
+        addables.addable = f"{request.session.get("planner_dishes")}"
+        db.commit()
+    else:
+        new_addable = Addable(addable=str(request.session.get("planner_dishes")), user_id=user.id)
+        db.add(new_addable)
+        db.commit()
 
     return {"detail": "Added to planner section"}
 
 # this api returns dishes added to planner session from db
 @router.get("/planner-dishes", status_code=status.HTTP_200_OK)
 def planner_dishes(request: Request, db: Session=Depends(get_db)):
-    print(request.session.get("planner_dishes"))
-
+    # since request.session.get("planner_dishes") is an array of dish IDs(int), 
+    # we need to search db table for each meal based on their IDs in that session
     dishes = []
     for dish in request.session.get("planner_dishes"):
         dish_data = db.query(Dish).where(Dish.id == dish).first()
@@ -157,9 +167,16 @@ def planner_dishes(request: Request, db: Session=Depends(get_db)):
 # this api removes addable planner dish from session
 @router.delete("/remove-addable", status_code=status.HTTP_200_OK)
 async def remove_addable(request: Request, id: int, db: Session=Depends(get_db)):
+    # get current user
+    user = db.query(User).where(User.email == request.session.get("email")).first()
+
     # remove from session
     if id in request.session.get("planner_dishes"):
         request.session.get("planner_dishes").remove(id)
+        # update addables in db
+        addables = db.query(Addable).where(Addable.user_id == user.id).first()
+        addables.addable = request.session.get("planner_dishes")
+        db.commit()
         return {"detail": "Removed addable from list"}
     HTTPException(detail="Invalid dish id", status_code=status.HTTP_406_NOT_ACCEPTABLE)
 
@@ -248,8 +265,14 @@ async def store_planner_dish(request: Request, db: Session=Depends(get_db)):
 # this api returns existing planner meals for requested date
 @router.get("/planner-added-meals", status_code=status.HTTP_200_OK)
 async def planner_added_meals(request: Request, q: str, db: Session=Depends(get_db)):
+    # get current user
+    current_user = db.query(User).where(User.email == request.session.get("email")).first()
+
     # check if date exists already
-    planner_meals = db.query(Planner).where(Planner.date == q).first()
+    planner_meals = db.query(Planner).where(and_(
+        Planner.date == q,
+        Planner.user_id == current_user.id
+    )).first()
     if planner_meals:
         return {"detail": planner_meals}
     

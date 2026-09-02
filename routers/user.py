@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends, status, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse, StreamingResponse
-from models import CreateUser, LoginUser, UserData, get_db, User, Chat, History, Planner
+from models import (
+    CreateUser, LoginUser, UserData, 
+    get_db, User, Chat, History, 
+    Planner, Addable
+)
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from hash import Hash
@@ -64,7 +68,7 @@ async def signup(request: Request ,user_data: CreateUser, db: Session=Depends(ge
     db.add(user)
     db.commit()
     request.session["email"] = user_data.email
-    request.session["username"] = "user"
+    request.session["username"] = f"{user_data.email}"
     db.refresh(user)
     return {"detail": "success"}
 
@@ -75,9 +79,6 @@ def login(request: Request):
 
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login(request: Request,user_data: LoginUser, db: Session=Depends(get_db)):
-    # remove live sessions after login
-    if request.session.get("dishes"):
-        request.session["dishes"] = None
     # check if fields are empty
     if user_data.email.strip() == "" or user_data.password.strip() == "":
         raise HTTPException(
@@ -88,9 +89,15 @@ async def login(request: Request,user_data: LoginUser, db: Session=Depends(get_d
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                             detail="not exist")
+    # pull addables from db to live session
+    addables = db.query(Addable).where(Addable.user_id == user.id).first()
+    # convert list string to list type then assign to session
+    if addables:
+        request.session["planner_dishes"] = ast.literal_eval(addables.addable)
+
     if Hash.verify_hash(user_data.password, user.password):
         request.session["email"] = user.email
-        request.session["username"] = "user"
+        request.session["username"] = user.username
         return {"detail": "success"}
     return {"detail": "Check password again"}
 
@@ -107,6 +114,8 @@ def get_user(username: str, db: Session=Depends(get_db)):
 def logout(request: Request):
     request.session["username"] = None
     request.session["email"] = None
+    request.session["dishes"] = None
+    request.session["planner_dishes"] = None
     return RedirectResponse("/login", status_code=status.HTTP_308_PERMANENT_REDIRECT)
 
 # agent query endpoint
@@ -227,11 +236,15 @@ async def edit_profile(request: Request, db=Depends(get_db)):
     if new_data["username"].strip() == "":
         return {"detail": "username field can not be empty"}
     elif new_data["email"].strip() == "":
-        return {"detail": "email field can not be empty"}
+        return {"detail": "email field can not be empty"} 
     # compare current user data
     user_data = db.query(User).where(User.email == request.session.get("email")).first()
     if not user_data:
         raise HTTPException(detail="User not found", status_code=status.HTTP_404_NOT_FOUND)
+    # check if another user already exists with email
+    other_user = db.query(User).where(User.email == new_data.get("email")).first()
+    if other_user and new_data.get("email") != user_data.email:
+        return {"detail": "account with email already exists"}
 
     if user_data.email == new_data["email"] and user_data.username == new_data["username"]:
         return {"detail": "No changes detected"}

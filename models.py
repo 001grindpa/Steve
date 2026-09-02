@@ -98,6 +98,15 @@ class Dish(BaseClass):
     def __repr__(self):
         f"<name='{self.name}', origin='{self.origin}', ingredients='{self.ingredients}'>"
 
+# this table stores meal ids of planner addable meals in a string array per user
+class Addable(BaseClass):
+    __tablename__ = "addables"
+    addable = Column(String(1000))
+    user_id = Column(Integer)
+
+    def __repr__(self):
+        return f"id='{self.id}', addable='{self.addable}', user_id='{self.user_id}'"
+
 # table that stores conversations
 class Chat(BaseClass):
     __tablename__ = "chats"
